@@ -5,21 +5,12 @@
   <artifactId>orgbml</artifactId>
   <version>1.0-SNAPSHOT</version>
   <packaging>jar</packaging>
-  <name>orgbml</name>
-  <url>http://maven.apache.org</url>
-  <pluginRepositories>
-    <pluginRepository>
-      <id>mc-release</id>
-      <name>Local Maven repository of releases</name>
-      <url>http://mc-repo.googlecode.com/svn/maven2/releases</url>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-    </pluginRepository>
-  </pluginRepositories>
+  <inceptionYear>2008</inceptionYear>
+  <organization>
+    <name>Brian M. Lima</name>
+    <url></url>  
+  </organization>
+ 
   <build>
     <extensions>
       <extension>
@@ -49,40 +40,29 @@
         </configuration>
       </plugin>
       <plugin>
-        <groupId>com.mycila.maven-license-plugin</groupId>
-        <artifactId>maven-license-plugin</artifactId>
-        <version>1.5.1</version>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>license-maven-plugin</artifactId>
+        <version>1.5</version>
         <configuration>
-          <basedir>${basedir}</basedir>
-          <header>${basedir}/src/main/resources/License.txt</header>
-          <failIfMissing>true</failIfMissing>
-          <aggregate>true</aggregate>
-          <properties>
-            <owner>Brian M. Lima</owner>
-            <year>2010</year>
-            <email>brianmlima@gmail.com</email>
-            <excludes>
-              <exclude>*/*.sql</exclude>
-              <exclude>${basedir}/src/main/resources/License.txt</exclude>
-            </excludes>
-            <useDefaultExcludes>true</useDefaultExcludes>
-          </properties>
-
-          
-          
-          <executions>
-            <execution>
-              <id>check-headers</id>
-              <phase>verify</phase>
-              <goals>
-                <goal>check</goal>
-              </goals>
-            </execution>
-          </executions>
-
+          <licenseName>my_license</licenseName>
+          <licenseResolver>${project.baseUri}/src/license</licenseResolver>
         </configuration>
+        <executions>
+          <execution>
+            <id>first</id>
+            <goals>
+              <goal>update-file-header</goal>
+            </goals>
+            <phase>process-sources</phase>
+          </execution>
+          <execution>
+            <id>download-licenses</id>
+            <goals>
+              <goal>download-licenses</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
-
     </plugins>
   </build>
   <properties>
@@ -99,6 +79,11 @@
       <groupId>c3p0</groupId>
       <artifactId>c3p0</artifactId>
       <version>0.9.1.2</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-primitives</groupId>
+      <artifactId>commons-primitives</artifactId>
+      <version>1.0</version>
     </dependency>
     <dependency>
       <groupId>commons-dbutils</groupId>
