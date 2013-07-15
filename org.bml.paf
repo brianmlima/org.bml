@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Application name="org.bml">
+	<Project language_type="2" path="./org.bml.ppf"/>
+</Application>
