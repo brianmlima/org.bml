@@ -123,6 +123,7 @@ public class ElasticConsumer<T> extends WorkerThread {
      * on.
      */
     public static enum REPORT_KEYS {
+
         /**
          * The key for the number of dead worker threads.
          */
@@ -132,18 +133,20 @@ public class ElasticConsumer<T> extends WorkerThread {
          */
         REPORT_MAP_KEY_ALIVE("REPORT_MAP_KEY_ALIVE"),
         /**
-         * The key for the number of worker threads that have shouldRun set to true.
+         * The key for the number of worker threads that have shouldRun set to
+         * true.
          */
         REPORT_MAP_KEY_SHOULD_RUN("REPORT_MAP_KEY_SHOULD_RUN"),
         /**
-         * The key for the number of worker threads that have shouldRun set to false.
+         * The key for the number of worker threads that have shouldRun set to
+         * false.
          */
         REPORT_MAP_KEY_SHOULD_NOT_RUN("REPORT_MAP_KEY_SHOULD_NOT_RUN");
 
         private String stringValue;
 
         /**
-         * 
+         *
          * @param stringValue the String representation for a REPORT_KEYS enum.
          */
         REPORT_KEYS(String stringValue) {
@@ -152,6 +155,7 @@ public class ElasticConsumer<T> extends WorkerThread {
 
         /**
          * Getter for the String representation of a REPORT_KEYS enum.
+         *
          * @return String representation of a REPORT_KEYS enum.
          */
         public String getStringValue() {
@@ -159,11 +163,11 @@ public class ElasticConsumer<T> extends WorkerThread {
         }
     }
     /**
-     * The Set of WorkerThread implementations operating on behalf of this 
+     * The Set of WorkerThread implementations operating on behalf of this
      * ElasticConsumer.
      */
     protected Set<WorkerThread> workers = null;
-    
+
     private BlockingQueue queueIn = null;
     private ObjectFactory<WorkerThread> threadFactory = null;
     private int numWorkers = 0;
@@ -287,22 +291,35 @@ public class ElasticConsumer<T> extends WorkerThread {
     /**
      * Offer an object to be processed to the processing queue.
      *
-     * @param o The object to be processed.
-     * @param timeout max wait time for successful offer
-     * @param unit A measure of time to interpret timeout
+     * @param theObject The object to be processed.
+     * @param theTimeout The max wait time for successful offer.
+     * @param theTimeUnit The TimeUnit the argument theTimeout is in.
      * @return boolean true on success false otherwise
-     * @throws java.lang.InterruptedException
+     * @throws java.lang.InterruptedException if this thread is interrupted
+     * while attempting the offer.
+     * @throws IllegalArgumentException If theObject is null, theTimeout is less
+     * than 1, or theTimeUnit is null.
      */
-    public boolean offer(T o, long timeout, TimeUnit unit) throws InterruptedException {
+    public boolean offer(final T theObject, final long theTimeout, final TimeUnit theTimeUnit) throws InterruptedException, IllegalArgumentException {
+        if (theObject == null) {
+            throw new IllegalArgumentException("Can not offer a null object.");
+        }
+        if (theTimeout < 1) {
+            throw new IllegalArgumentException("Can not offer an object with a timeout less than 1.");
+        }
+        if (theTimeUnit == null) {
+            throw new IllegalArgumentException("Can not offer an object with a null TimeUnit.");
+        }
+
         if (log.isDebugEnabled()) {
             StopWatch watch = new StopWatch();
             watch.start();
-            boolean result = doOffer(o, timeout, unit);
+            boolean result = doOffer(theObject, theTimeout, theTimeUnit);
             watch.stop();
-            log.debug(getLogPrefix() + " DEBUG: OFFER result=" + result + " timeout=" + timeout + " time unit " + unit + " actual time in mills=" + watch.getTime());
+            log.debug(getLogPrefix() + " DEBUG: OFFER result=" + result + " timeout=" + theTimeout + " time unit " + theTimeUnit + " actual time in mills=" + watch.getTime());
             return result;
         }
-        return doOffer(o, timeout, unit);
+        return doOffer(theObject, theTimeout, theTimeUnit);
     }
 
     /**
