@@ -57,7 +57,7 @@ public abstract class WorkerThreadStateWatcher extends TimeoutNotificationThread
     @Override
     protected void doIt() {
         while (this.getShouldRun()) {
-            long millsSinceLastStateChange = TimeUtils.timeUnitsToMilliseconds(TimeUnit.SECONDS, thread.getSecondsSinceLastStateChange());
+            long millsSinceLastStateChange = TimeUnit.MILLISECONDS.convert(thread.getSecondsSinceLastStateChange(),TimeUnit.SECONDS);
             WORKER_STATE state = thread.getWorkerState();
             if (millsSinceLastStateChange > getTimeoutInMills()) {
                 LOG.info(this.getInfoMessage(thread.getLogPrefix(), state, millsSinceLastStateChange));
