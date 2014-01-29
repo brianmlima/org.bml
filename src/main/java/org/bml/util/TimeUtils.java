@@ -1,4 +1,3 @@
-
 package org.bml.util;
 
 /*
@@ -23,7 +22,6 @@ package org.bml.util;
  * along with org.bml.  If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
 import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -46,14 +44,26 @@ import org.apache.commons.logging.LogFactory;
 public class TimeUtils {
 
     private static final Log LOG = LogFactory.getLog(TimeUtils.class);
+    //Arbitrary date for windowing dates
     public static final long UTC_LONG_2005 = 1104537600000l;
+    //Arbitrary Date for windowing dates
     public static final Date UTC_DATE_2005 = new Date(UTC_LONG_2005);
 
-    public static String dayOfWeekFromInt(int day) {
-        if (day > 7 || day < 1) {
-            return null;
+    /**
+     * Conversion utility for getting a print friendly string representation of
+     * a day of the week from a numeric between 1 and 7. Sunday is 1.
+     *
+     * @param theDay an integer between 1 and 7 denoting the day of the week. 1
+     * being Sunday.
+     * @return a print friendly string representation of a day of the week. 1
+     * being Sunday.
+     * @throws IllegalArgumentException if argument theDay is not in range of 1 to 7
+     */
+    public static String dayOfWeekFromInt(final int theDay) throws IllegalArgumentException {
+        if (theDay > 7 || theDay < 1) {
+            throw new IllegalArgumentException("Argument theDay is not in range of 1 to 7");
         }
-        switch (day) {
+        switch (theDay) {
             case 1:
                 return "Sunday";
             case 2:
@@ -68,33 +78,43 @@ public class TimeUtils {
                 return "Friday";
             case 7:
                 return "Saturday";
-            default:
+            default: //unreachable but the compiler wants it!
                 return null;
         }
     }
 
-    
-    public static int getHourOfWeek(Date dateIn){
+    /**Returns the hour of the week in the range of 1 to 168. 1 being the first hour of 
+     * Sunday, 168 being the last hour of Saturday.
+     * 
+     * @param dateIn the date to extract the hour of the week.
+     * @return an integer in the range of 1 to 168. 1 being the first hour of 
+     * Sunday.
+     * @throws IllegalArgumentException if the parameter dateIn is null.
+     */
+    public static int getHourOfWeek(Date dateIn) {
+        if(dateIn==null){
+            throw new IllegalArgumentException("Can not operate on a null Date object.");
+        }
         Calendar cal = Calendar.getInstance();
         cal.setTime(dateIn);
-        int hour =((cal.get(Calendar.DAY_OF_WEEK)-1)*24)+cal.get(Calendar.HOUR_OF_DAY) ;
-        return hour;
-    } 
-    
-    public static Date truncateToWeek(Date dateIn){
+        return ((cal.get(Calendar.DAY_OF_WEEK) - 1) * 24) + cal.get(Calendar.HOUR_OF_DAY);
+        
+    }
+
+    /**Truncates a Date object to the week. Truncation is based on Sunday being 
+     * the first day of the calendar week.
+     * 
+     * @param dateIn a date to truncate to the week.
+     * @return a truncated to the week version of the dateIn parameter.
+     * @throws IllegalArgumentException if the parameter dateIn is null.
+     */
+    public static Date truncateToWeek(Date dateIn) throws IllegalArgumentException {
+        if(dateIn==null){
+            throw new IllegalArgumentException("Can not operate on a null Date object.");
+        }
         Calendar cal = Calendar.getInstance();
         cal.setTime(dateIn);
         cal.set(Calendar.DAY_OF_WEEK, 1);
         return DateUtils.truncate(cal.getTime(), Calendar.DATE);
     }
-    
-        public static long timeUnitsToMilliseconds(final TimeUnit theTimeUnit, final long unitCount ){        
-        switch(theTimeUnit){
-            case MILLISECONDS : return unitCount ; 
-            case SECONDS : return unitCount*1000 ; 
-            case MINUTES : return (unitCount*60)*1000 ; 
-        }
-        return -1;
-    }
-    
 }
