@@ -322,17 +322,17 @@ public class ElasticConsumer<T> extends WorkerThread {
         return doOffer(theObject, theTimeout, theTimeUnit);
     }
 
-    /**
-     * @param o T The object to be offered to the queue.
-     * @param timeout long denoting the number of time units to use during the
+    /** Performs the offer. does not handle nulls or bad arguments.
+     * @param theObject T The object to be offered to the queue.
+     * @param theTimeout long denoting the number of time units to use during the
      * blocking offer call.
-     * @param unit TimeUnit object telling the offer call what unit of time it
+     * @param theTimeUnit TimeUnit object telling the offer call what unit of time it
      * should block for if necessary.
      * @return true on success false otherwise.
      * @throws InterruptedException if hard shutdown has been initiated.
      */
-    private boolean doOffer(T o, long timeout, TimeUnit unit) throws InterruptedException {
-        return queueIn.offer(o, timeout, unit);
+    private boolean doOffer(final T theObject, final long theTimeout, final TimeUnit theTimeUnit) throws InterruptedException {
+        return queueIn.offer(theObject, theTimeout, theTimeUnit);
     }
 
     /**
@@ -480,6 +480,10 @@ public class ElasticConsumer<T> extends WorkerThread {
         return map;
     }
 
+    /**
+     * hy
+     * @return 
+     */
     @Override
     public synchronized int flush() {
         int c = 0;
