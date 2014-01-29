@@ -74,7 +74,7 @@ public abstract class TimeoutNotificationThread extends WorkerThread {
   private void configure(TimeUnit theTimeUnit, long unitCount) {
     this.theTimeUnit = theTimeUnit;
     this.unitCount = unitCount;
-    timeoutInMills = TimeUtils.timeUnitsToMilliseconds(theTimeUnit, unitCount);
+    timeoutInMills = TimeUnit.MILLISECONDS.convert(unitCount, theTimeUnit);
     this.setShouldRun(true);
     super.start();
   }
