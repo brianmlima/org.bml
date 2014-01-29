@@ -1,4 +1,3 @@
-
 package org.bml.util.elasticconsumer;
 
 /*
@@ -23,7 +22,6 @@ package org.bml.util.elasticconsumer;
  * along with org.bml.  If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -95,6 +93,10 @@ public class ElasticConsumer<T> extends WorkerThread {
     public void setLog(Log log) {
         this.log = log;
     }
+
+    /**
+     * Should track and print debugging data.
+     */
     private boolean debug = true;
 
     /**
@@ -116,18 +118,52 @@ public class ElasticConsumer<T> extends WorkerThread {
         this.debug = debug;
     }
 
+    /**
+     * Enumeration for the base report key metrics the ElasticConsumer reports
+     * on.
+     */
     public static enum REPORT_KEYS {
+        /**
+         * The key for the number of dead worker threads.
+         */
+        REPORT_MAP_KEY_DEAD("REPORT_MAP_KEY_DEAD"),
+        /**
+         * The key for the number of alive worker threads.
+         */
+        REPORT_MAP_KEY_ALIVE("REPORT_MAP_KEY_ALIVE"),
+        /**
+         * The key for the number of worker threads that have shouldRun set to true.
+         */
+        REPORT_MAP_KEY_SHOULD_RUN("REPORT_MAP_KEY_SHOULD_RUN"),
+        /**
+         * The key for the number of worker threads that have shouldRun set to false.
+         */
+        REPORT_MAP_KEY_SHOULD_NOT_RUN("REPORT_MAP_KEY_SHOULD_NOT_RUN");
 
-        REPORT_MAP_KEY_DEAD,
-        REPORT_MAP_KEY_ALIVE,
-        REPORT_MAP_KEY_SHOULD_RUN,
-        REPORT_MAP_KEY_SHOULD_NOT_RUN
+        private String stringValue;
+
+        /**
+         * 
+         * @param stringValue the String representation for a REPORT_KEYS enum.
+         */
+        REPORT_KEYS(String stringValue) {
+            this.stringValue = stringValue;
+        }
+
+        /**
+         * Getter for the String representation of a REPORT_KEYS enum.
+         * @return String representation of a REPORT_KEYS enum.
+         */
+        public String getStringValue() {
+            return stringValue;
+        }
     }
-    public static final String REPORT_MAP_KEY_DEAD = "REPORT_MAP_KEY_DEAD";
-    public static final String REPORT_MAP_KEY_ALIVE = "REPORT_MAP_KEY_ALIVE";
-    public static final String REPORT_MAP_KEY_SHOULD_RUN = "REPORT_MAP_KEY_SHOULD_RUN";
-    public static final String REPORT_MAP_KEY_SHOULD_NOT_RUN = "REPORT_MAP_KEY_SHOULD_NOT_RUN";
+    /**
+     * The Set of WorkerThread implementations operating on behalf of this 
+     * ElasticConsumer.
+     */
     protected Set<WorkerThread> workers = null;
+    
     private BlockingQueue queueIn = null;
     private ObjectFactory<WorkerThread> threadFactory = null;
     private int numWorkers = 0;
