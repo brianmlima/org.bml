@@ -25,10 +25,10 @@ package org.bml.util.threads;
  */
 
 import java.util.Date;
+import org.apache.commons.lang.time.StopWatch;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
-import org.bml.util.StopWatch;
 
 /**
  * <p>A Thread with graceful shutdown extensions and a runtime boolean check of
@@ -125,7 +125,7 @@ public abstract class WorkerThread extends Thread {
    * @return long
    */
   public long getSecondsSinceLastStateChange() {
-    return this.lastStateWatch.getElapsedTimeSecs();
+    return (this.lastStateWatch.getTime()/1000);
   }
 
   /**
@@ -252,7 +252,7 @@ public abstract class WorkerThread extends Thread {
           }
           continue;
         }
-        theDescriptiveStatistics.addValue(watch.getElapsedTime());
+        theDescriptiveStatistics.addValue(watch.getTime());
       }
     }
     //call shutdown handler.

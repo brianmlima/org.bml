@@ -32,10 +32,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
+import org.apache.commons.lang.time.StopWatch;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.bml.util.ObjectFactory;
-import org.bml.util.StopWatch;
 import org.bml.util.threads.WorkerThread;
 
 /**
@@ -263,7 +263,7 @@ public class ElasticConsumer<T> extends WorkerThread {
             watch.start();
             boolean result = doOffer(o, timeout, unit);
             watch.stop();
-            log.debug(getLogPrefix() + " DEBUG: OFFER result=" + result + " timeout=" + timeout + " time unit " + unit + " actual time in mills=" + watch.getElapsedTime());
+            log.debug(getLogPrefix() + " DEBUG: OFFER result=" + result + " timeout=" + timeout + " time unit " + unit + " actual time in mills=" + watch.getTime());
             return result;
         }
         return doOffer(o, timeout, unit);

@@ -1,10 +1,16 @@
-package org.bml.util.ratelimitor;
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+package org.bml.util.useragent;
 
 /*
  * #%L
- * orgbml
+ * org.bml
  * %%
- * Copyright (C) 2008 - 2013 Brian M. Lima
+ * Copyright (C) 2008 - 2014 Brian M. Lima
  * %%
  * This file is part of org.bml.
  * 
@@ -22,17 +28,19 @@ package org.bml.util.ratelimitor;
  * along with org.bml.  If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
+
 /**
  *
  * @author brianmlima
  */
-public class RateConfiguration {
-
-  public static enum ConfigKeys {
-  
-  RATE_DELTA_IN_MILLS,
-  
-  
-  
-  }
+public interface UAParser {
+ 
+    public boolean isMobileBrowser(String userAgent);
+    public boolean isDesktopBrowser(String userAgent);
+    public boolean isSmartTvBrowser(String userAgent);
+    
+    public boolean isBot(String userAgent);
+    
+    
+    
 }

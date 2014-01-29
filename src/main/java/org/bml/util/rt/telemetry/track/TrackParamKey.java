@@ -1,8 +1,10 @@
-package org.bml.util.ratelimitor;
+/*
+ */
+package org.bml.util.rt.telemetry.track;
 
 /*
  * #%L
- * orgbml
+ * org.bml
  * %%
  * Copyright (C) 2008 - 2013 Brian M. Lima
  * %%
@@ -22,17 +24,19 @@ package org.bml.util.ratelimitor;
  * along with org.bml.  If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-/**
- *
- * @author brianmlima
- */
-public class RateConfiguration {
 
-  public static enum ConfigKeys {
-  
-  RATE_DELTA_IN_MILLS,
-  
-  
-  
-  }
+/**
+ * Parameter keys for configuration of tracking params. This provides a common
+ * key set for parameters used to configure a telemetry track.
+ *
+ * @author Brian M. Lima
+ */
+public enum TrackParamKey {
+
+  DISPLAY_NAME,
+  FIELD_NAME,
+  CLASS_TYPE,
+  REQUIRED,
+  SYNC_RATE
+
 }

@@ -1,4 +1,3 @@
-
 package org.bml.util.io;
 
 /*
@@ -23,17 +22,32 @@ package org.bml.util.io;
  * along with org.bml.  If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.compress.archivers.zip.ZipFile;
+import static org.apache.commons.io.IOUtils.closeQuietly;
+import org.apache.commons.io.LineIterator;
 
 /**
  * @author Brian M. Lima
  */
 public class IOUtils extends org.apache.commons.io.IOUtils {
+
+  /**
+   * This is just a helper method to keep all the closeQuietly methods in one
+   * place
+   *
+   * @param theLineIterator an open or null LineIterator
+   */
+  public static void closeQuietly(LineIterator theLineIterator) {
+    if (theLineIterator == null) {
+      return;
+    }
+    LineIterator.closeQuietly(theLineIterator);
+  }
 
   public static void closeQuietly(PrintWriter thePrintWriters[]) {
     if (thePrintWriters == null || thePrintWriters.length == 0) {

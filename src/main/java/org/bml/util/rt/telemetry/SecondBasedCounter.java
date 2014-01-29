@@ -43,6 +43,11 @@ import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
  * behavior this would cause at a high level in a hard real time system.
  *
  * Only testing and analysis will tell what if any modifications are necessary.
+ * 
+ * NOTE : a method of zeroing out seconds that happen after the first rotation 
+ * without blocking is necessary otherwise this class serves no purpose
+ * 
+ * 
  *
  * @author Brian M Lima
  */
@@ -51,6 +56,7 @@ public class SecondBasedCounter {
   private AtomicLong numOperations;
   private final AtomicInteger[] counterArray;
   private final String telemetryStreamId;
+  private int currentSecondId=-1, lastSecondId=-1;
 
   public SecondBasedCounter(final int windowSize, final String telemetryStreamId) {
     this.telemetryStreamId=telemetryStreamId;
@@ -63,6 +69,14 @@ public class SecondBasedCounter {
     numOperations = new AtomicLong(0);
   }
 
+  
+  
+  private void setSecond(){
+    this.currentSecondId=getCurrentSecondID();
+    if(this.lastSecondId!=this.currentSecondId){
+      
+    }
+  }
   
   /**
    * 
@@ -92,7 +106,7 @@ public class SecondBasedCounter {
     //increment total operations
     numOperations.incrementAndGet();
     //Handle the increment
-    this.counterArray[this.getCurrentSecondID()].incrementAndGet();
+    this.counterArray[getCurrentSecondID()].incrementAndGet();
  }
 
   /**
@@ -124,4 +138,20 @@ public class SecondBasedCounter {
   public static int getCurrentSecondID() {
     return Calendar.getInstance(TimeZone.getTimeZone("UTC".intern())).get(Calendar.SECOND);
   }
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 }

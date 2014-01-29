@@ -1,8 +1,8 @@
-package org.bml.util.ratelimitor;
+package org.bml.util.rt.telemetry;
 
 /*
  * #%L
- * orgbml
+ * org.bml
  * %%
  * Copyright (C) 2008 - 2013 Brian M. Lima
  * %%
@@ -22,17 +22,29 @@ package org.bml.util.ratelimitor;
  * along with org.bml.  If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
+
 /**
  *
- * @author brianmlima
+ * @author Brian M. Lima
  */
-public class RateConfiguration {
-
-  public static enum ConfigKeys {
-  
-  RATE_DELTA_IN_MILLS,
+public abstract class RTTelemetrySink {
   
   
+  long blockTimeout=1L;
   
-  }
+ 
+  //pubic offerTelemetry()throws UnavailableException, OverloadedException
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 }

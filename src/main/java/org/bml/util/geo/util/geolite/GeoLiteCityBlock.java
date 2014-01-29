@@ -149,6 +149,12 @@ public class GeoLiteCityBlock {
         this.locId = locId;
     }
 
+    public GeoLiteCityBlock(final String startIpNum, final String endIpNum, final String locId) {
+        this.startIpNum = Integer.parseInt(startIpNum);
+        this.endIpNum = Integer.parseInt(endIpNum);
+        this.locId = Integer.parseInt(locId);
+    }
+
     public Map<String, String> getParamMap() {
         if (this.blockMap == null) {
             this.blockMap = toParamMap(this);

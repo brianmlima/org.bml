@@ -34,6 +34,10 @@ import org.apache.commons.pool.BasePoolableObjectFactory;
  * a result we see odd behavior from DateFormat in a threaded environment. The
  * higher concurrency the greater the effect. As a result we use a pool whenever
  * we are in a threaded environment.
+ * 
+ * There are also situations where concurrency may be low but a specific format 
+ * is necessary repeatedly enough to make this type of pooling a simple 
+ * alternative to repeated creation, in effect reducing resource usage.
  *
  * @author Brian M. Lima
  */
@@ -51,9 +55,9 @@ public class DateFormatFactory extends BasePoolableObjectFactory<DateFormat> {
     /**
      * @param stringFormat a SimpleDateFormat string
      */
-    public DateFormatFactory(String stringFormat, TimeZone defaultTimeZone) {
+    public DateFormatFactory(final String stringFormat, final TimeZone defaultTimeZone) {
         super();
-        this.stringFormat = stringFormat;
+        this.stringFormat = stringFormat.intern();
         this.defaultTimeZone = defaultTimeZone;
     }
 
@@ -66,5 +70,6 @@ public class DateFormatFactory extends BasePoolableObjectFactory<DateFormat> {
 
     @Override
     public void passivateObject(DateFormat aDateFormat) {
+      //nothing necessary here
     }
 }

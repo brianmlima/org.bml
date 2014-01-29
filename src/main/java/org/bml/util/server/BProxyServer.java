@@ -49,11 +49,11 @@ public class BProxyServer extends BServer {
         theObjectMap = new HashMap<String, Object>();
     }
     
-    public void runInvProxy(int aPort, int aNumThreads, int aSleepTime, int aMaxQueueSize) {
+    public void runInvProxy(int aPort, int aNumThreads, int aSleepTime, int aMaxQueueSize,Log accessLog) {
         super.runInvProxy(aPort,
                 aNumThreads,
                 aSleepTime,
-                aMaxQueueSize);
+                aMaxQueueSize,accessLog);
     }
     
     public void addObjectToMap(String aKey, Object anObj) {

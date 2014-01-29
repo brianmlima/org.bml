@@ -29,9 +29,9 @@ import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import org.apache.commons.lang.time.StopWatch;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.bml.util.StopWatch;
 import org.bml.util.exception.UnavailableException;
 import org.bml.util.io.net.NetworkUtils;
 import org.bml.util.search.SearchUtils;
@@ -78,13 +78,13 @@ public class GISControler {
 
       myStopWatch.stop();
       if (LOG.isInfoEnabled()) {
-        LOG.info("Finished Loading " + ipBlocks.size() + " IPBlocks Map in " + myStopWatch.getElapsedTimeSecs() + " Seconds");
+        LOG.info("Finished Loading " + ipBlocks.size() + " IPBlocks Map in " + (myStopWatch.getTime()/1000) + " Seconds");
       }
       myStopWatch.start();
       Map<Integer, GeoLiteCityLocation> locationMap = GeoLiteCityLocation.readFromDB(myComboPooledDataSource);
       myStopWatch.stop();
       if (LOG.isInfoEnabled()) {
-        LOG.info("Finished Loading " + locationMap.size() + " Locations in " + myStopWatch.getElapsedTimeSecs() + " Seconds");
+        LOG.info("Finished Loading " + locationMap.size() + " Locations in " + (myStopWatch.getTime()/1000) + " Seconds");
       }
       startIPs = ipBlocks.keySet().toArray(new Integer[ipBlocks.keySet().size()]);
       //This should not be necessary but we sort for now until the underlying structures have been 

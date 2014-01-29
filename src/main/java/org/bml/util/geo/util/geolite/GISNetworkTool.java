@@ -1,4 +1,3 @@
-
 package org.bml.util.geo.util.geolite;
 
 /*
@@ -23,17 +22,26 @@ package org.bml.util.geo.util.geolite;
  * along with org.bml.  If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
+import au.com.bytecode.opencsv.CSVReader;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.commons.csv.CSVParser;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.IOFileFilter;
+import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.bml.util.CompressUtil;
 import org.bml.util.io.IOUtils;
 
@@ -60,28 +68,25 @@ public class GISNetworkTool {
       return false;
     } finally {
       IOUtils.closeQuietly(myReadableByteChannel);
-      IOUtils.closeQuietly(myFileOutputStream);      
+      IOUtils.closeQuietly(myFileOutputStream);
     }
     return true;
   }
 
   public static boolean initFromNetwork() throws Exception {
 
-    //"/root/software/geolite/country": "http://geolite.maxmind.com/download/geoip/database/GeoIPCountryCSV.zip",
-    //"/root/software/geolite/city": "http://geolite.maxmind.com/download/geoip/database/GeoLiteCity_CSV/GeoLiteCity-latest.zip"
-
     String stringCountryZipURLIn = "http://geolite.maxmind.com/download/geoip/database/GeoIPCountryCSV.zip";
     String stringCountryZipFileOut = "/tmp/gis/GeoIPCountryCSV.zip";
-    String stringLatestCityZipFileOut ="/tmp/gis/GeoLiteCity-latest.zip";
-    String stringLatestCityZipURLIn = "http://geolite.maxmind.com/download/geoip/database/GeoLiteCity_CSV/GeoLiteCity-latest.zip" ;
- 
+    String stringLatestCityZipFileOut = "/tmp/gis/GeoLiteCity-latest.zip";
+    String stringLatestCityZipURLIn = "http://geolite.maxmind.com/download/geoip/database/GeoLiteCity_CSV/GeoLiteCity-latest.zip";
+
     File baseDir = new File("/tmp/gis");
     if (baseDir.exists() && baseDir.isDirectory()) {
       FileUtils.deleteDirectory(baseDir);
     } else if (baseDir.exists() && baseDir.isFile()) {
       FileUtils.deleteQuietly(baseDir);
     }
-    
+
     FileUtils.forceMkdir(baseDir);
 
     getFileFromNet(stringCountryZipURLIn, stringCountryZipFileOut);
@@ -90,11 +95,58 @@ public class GISNetworkTool {
     CompressUtil.extractZip(stringCountryZipFileOut, baseDir.getAbsolutePath());
     CompressUtil.extractZip(stringLatestCityZipFileOut, baseDir.getAbsolutePath());
 
+    File blockFile = getBlockFile(baseDir);
+
+    if (blockFile == null || !blockFile.isFile()) {
+      //throw some standard exception log and return.
+    }
+
+    Reader blockFIleReader = new FileReader(blockFile.getAbsolutePath());
+    System.out.println(blockFile.getAbsolutePath());
+    CSVReader reader = new CSVReader(blockFIleReader);
+    
+    String[] nextLine;
+    
+    
+    Set<GeoLiteCityBlock> blockSet = new HashSet<GeoLiteCityBlock>();
+    
+    
+    int lineNum=1;
+    while ((nextLine = reader.readNext()) != null) {
+      //Skip the header
+      if(lineNum==1){
+        lineNum++;
+        continue;
+      }
+      blockSet.add(new GeoLiteCityBlock(nextLine[0],nextLine[1],nextLine[2]));
+    }
+
+    System.out.println();
+
+
+
+
     return false;
+  }
+
+  /**
+   *
+   * @param baseDir
+   * @return the Blocks.csv file or null if the file dows not exist in the
+   * baseDir.
+   */
+  public static File getBlockFile(final File baseDir) {
+    IOFileFilter blockFileFilter = new WildcardFileFilter("*Blocks.csv");
+    Collection<File> files = FileUtils.listFilesAndDirs(baseDir, blockFileFilter, new WildcardFileFilter("*"));
+    for (File file : files) {
+      if (file.isFile()) {
+        return file;
+      }
+    }
+    return null;
   }
 
   public static void main(String args[]) throws Exception {
     initFromNetwork();
   }
-  
 }

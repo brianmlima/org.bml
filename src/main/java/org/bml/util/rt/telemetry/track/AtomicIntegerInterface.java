@@ -1,8 +1,11 @@
-package org.bml.util.ratelimitor;
+/*
+ */
+
+package org.bml.util.rt.telemetry.track;
 
 /*
  * #%L
- * orgbml
+ * org.bml
  * %%
  * Copyright (C) 2008 - 2013 Brian M. Lima
  * %%
@@ -22,17 +25,49 @@ package org.bml.util.ratelimitor;
  * along with org.bml.  If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-/**
- *
- * @author brianmlima
- */
-public class RateConfiguration {
 
-  public static enum ConfigKeys {
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+/**
+ * @author Brian M. Lima
+ */
+public interface AtomicIntegerInterface {
+
+  int addAndGet(int delta);
+
+  byte byteValue();
+
+  boolean compareAndSet(int expect, int update);
+
+  int decrementAndGet();
+
+  double doubleValue();
+
+  float floatValue();
+
+  int get();
+
+  int getAndAdd(int delta);
+
+  int getAndDecrement();
+
+  int getAndIncrement();
+
+  int getAndSet(int newValue);
+
+  int incrementAndGet();
+
+  int intValue();
+
+  void lazySet(int newValue);
+
+  long longValue();
+
+  void set(int newValue);
+
+  short shortValue();
+
+  boolean weakCompareAndSet(int expect, int update);
   
-  RATE_DELTA_IN_MILLS,
-  
-  
-  
-  }
 }

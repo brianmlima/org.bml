@@ -35,12 +35,12 @@ import java.util.Queue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 import org.apache.commons.dbutils.DbUtils;
+import org.apache.commons.lang.time.StopWatch;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.bml.device.DeviceClass;
 import org.bml.device.DeviceType;
 import org.bml.util.DataContainer;
-import org.bml.util.StopWatch;
 import org.bml.util.sql.DBUtil;
 import org.bml.util.threads.BlockingQueueWorkerThread;
 
@@ -95,7 +95,7 @@ public class ParseErrorWorkerThread extends BlockingQueueWorkerThread<ParseError
             LOG.warn("UNABLE TO ADD ParseError to internal errorQueue");
         }
 
-        if (timer.getElapsedTimeSecs() > 30 || errorQueue.size() > 200) {
+        if ((timer.getTime()/1000) > 30 || errorQueue.size() > 200) {
             handleDBEntry();
             timer.stop();
             timer.start();
@@ -157,7 +157,7 @@ public class ParseErrorWorkerThread extends BlockingQueueWorkerThread<ParseError
             myPreparedStatement = myConnection.prepareStatement(ParseErrorTable.PREPARED_INSERT_SQL);
             setWorkerState(WORKER_STATE.BATCHING);
 
-            while (connectionAge.getElapsedTimeSecs() <= 20) {
+            while ((connectionAge.getTime()/1000) <= 20) {
                 ParseErrorTable.populatePreparedStatement(myPreparedStatement, aParseError.toParamMap(), Boolean.FALSE);
                 myPreparedStatement.addBatch();
                 try {

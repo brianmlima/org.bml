@@ -1,8 +1,11 @@
-package org.bml.util.ratelimitor;
+/*
+ */
+
+package org.bml.util.rt.telemetry;
 
 /*
  * #%L
- * orgbml
+ * org.bml
  * %%
  * Copyright (C) 2008 - 2013 Brian M. Lima
  * %%
@@ -22,17 +25,22 @@ package org.bml.util.ratelimitor;
  * along with org.bml.  If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-/**
- *
- * @author brianmlima
- */
-public class RateConfiguration {
 
-  public static enum ConfigKeys {
-  
-  RATE_DELTA_IN_MILLS,
-  
-  
-  
+import java.util.Properties;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+/**
+ * @author Brian M. Lima
+ */
+public class RTTelemetryConfig extends Properties {
+  /** standard commons Logging */
+  private static final Log LOG = LogFactory.getLog(RTTelemetryConfig.class);
+
+  static enum KEYS {
+    SYNC_RATE,
+    
+    
   }
+  
 }
