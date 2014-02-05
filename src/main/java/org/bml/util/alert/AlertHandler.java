@@ -26,7 +26,7 @@ package org.bml.util.alert;
 
 import java.util.Date;
 import org.bml.util.exception.DisabledException;
-import org.bml.util.exception.RateExceededException;
+import org.bml.util.ratelimitor.RateExceededException;
 
 /**Interface all Alert Handlers must implement
  * @author Brian M. Lima

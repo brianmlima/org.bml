@@ -27,7 +27,7 @@ package org.bml.util.alert.impl;
 import java.util.Date;
 import org.bml.util.alert.AlertHandler;
 import org.bml.util.exception.DisabledException;
-import org.bml.util.exception.RateExceededException;
+import org.bml.util.ratelimitor.RateExceededException;
 import org.bml.util.mail.MailUtils;
 
 /**Simple alert handler for email. Can be used as a plugin to the Alert 
@@ -81,8 +81,8 @@ public class EmailAlertHandler implements AlertHandler {
             trigger = true;
         }else if (this.minTriggerInterval == -1) {
             trigger = true;
-        } else if ((new Date().getTime() - this.lastTriggered.getTime()) < this.minTriggerInterval) {
-            throw new RateExceededException("This AlertHandler has exceeded its rate limit and will not be fired.");
+        } else if ((System.currentTimeMillis() - this.lastTriggered.getTime()) < this.minTriggerInterval) {
+            throw new RateExceededException("This AlertHandler has exceeded its rate limit and will not be fired.",0);
         } else {
             trigger = true;
         }

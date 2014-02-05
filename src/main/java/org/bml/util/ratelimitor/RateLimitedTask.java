@@ -1,6 +1,9 @@
 
 package org.bml.util.ratelimitor;
 
+import org.bml.util.exception.DisabledException;
+import org.bml.util.exception.UnavailableException;
+
 /*
  * #%L
  * orgbml
@@ -27,6 +30,21 @@ package org.bml.util.ratelimitor;
 /**
  * @author Brian M. Lima
  */
-public class RateLimitedTask {
+public interface RateLimitedTask<R,C> {
+
+    
+    /**
+     * 
+     * @param callConfiguration An object containing the configuration for the
+     * call to be made. This is usually some extension of Properties and or a Map.
+     * @param timeout A long denoting the ammount of time to wait for a call to 
+     * complete.
+     * @return 
+     * @throws org.bml.util.exception.RateExceededException 
+     * @throws org.bml.util.exception.DisabledException 
+     * @throws org.bml.util.exception.UnavailableException 
+     */
+    public R attemptCall(final C callConfiguration,final long timeout) throws RateExceededException, DisabledException,UnavailableException;
+    
     
 }
