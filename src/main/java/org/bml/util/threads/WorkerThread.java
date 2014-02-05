@@ -31,10 +31,25 @@ import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
 /**
  * <p>
- * A Thread with graceful shutdown extensions and a runtime boolean check of
- * shouldRun to ensure proper initialization. These two extensions are
+ * A Thread extension with graceful shutdown extensions and a runtime boolean
+ * check of shouldRun to ensure proper initialization. These two extensions are
  * especially handy when implementing pools of threads that may or may not have
- * been initialized correctly by an ObjectFactory.</p>
+ * been initialized correctly by an
+ * {@link org.apache.commons.pool.PoolableObjectFactory}.</p>
+ * <p>
+ * <b>NOTE:</b>This class does not implicitly require the use of a
+ * {@link org.apache.commons.pool.PoolableObjectFactory} for creation, however
+ * it is recommended that you use the pool/factory pattern where multiple
+ * instances of a specific WorkerThread implementation are used.<p/>
+ * <p>
+ * The WorkerThread is also instrumented to operate with
+ * {@link org.bml.util.threads.WorkerThreadStateWatcher WorkerThreadStateWatcher}
+ * instances. Implementations should always use the thread state
+ * instrumentation. Use of the built in thread state instrumentation allows easy
+ * configuration and implementation of
+ * {@link org.bml.util.alert.AlertTestExecutor AlertTestExecutor} and
+ * {@link org.bml.util.rt.telemetry.RTTelemetrySink RTTelemetrySink} objects and
+ * their supporting sub-systems.</p>
  *
  * <p>
  * Commons math <code>DescriptiveStatistics</code> based cycle telemetry and
@@ -47,6 +62,14 @@ import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
  * <p>
  * <b>Note:</b> Be aware extensions of this class will not 'run' unless<br/>
  * <code>getShouldRun() == true</code> </p>
+ *
+ * @see org.apache.commons.math3.stat.descriptive.DescriptiveStatistics
+ * DescriptiveStatistics
+ * @see org.apache.commons.math3.stat.descriptive.SummaryStatistics
+ * SummaryStatistics
+ * @see java.lang.Thread Thread
+ * @see org.bml.util.elasticconsumer.ElasticConsumer ElasticConsumer
+ *
  *
  * @author Brian M. Lima
  */
@@ -108,23 +131,31 @@ public abstract class WorkerThread extends Thread {
      */
     private StopWatch lastStateWatch = new StopWatch();
 
-    /**Getter for the current state this worker is in.
+    /**
+     * Getter for the current state this worker is in.
+     *
      * @return WORKER_STATE the current state this worker is in.
      */
     public WORKER_STATE getWorkerState() {
         return this.state;
     }
 
-    /**Getter for a Date object representing the date/time this worker last 
+    /**
+     * Getter for a Date object representing the date/time this worker last
      * changed states
+     *
      * @return Date the date/time this worker last changed states.
      */
     public Date getLastStateChangeDate() {
         return this.lastStateChange;
     }
 
-    /**Getter for the number of seconds this worker has been in its current state.
-     * @return long the number of seconds this worker has been in it's current state.
+    /**
+     * Getter for the number of seconds this worker has been in its current
+     * state.
+     *
+     * @return long the number of seconds this worker has been in it's current
+     * state.
      */
     public long getSecondsSinceLastStateChange() {
         return TimeUnit.SECONDS.convert(this.lastStateWatch.getTime(), TimeUnit.MILLISECONDS);
@@ -274,7 +305,7 @@ public abstract class WorkerThread extends Thread {
             //TRACK INSTANCE TELEMETRY
             if (trackInstanceCycles) {
                 watch.stop();
-        //Be definsive. NOTE: This should probubly be encapsulated or
+                //Be definsive. NOTE: This should probubly be encapsulated or
                 //initialization should be revisited to ensure these checks are 
                 //not necessary.
                 if (theDescriptiveStatistics == null) {
@@ -321,7 +352,9 @@ public abstract class WorkerThread extends Thread {
      * Override for workers that use storage if you want to force a flush to
      * storage. This is provisioned here so monitors and handlers can use the
      * WorkerThead in pipelines where the operations are not specific to the
-     * implementation class.
+     * implementation class. This should be implemented as a logical equivalent
+     * of {@link java.io.OutputStream#flush()}
+     *
      *
      * @return the number of objects that were flushed. May throw an
      * UnsupportedOperationException if the implementation class does not
