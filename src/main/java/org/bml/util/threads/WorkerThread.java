@@ -313,11 +313,10 @@ public abstract class WorkerThread extends Thread {
                     }
                     continue;//skip to next loop cycle.
                 }
-                theDescriptiveStatistics.addValue(endTime - startTime);
+                theDescriptiveStatistics.addValue(endTime - startTime);//Log telemetry in stats object.
             }
         }
-        //call shutdown handler.
-        doShutdown();
+        doShutdown();//call shutdown handler.
     }
 
     /**
