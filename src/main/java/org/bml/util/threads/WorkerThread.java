@@ -290,21 +290,16 @@ public abstract class WorkerThread extends Thread {
      */
     @Override
     public void run() {
-        long startTime = 0,endTime=0;
+        long startTime, endTime;
         /**
          * check shoudlRun. We commit to a full run so overrides of doIt are
          * expected to handle as an atomic transaction
          */
-        while (shouldRun) {
-            //TRACK INSTANCE TELEMETRY
+        while (shouldRun) {            
+            startTime = System.currentTimeMillis();//TRACK TELEMETRY            
+            doIt();//EXECUTE
+            endTime = System.currentTimeMillis();//TRACK TELEMETRY
             if (trackInstanceCycles) {
-                startTime=System.currentTimeMillis();
-            }
-            //EXECUTE
-            doIt();
-            //TRACK INSTANCE TELEMETRY
-            if (trackInstanceCycles) {
-                endTime=System.currentTimeMillis();
                 //Be definsive. NOTE: This should probubly be encapsulated or
                 //initialization should be revisited to ensure these checks are 
                 //not necessary.
@@ -314,11 +309,11 @@ public abstract class WorkerThread extends Thread {
                     if (log != null) {
                         log.warn(tmpWarning);
                     } else {
-                        System.out.println(tmpWarning);
+                        System.out.println(tmpWarning);//Last ditch effort log.
                     }
-                    continue;
+                    continue;//skip to next loop cycle.
                 }
-                theDescriptiveStatistics.addValue(endTime-startTime);
+                theDescriptiveStatistics.addValue(endTime - startTime);
             }
         }
         //call shutdown handler.
