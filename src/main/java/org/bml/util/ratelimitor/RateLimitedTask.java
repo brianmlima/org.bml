@@ -1,5 +1,4 @@
-
-package org.bml.util.ratelimitor;
+ package org.bml.util.ratelimitor;
 
 import org.bml.util.exception.DisabledException;
 import org.bml.util.exception.UnavailableException;
@@ -8,7 +7,7 @@ import org.bml.util.exception.UnavailableException;
  * #%L
  * orgbml
  * %%
- * Copyright (C) 2008 - 2013 Brian M. Lima
+ * Copyright (C) 2008 - 2013 Brian M. Lima  
  * %%
  * This file is part of org.bml.
  * 
@@ -26,25 +25,33 @@ import org.bml.util.exception.UnavailableException;
  * along with org.bml.  If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
-/**
+/**{@link RateLimitedTask} An interface for rate limited service.
  * @author Brian M. Lima
  */
-public interface RateLimitedTask<R,C> {
+public interface RateLimitedTask<R, C> {
 
-    
     /**
-     * 
-     * @param callConfiguration An object containing the configuration for the
-     * call to be made. This is usually some extension of Properties and or a Map.
-     * @param timeout A long denoting the ammount of time to wait for a call to 
-     * complete.
-     * @return 
-     * @throws org.bml.util.exception.RateExceededException 
-     * @throws org.bml.util.exception.DisabledException 
-     * @throws org.bml.util.exception.UnavailableException 
+     * Check method for seeing if the underlying service is available for usage.
+     *
+     * @return true if service is available for query false otherwise
      */
-    public R attemptCall(final C callConfiguration,final long timeout) throws RateExceededException, DisabledException,UnavailableException;
-    
-    
+    public boolean isAvailable();
+
+    /** 
+     *
+     * @param callConfiguration An object containing the configuration for the
+     * call to be made. This is usually some extension of Properties and or a
+     * Map.
+     * @param timeout A long denoting the ammount of time to wait for a call to
+     * complete.
+     * @return
+     * @throws RateExceededException if the rate limit of the underlying system
+     * is exceeded.
+     * @throws DisabledException If the underlying system has been disabled.
+     * @throws UnavailableException If The underlying system is unavailable
+     * @throws InterruptedException If the call timeout is exceeded and the
+     * attempt is interrupted.
+     */
+    public R attemptCall(final C callConfiguration, final long timeout) throws RateExceededException, DisabledException, UnavailableException, InterruptedException;
+
 }

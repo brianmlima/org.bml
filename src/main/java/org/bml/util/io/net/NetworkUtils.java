@@ -24,6 +24,7 @@ package org.bml.util.io.net;
  * #L%
  */
 
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import org.apache.commons.logging.Log;
@@ -53,4 +54,43 @@ public class NetworkUtils {
             throw ex;
         }
     }
+    
+    
+    public static void main(String args[]){
+        getThisHostName();
+    }
+    
+    
+    /**
+     * Order of host name source.
+     * <ol>
+     * <li><code>Runtime.getRuntime().exec("hostname")</code>(Linux)</li>
+     * <ol><code>Runtime.getRuntime().exec("gethostname")</code>(Unix)</li>
+     * <ol><code>InetAddress.getLocalHost().getHostName()</code>(Other)</li>
+     * </ol>
+     * @return The host name of the server that this code runs on.
+     */
+    public static String getThisHostName(){
+        String hostname=null;
+        //get Runtime
+        Runtime runtime = Runtime.getRuntime();
+        try {
+            //Attempt hostname call
+            Process process=Runtime.getRuntime().exec("hostname");
+            System.out.println(process.exitValue());
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        
+        
+        
+        
+        
+        return hostname;
+    }
+    
+    
+    
+    
+    
 }

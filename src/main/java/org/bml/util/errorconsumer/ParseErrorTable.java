@@ -49,6 +49,7 @@ public class ParseErrorTable {
     static {
         //POPULATE the parameter map
         PARAM_MAP.put("class_name", String.class);
+        //PARAM_MAP.put("host_name", String.class);
         PARAM_MAP.put("uri", String.class);
         PARAM_MAP.put("reason", String.class);
         
@@ -59,9 +60,12 @@ public class ParseErrorTable {
             c++;
         }
         //BUILD prepared statement for inserts.
-        PREPARED_INSERT_SQL = "INSERT INTO " + TABLE_NAME + " (" + StringUtils.join(PARAM_MAP.keySet(), ',') + ") VALUES (" + StringUtils.repeat("?", ",", PARAM_MAP.size()) + ");";
+        PREPARED_INSERT_SQL = "INSERT INTO " + TABLE_NAME + " ( host_name," + StringUtils.join(PARAM_MAP.keySet(), ',') + ") VALUES (" + StringUtils.repeat("?", ",", PARAM_MAP.size()) + ");";
     }
 
+
+    
+    
     /**
      *
      * @param ps
@@ -79,5 +83,5 @@ public class ParseErrorTable {
             }
         }
         return paramMap;
-    }
+    }    
 }
