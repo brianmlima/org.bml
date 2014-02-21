@@ -103,6 +103,7 @@
                 <configuration>
                     <licenseName>org_bml_license</licenseName>
                     <licenseResolver >${project.baseUri}src/main/resources/license</licenseResolver>
+                    <inceptionYear>2006</inceptionYear>
                 </configuration>
                 <executions>
                     <execution>
