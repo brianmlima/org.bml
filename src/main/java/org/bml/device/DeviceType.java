@@ -38,12 +38,12 @@ public class DeviceType {
     /**
      * Storage for test results
      */
-    private Boolean isDeviceArray[] = new Boolean[DeviceClass.values().length];
+    private final Boolean isDeviceArray[] = new Boolean[DeviceClass.values().length];
     /**
      * Storage for has test occurred to avoid testing the userAgent more than
      * once per device type
      */
-    private boolean hasTestedArray[] = new boolean[DeviceClass.values().length];
+    private final boolean hasTestedArray[] = new boolean[DeviceClass.values().length];
 
     /**
      * Access to the user agent string.
