@@ -72,6 +72,12 @@ public class GISNetworkTool {
     return true;
   }
 
+  
+  /**
+   * TODO: Clean up and log on failure. Currently this method just fails and returns with a vague message to STDOut
+   * @return
+   * @throws Exception 
+   */
   public static boolean initFromNetwork() throws Exception {
 
     String stringCountryZipURLIn = "http://geolite.maxmind.com/download/geoip/database/GeoIPCountryCSV.zip";
@@ -91,13 +97,15 @@ public class GISNetworkTool {
     getFileFromNet(stringCountryZipURLIn, stringCountryZipFileOut);
     getFileFromNet(stringLatestCityZipURLIn, stringLatestCityZipFileOut);
 
-    CompressUtil.extractZip(stringCountryZipFileOut, baseDir.getAbsolutePath());
-    CompressUtil.extractZip(stringLatestCityZipFileOut, baseDir.getAbsolutePath());
+    CompressUtil.extractZip(new File(stringCountryZipFileOut), baseDir);
+    CompressUtil.extractZip(new File(stringLatestCityZipFileOut), baseDir);
 
     File blockFile = getBlockFile(baseDir);
 
     if (blockFile == null || !blockFile.isFile()) {
       //throw some standard exception log and return.
+        System.out.println("Bad JUJU!");
+        return false;
     }
 
     Reader blockFIleReader = new FileReader(blockFile.getAbsolutePath());
