@@ -25,17 +25,27 @@ package org.bml.util.useragent;
  */
 
 /**
- *
+ * Interface for http user agent parsers.
  * @author Brian M. Lima
  */
 public interface UAParser {
  
-    public boolean isMobileBrowser(String userAgent);
-    public boolean isDesktopBrowser(String userAgent);
-    public boolean isSmartTvBrowser(String userAgent);
-    
-    public boolean isBot(String userAgent);
-    
-    
-    
+    /**
+     * Allows user classes to access the underlying implementation. Handy for logging
+     * facilities to log the name of the parser on error or other telemetry.
+     * @return The {@link Class} of the user agent parser implementation.
+     */
+    public Class getImplementationClass();
+
+    /**
+     * 
+     * @param userAgent
+     * @return
+     * @throws IllegalArgumentException 
+     */
+    public boolean isMobileBrowser(String userAgent) throws IllegalArgumentException;
+    public boolean isDesktopBrowser(String userAgent) throws IllegalArgumentException;
+    public boolean isSmartTvBrowser(String userAgent) throws IllegalArgumentException;
+    public boolean isBot(String userAgent) throws IllegalArgumentException;
+    public boolean isTablet(String userAgent)throws IllegalArgumentException;
 }

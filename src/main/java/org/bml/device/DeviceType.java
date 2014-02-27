@@ -1,5 +1,7 @@
-
 package org.bml.device;
+
+import org.bml.util.ArgumentUtils;
+import org.bml.util.exception.DisabledException;
 
 /*
  * #%L
@@ -23,7 +25,6 @@ package org.bml.device;
  *     along with ORG.BML.  If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
 /**
  * Device type data structure and cached on demand testing support.
  *
@@ -34,7 +35,7 @@ public class DeviceType {
     /**
      * The User Agent String
      */
-    private String userAgent = null;
+    private final String userAgent;
     /**
      * Storage for test results
      */
@@ -57,9 +58,11 @@ public class DeviceType {
     /**
      * Create a new DeviceType from a user agent string
      *
-     * @param userAgent
+     * @param userAgent An http connections user agent
+     * @throws IllegalArgumentException <ol><li>if userAgent is null</li><li>if userAgent is empty</li></ol>
      */
-    public DeviceType(String userAgent) {
+    public DeviceType(String userAgent) throws IllegalArgumentException {
+        ArgumentUtils.checkStringArg(userAgent, "userAgent parameter", false, false);
         this.userAgent = userAgent;
     }
 
@@ -73,8 +76,11 @@ public class DeviceType {
      * @param deviceClass The DeviceClass to test for
      * @return True if a match is found, null if unable to test (IE: null
      * userAgent), or True if a match is found.
+     * @throws DisabledException If the underlying parser is not configured and or purposely disabled.
+     * @throws IllegalArgumentException if the deviceClass parameter is null;
      */
-    public Boolean test(DeviceClass deviceClass) {
+    public boolean test(DeviceClass deviceClass) throws DisabledException, IllegalArgumentException {
+        ArgumentUtils.checkNullArg(deviceClass, "deviceClass parameter");
         int deviceId = deviceClass.getId();
         if (!hasTestedArray[deviceId]) {
             isDeviceArray[deviceId] = DeviceClass.isClass(deviceClass, userAgent);
@@ -84,11 +90,12 @@ public class DeviceType {
     }
 
     /**
-     * Helper method
+     * Uses the UAParser implementation to classify the userAgent {@link String} this {@link DeviceType} instance wraps.
      *
-     * @return
+     * @return The {@link DeviceClass} enum value for this {@link DeviceType} instance.
+     * @throws DisabledException If the underlying parser is not configured and or purposely disabled.
      */
-    public DeviceClass getDeviceClass() {
+    public DeviceClass getDeviceClass() throws DisabledException {
         if (this.isDesktop() == Boolean.TRUE) {
             return DeviceClass.DESKTOP;
         }
@@ -111,8 +118,9 @@ public class DeviceType {
      * Test user agent for a Bot signature
      *
      * @return the isMobile test result
+     * @throws DisabledException If the underlying parser is not configured and or purposely disabled.
      */
-    public Boolean isMobile() {
+    public Boolean isMobile() throws DisabledException {
         return test(DeviceClass.MOBILE);
     }
 
@@ -120,8 +128,9 @@ public class DeviceType {
      * Test user agent for a isDeskTop signature
      *
      * @return the isDesktop test result
+     * @throws DisabledException If the underlying parser is not configured and or purposely disabled.
      */
-    public Boolean isDesktop() {
+    public Boolean isDesktop() throws DisabledException {
         return test(DeviceClass.DESKTOP);
     }
 
@@ -129,8 +138,9 @@ public class DeviceType {
      * Test user agent for a SmartTv signature
      *
      * @return the isSmartTV test result
+     * @throws DisabledException If the underlying parser is not configured and or purposely disabled.
      */
-    public Boolean isSmartTV() {
+    public Boolean isSmartTV() throws DisabledException {
         return test(DeviceClass.SMARTTV);
     }
 
@@ -138,8 +148,9 @@ public class DeviceType {
      * Test user agent for a Bot signature
      *
      * @return the isBot test result
+     * @throws DisabledException If the underlying parser is not configured and or purposely disabled.
      */
-    public Boolean isBot() {
+    public Boolean isBot() throws DisabledException {
         return test(DeviceClass.BOT);
     }
 
@@ -148,8 +159,9 @@ public class DeviceType {
      * other class membership before unknown can be determined.
      *
      * @return the isUnknown test result
+     * @throws DisabledException If the underlying parser is not configured and or purposely disabled.
      */
-    public Boolean isUnknown() {
+    public Boolean isUnknown() throws DisabledException {
         if (this.userAgent == null) {
             return null;
         }

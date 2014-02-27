@@ -24,6 +24,8 @@ package org.bml.device;
  * #L%
  */
 
+import org.bml.util.ArgumentUtils;
+import org.bml.util.exception.DisabledException;
 import org.bml.util.useragent.UserAgentUtils;
 
 /**
@@ -101,14 +103,23 @@ public enum DeviceClass {
      * NOTE: There is no caching. It is recommended that you use DeviceType if 
      * you plan on accessing any test more than once or plan on testing for UNKNOWN. 
      * 
-     * @param deviceClass A {@link DeviceClass} to test equality.
-     * @param userAgent A String containing a user agent
-     * @return True if the {@link userAgent} is the passed {@link DeviceClass}
+     * @param deviceClass A {@link DeviceClass} to test for equality.
+     * @param userAgent {@link String} containing a user agent
+     * @return boolean <p>if the {@link userAgent} is the passed {@link DeviceClass}</p>
+     * @throws DisabledException <p>If the underlying parser system has not been setup correctly or has been disabled for some reason.</p>
+     * @throws IllegalArgumentException <ol><li>if userAgent parameter is null or empty</li><li>if DeviceClass is null</li></ol>
      */
-    public static Boolean isClass(DeviceClass deviceClass, String userAgent) {
+    public static boolean isClass(DeviceClass deviceClass, String userAgent) throws DisabledException, IllegalArgumentException {
+        ArgumentUtils.checkNullArg(deviceClass, "DeviceClass parameter");
+        ArgumentUtils.checkStringArg(userAgent, "user agent parameter", false, false);        
         switch (deviceClass) {
-            case UNKNOWN:
-                return null;
+            case UNKNOWN: //This is unfortunate code. TODO: Think about removing the Unknown Test
+                if(UserAgentUtils.isMobileDevice(userAgent)){return false;}
+                if(UserAgentUtils.isDesktopDevice(userAgent)){return false;}
+                if(UserAgentUtils.isSmartTvDevice(userAgent)){return false;}
+                if(UserAgentUtils.isBot(userAgent)){return false;}
+                if(UserAgentUtils.isTablet(userAgent)){return false;}
+                return true;
             case MOBILE:
                 return UserAgentUtils.isMobileDevice(userAgent);
             case DESKTOP:
@@ -118,10 +129,9 @@ public enum DeviceClass {
             case BOT:
                 return UserAgentUtils.isBot(userAgent);
             case TABLET:
-                //return UserAgentUtils.isTablet(userAgent);
-                return null;
+                return UserAgentUtils.isTablet(userAgent);
             default:
-                return null;
+                return false;
         }
     }
 
