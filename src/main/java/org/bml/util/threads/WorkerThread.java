@@ -1,4 +1,3 @@
-
 package org.bml.util.threads;
 
 /*
@@ -23,7 +22,6 @@ package org.bml.util.threads;
  *     along with ORG.BML.  If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 import org.apache.commons.lang.time.StopWatch;
@@ -200,7 +198,13 @@ public abstract class WorkerThread extends Thread {
          * Indicates a worker thread that is aquiring a connection to some
          * outside API such as a JDBC or URL connection.
          */
-        AQUIRINGCONNECTION,
+        AQUIRING_CONNECTION,
+        /**
+         * Indicates a worker thread that is configuring a connection. This state
+         * exists as some configurations depend on the underlying database and can
+         * stall or fail.
+         */
+        CONFIGURING_CONNECTION,
         /**
          * Indicates a worker thread that is waiting on a pull operation from a
          * queue or stack like structure
@@ -220,11 +224,28 @@ public abstract class WorkerThread extends Thread {
          */
         ENTERING,
         /**
+         * Indicates a worker thread that is in the process of building up a
+         * batch. NOTE: This state should be very short lived and always
+         * followed by an EXECUTE_BATCH state. Long periods of batch building
+         * can result in loss of data in hard power loss and or other
+         * catastrophic system failures. As a result limiting batching time or
+         * better yet make batch sizes a moving numeric based on traffic and the
+         * response time of the recording system.
+         */
+        BATCHING,
+        /**
          * Indicates a worker thread that is executing a batch operation such as
          * a bulk write to a database or flushing a batch amount of data to
          * disk.
          */
         EXECUTING_BATCH,
+        /**
+         * Indicates a {@link WorkerThread} that has executed a batch operation such as
+         * a bulk write to a database or flushing a batch amount of data to
+         * disk and is currently in the process of confirming the batch
+         * operation completed without error.
+         */
+        VERIFYING_BATCH,
         /**
          * Indicates a worker thread that is in the process of or waiting for a
          * commit operation. This is most commonly found when committing bulk
@@ -264,15 +285,15 @@ public abstract class WorkerThread extends Thread {
          */
         FLUSHING,
         /**
-         * Indicates a worker thread that is in the process of building up a
-         * batch. NOTE: This state should be very short lived and always
-         * followed by an EXECUTE_BATCH state. Long periods of batch building
-         * can result in loss of data in hard power loss and or other
-         * catastrophic system failures. As a result limiting batching time or
-         * better yet make batch sizes a moving numeric based on traffic and the
-         * response time of the recording system.
+         * Indicates a {@link WorkerThread} that is in the process of preparing
+         * an SQL statement usually via {@link java.sql.Connection#prepareStatement(java.lang.String)}.
+         * Extentions or implementations of {@link WorkerThreadStateWatcher}
+         * should treat this state as short lived, IE: Not exceeding a few
+         * hundred milliseconds. A longer period in this state indicates an issue
+         * with either the SQL and or a thread that is not correctly managing
+         * it's own state.
          */
-        BATCHING
+        PREPARING_SQL
     }
 
     /**
@@ -297,7 +318,7 @@ public abstract class WorkerThread extends Thread {
          * check shoudlRun. We commit to a full run so overrides of doIt are
          * expected to handle as an atomic transaction
          */
-        while (shouldRun) {            
+        while (shouldRun) {
             startTime = System.currentTimeMillis();//TRACK TELEMETRY            
             doIt();//EXECUTE
             endTime = System.currentTimeMillis();//TRACK TELEMETRY
