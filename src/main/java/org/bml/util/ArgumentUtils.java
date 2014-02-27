@@ -63,7 +63,7 @@ public class ArgumentUtils {
      */
     public static void checkNullArg(final Object checkObject, final String name) throws IllegalArgumentException {
         if (checkObject == null) {
-            throw new IllegalArgumentException("Can not operate on a null " + checkObject);
+            throw new IllegalArgumentException("Can not operate on a null " + name);
         }
     }
 
