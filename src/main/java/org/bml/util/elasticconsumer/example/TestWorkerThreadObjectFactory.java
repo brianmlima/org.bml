@@ -26,12 +26,12 @@ package org.bml.util.elasticconsumer.example;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
-import org.bml.util.ObjectFactory;
+import org.apache.commons.pool.PoolableObjectFactory;
 
 /** An Example implementation of an ObjectFactory<TestWorkerThread> for the test rig.
  * @author BML
  */
-public class TestWorkerThreadObjectFactory implements ObjectFactory<TestWorkerThread> {
+public class TestWorkerThreadObjectFactory implements PoolableObjectFactory<TestWorkerThread> {
 
     /**This input queue. this is only used in the factory for TestWorkerThread initialization*/
     private BlockingQueue<ProcData> queueIn = null;
@@ -64,9 +64,20 @@ public class TestWorkerThreadObjectFactory implements ObjectFactory<TestWorkerTh
      * @param obj TestWorkerThread to be destroyed.
      * @return always true;
      */
-    public boolean destroyObject(TestWorkerThread obj) {
+    public void destroyObject(TestWorkerThread obj) throws Exception {
         obj.setShouldRun(false);
-        obj.interrupt();
-        return true;
+        obj.flush();
+    }
+
+    public boolean validateObject(TestWorkerThread obj) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public void activateObject(TestWorkerThread obj) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public void passivateObject(TestWorkerThread obj) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

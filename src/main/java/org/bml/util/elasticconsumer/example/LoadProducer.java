@@ -36,7 +36,7 @@ import org.bml.util.elasticconsumer.ElasticConsumer;
 public class LoadProducer extends WorkerThread {
 
     /*The ElasticConsumer to place a load on*/
-    private ElasticConsumer<ProcData> anElasticConsumer = null;
+    private ElasticConsumer<ProcData,TestWorkerThread> anElasticConsumer = null;
     /*The total succesfull offers to make*/
     private int doTotal = 1000000;
     /*The total succesfull offers made*/
@@ -45,7 +45,7 @@ public class LoadProducer extends WorkerThread {
     /**Creates a new LoadProducer for ElasticConsumer<ProcData>  testing.
      * @param aElasticConsumer a ElasticConsumer<ProcData> to place a load on.
      */
-    public LoadProducer(ElasticConsumer<ProcData> aClientLimitor) {
+    public LoadProducer(ElasticConsumer<ProcData,TestWorkerThread> aClientLimitor) {
         super();
         this.anElasticConsumer = aClientLimitor;
     }
