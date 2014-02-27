@@ -39,7 +39,7 @@ public class DeviceType {
     /**
      * Storage for test results
      */
-    private final Boolean isDeviceArray[] = new Boolean[DeviceClass.values().length];
+    private final boolean isDeviceArray[] = new boolean[DeviceClass.values().length];
     /**
      * Storage for has test occurred to avoid testing the userAgent more than
      * once per device type
@@ -120,7 +120,7 @@ public class DeviceType {
      * @return the isMobile test result
      * @throws DisabledException If the underlying parser is not configured and or purposely disabled.
      */
-    public Boolean isMobile() throws DisabledException {
+    public boolean isMobile() throws DisabledException {
         return test(DeviceClass.MOBILE);
     }
 
@@ -130,7 +130,7 @@ public class DeviceType {
      * @return the isDesktop test result
      * @throws DisabledException If the underlying parser is not configured and or purposely disabled.
      */
-    public Boolean isDesktop() throws DisabledException {
+    public boolean isDesktop() throws DisabledException {
         return test(DeviceClass.DESKTOP);
     }
 
@@ -140,7 +140,7 @@ public class DeviceType {
      * @return the isSmartTV test result
      * @throws DisabledException If the underlying parser is not configured and or purposely disabled.
      */
-    public Boolean isSmartTV() throws DisabledException {
+    public boolean isSmartTV() throws DisabledException {
         return test(DeviceClass.SMARTTV);
     }
 
@@ -150,7 +150,7 @@ public class DeviceType {
      * @return the isBot test result
      * @throws DisabledException If the underlying parser is not configured and or purposely disabled.
      */
-    public Boolean isBot() throws DisabledException {
+    public boolean isBot() throws DisabledException {
         return test(DeviceClass.BOT);
     }
 
@@ -161,10 +161,7 @@ public class DeviceType {
      * @return the isUnknown test result
      * @throws DisabledException If the underlying parser is not configured and or purposely disabled.
      */
-    public Boolean isUnknown() throws DisabledException {
-        if (this.userAgent == null) {
-            return null;
-        }
+    public boolean isUnknown() throws DisabledException {
         for (DeviceClass deviceClass : DeviceClass.values()) {
             if (deviceClass == DeviceClass.UNKNOWN) {
                 continue;
