@@ -34,22 +34,27 @@ import java.util.concurrent.TimeUnit;
 import org.apache.commons.lang.time.StopWatch;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.bml.util.ObjectFactory;
+import org.apache.commons.pool.PoolableObjectFactory;
 import org.bml.util.threads.WorkerThread;
 
 /**
  * DESCRIPTION: The ElasticConsumer is designed to as an extendable component
  * that allows a process to be threaded out but have either a widely varying
  * processing time and or want to be able to tune resource allocation at
- * runtime.
+ * runtime. It is a generic implementation of a scaling consumer end of a producer 
+ * consumer pattern
  *
  * This particular version latches onto a BlockingQueue and continues working.
  *
- * See example for details and a test harness.
+ * See {@link ElasticConsumerTest} for an example with a test harness.
  *
  * @author Brian M. Lima
+ * @param <D> The Data container class for data that is to be consumed. This is 
+ * the result of a producer in a producer consumer pattern.
+ * @param <W> The extension of @{link WorkerThread} that is the Consumer in this 
+ * producer consumer pattern.
  */
-public class ElasticConsumer<T> extends WorkerThread {
+public class ElasticConsumer<D,W extends WorkerThread> extends WorkerThread {
 
     /**
      * I have to figure out what the correct pattern for logging is. 1. Static
@@ -170,7 +175,7 @@ public class ElasticConsumer<T> extends WorkerThread {
     protected Set<WorkerThread> workers = null;
 
     private BlockingQueue queueIn = null;
-    private ObjectFactory<WorkerThread> threadFactory = null;
+    private PoolableObjectFactory<W> threadFactory = null;
     private int numWorkers = 0;
     private boolean maintainNumWorkers = false;
     private long reportInterval = 10000;
@@ -270,7 +275,7 @@ public class ElasticConsumer<T> extends WorkerThread {
 
     /**
      * @param factory The factory that manufactures new worker threads when
-     * necessary
+     * necessary. Implements {@link PoolableObjectFactory} for convience.
      * @param queueIn This is the queue that bridges the producers to this
      * particular consumer implementation.
      * @param numWorkers the original number of worker(consumer) processing
@@ -281,7 +286,7 @@ public class ElasticConsumer<T> extends WorkerThread {
      * application from de-allocating too many resources and choking the data
      * pipeline.
      */
-    public ElasticConsumer(ObjectFactory factory, BlockingQueue<T> queueIn, int numWorkers, boolean maintainNumWorkers) {
+    public ElasticConsumer(PoolableObjectFactory<W> factory, BlockingQueue<D> queueIn, int numWorkers, boolean maintainNumWorkers) {
         super();
         this.threadFactory = factory;
         this.queueIn = queueIn;
@@ -301,7 +306,7 @@ public class ElasticConsumer<T> extends WorkerThread {
      * @throws IllegalArgumentException If theObject is null, theTimeout is less
      * than 1, or theTimeUnit is null.
      */
-    public boolean offer(final T theObject, final long theTimeout, final TimeUnit theTimeUnit) throws InterruptedException, IllegalArgumentException {
+    public boolean offer(final D theObject, final long theTimeout, final TimeUnit theTimeUnit) throws InterruptedException, IllegalArgumentException {
         if (theObject == null) {
             throw new IllegalArgumentException("Can not offer a null object.");
         }
@@ -332,13 +337,13 @@ public class ElasticConsumer<T> extends WorkerThread {
      * @return true on success false otherwise.
      * @throws InterruptedException if hard shutdown has been initiated.
      */
-    private boolean doOffer(final T theObject, final long theTimeout, final TimeUnit theTimeUnit) throws InterruptedException {
+    private boolean doOffer(final D theObject, final long theTimeout, final TimeUnit theTimeUnit) throws InterruptedException {
         return queueIn.offer(theObject, theTimeout, theTimeUnit);
     }
 
     /**
      * You can override this for thread configuration if you do not want to do
-     * it in the ObjectFactory;
+     * it in the {@link PoolableObjectFactory};
      *
      * @return a WorkerThread ready to be started.
      */
@@ -346,7 +351,14 @@ public class ElasticConsumer<T> extends WorkerThread {
         if (log.isInfoEnabled()) {
             log.info(getLogPrefix() + " MSG='Creating WorkerThread'");
         }
-        return threadFactory.makeObject();
+        try {
+            return threadFactory.makeObject();
+        } catch (Exception ex) {
+            if(log.isFatalEnabled()){
+                log.fatal("Unable to operate. WorkerThread factory is throwing Exceptions on makeObject");
+            }
+        }
+        return null;
     }
 
     /**
