@@ -1,4 +1,3 @@
-
 package org.bml.util.errorconsumer;
 
 /*
@@ -23,7 +22,6 @@ package org.bml.util.errorconsumer;
  *     along with ORG.BML.  If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -38,32 +36,47 @@ import org.apache.commons.dbutils.DbUtils;
 import org.apache.commons.lang.time.StopWatch;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.bml.device.DeviceClass;
-import org.bml.device.DeviceType;
-import org.bml.util.DataContainer;
 import org.bml.util.sql.DBUtil;
 import org.bml.util.threads.BlockingQueueWorkerThread;
 
 /**
+ * An extension of {@link BlockingQueueWorkerThread<ParseError>} charged with 
+ * pulling {@link ParseError} objects from a {@link BlockingQueue} and storing them in 
+ * 
+ * 
  * The core worker thread for use with ElasticConsumer Classes
  *
+ *
+ * 
+ * TODO: Dump to /tmp/error_consumer/ on SQLException and recover
+ * 
+ * @see ParseError
+ * @see BlockingQueueWorkerThread
  * @author Brian M. Lima
  */
 public class ParseErrorWorkerThread extends BlockingQueueWorkerThread<ParseError> {
 
     /**
-     *
+     * Standard Commons {@link Log}
      */
     private static Log LOG = LogFactory.getLog(ParseErrorWorkerThread.class);
+
     /**
-     *
+     * A {@link StopWatch} utility for handling timing
      */
     private StopWatch timer = null;
+    
     /**
-     *
+     * The {@link Queue} of {@link ParseError} objects to be stored
      */
     private Queue<ParseError> errorQueue = new LinkedList<ParseError>();
 
+
+    
+    
+    
+    
+    
     /**
      * Creates a new BlockingQueueWorkerThread.
      *
@@ -73,7 +86,7 @@ public class ParseErrorWorkerThread extends BlockingQueueWorkerThread<ParseError
      * @param waitOnEmptyQueueInMills The worker threads sleep time on an empty
      * queue.
      */
-    public ParseErrorWorkerThread(BlockingQueue<ParseError> queueIn, long timeout, TimeUnit unit, long waitOnEmptyQueueInMills) {
+    public ParseErrorWorkerThread(final BlockingQueue<ParseError> queueIn, final long timeout, final TimeUnit unit, final long waitOnEmptyQueueInMills) {
         super(queueIn, timeout, unit, waitOnEmptyQueueInMills);
         timer = new StopWatch();
         timer.start();
@@ -95,7 +108,7 @@ public class ParseErrorWorkerThread extends BlockingQueueWorkerThread<ParseError
             LOG.warn("UNABLE TO ADD ParseError to internal errorQueue");
         }
 
-        if ((timer.getTime()/1000) > 30 || errorQueue.size() > 200) {
+        if ((timer.getTime() / 1000) > 30 || errorQueue.size() > 200) {
             handleDBEntry();
             timer.stop();
             timer.start();
@@ -113,67 +126,76 @@ public class ParseErrorWorkerThread extends BlockingQueueWorkerThread<ParseError
 
         Connection myConnection = null;
         PreparedStatement myPreparedStatement = null;
-        
-        
-        setWorkerState(WORKER_STATE.AQUIRINGCONNECTION);
 
         Connection myPageViewConnection = null;
 
-        PreparedStatement myPageViewPreparedStatement = null;
+        int batchExecutionResults[] = null;
 
-        int batchUpdateCounts[] = null, batchExecutionResults[] = null, counter = 0;
+        List<ParseError> theBatchTrackingList = new LinkedList<ParseError>();
 
-        List<DataContainer> theBatchTrackingList = null ;
-
-        DataContainer dataContainer = null, pvData = null ;
-
-        DeviceType aDeviceType = null;
-        DeviceClass aDeviceClass = null;
+        //DeviceType aDeviceType = null;
+        //DeviceClass aDeviceClass = null;
 
         //Change to reusable map
         Map<String, String> tmpMap = null;
 
         //Change to StringBuilder 
-        String tmpString = null;
+        //String tmpString = null; 
 
         //theBatchTrackingList = new ArrayList<PageViewData>(dataQueue.size());
-
         boolean dbErrror = false;
-        
+
         try {
             ParseError aParseError = null;
             try {
                 aParseError = errorQueue.remove();
+                theBatchTrackingList.add(aParseError);
             } catch (NoSuchElementException e) {
                 LOG.info("There are no ParseError Objects to push into the DB");
                 return;
             }
             StopWatch connectionAge = new StopWatch();
             connectionAge.start();
-
+            setWorkerState(WORKER_STATE.AQUIRING_CONNECTION);
             myConnection = DBUtil.getDefaultDataSource().getConnection();
+            setWorkerState(WORKER_STATE.CONFIGURING_CONNECTION);
             myConnection.clearWarnings();
             myConnection.setAutoCommit(false);
+            setWorkerState(WORKER_STATE.PREPARING_SQL);
             myPreparedStatement = myConnection.prepareStatement(ParseErrorTable.PREPARED_INSERT_SQL);
             setWorkerState(WORKER_STATE.BATCHING);
 
-            while ((connectionAge.getTime()/1000) <= 20) {
+            while ((connectionAge.getTime() / 1000) <= 20) {
                 ParseErrorTable.populatePreparedStatement(myPreparedStatement, aParseError.toParamMap(), Boolean.FALSE);
                 myPreparedStatement.addBatch();
                 try {
                     aParseError = errorQueue.remove();
+                    theBatchTrackingList.add(aParseError);
                 } catch (NoSuchElementException e) {
                     break;
                 }
             }
-            myPreparedStatement.executeBatch();
+
+            this.setWorkerState(WORKER_STATE.EXECUTING_BATCH);
+            batchExecutionResults=myPreparedStatement.executeBatch();
+            
             myConnection.commit();
-        } catch (SQLException mySQLException) {
-            //System.out.println(this.getClass().getName());
-            mySQLException.printStackTrace();
-        } catch (Exception myException) {
-            //System.out.println(this.getClass().getName());
-            myException.printStackTrace();
+            
+            this.setWorkerState(WORKER_STATE.VERIFYING_BATCH);
+            if(batchExecutionResults.length!=theBatchTrackingList.size()){
+                
+            }
+
+            
+        } catch (SQLException sqle) {
+            if (LOG.isFatalEnabled()) {
+                LOG.fatal("SQLException caught. The ErrorConsumer is unable to push data to a database. ParseErrors will be dumped to /tmp/error_consumer/", sqle);
+            }
+        } catch (Exception e) {
+            if (LOG.isFatalEnabled()) {
+                LOG.fatal("Exception caught. The ErrorConsumer is unable to push data to a database. Errors will be dumped to /tmp/error_consumer/", e);
+            }
+            
         } finally {
             DbUtils.closeQuietly(myPreparedStatement);
             DbUtils.closeQuietly(myConnection);
@@ -182,6 +204,7 @@ public class ParseErrorWorkerThread extends BlockingQueueWorkerThread<ParseError
 
     @Override
     public synchronized int flush() {
+        this.setWorkerState(WORKER_STATE.FLUSHING);
         if (LOG.isInfoEnabled()) {
             LOG.info("CALLING FLUSH");
         }

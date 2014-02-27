@@ -26,13 +26,13 @@ package org.bml.util.errorconsumer;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
-import org.bml.util.ObjectFactory;
+import org.apache.commons.pool.PoolableObjectFactory;
 
 /** An implementation of an ObjectFactory<ParseErrorWorkerThread> for the ParseError
  * handler.
  * @author BML
  */
-public class ParseErrorWorkerThreadObjectFactory implements ObjectFactory<ParseErrorWorkerThread> {
+public class ParseErrorWorkerThreadObjectFactory implements PoolableObjectFactory<ParseErrorWorkerThread> {
 
     /**This input queue. this is only used in the factory for TestWorkerThread initialization*/
     private BlockingQueue<ParseError> queueIn = null;
@@ -64,13 +64,25 @@ public class ParseErrorWorkerThreadObjectFactory implements ObjectFactory<ParseE
 
     /**Destruction method. Not necessary in the test case but handy in cleanup operations.
      * @param obj TestWorkerThread to be destroyed.
-     * @return always true;
+     * @throws java.lang.Exception This implementation should not throw Exception however it is necessary to complete the contract of {@link PoolableObjectFactory}
      */
     @Override
-    public boolean destroyObject(ParseErrorWorkerThread obj) {
+    public void destroyObject(ParseErrorWorkerThread obj) throws Exception {
+        
         obj.setShouldRun(false);
         obj.interrupt();
         obj.handleDBEntry();
-        return true;
+    }
+
+    public boolean validateObject(ParseErrorWorkerThread obj) {
+        throw new UnsupportedOperationException("Not supported.");
+    }
+
+    public void activateObject(ParseErrorWorkerThread obj) throws Exception {
+        throw new UnsupportedOperationException("Not supported.");
+    }
+
+    public void passivateObject(ParseErrorWorkerThread obj) throws Exception {
+        throw new UnsupportedOperationException("Not supported."); 
     }
 }
