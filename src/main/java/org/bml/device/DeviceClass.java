@@ -38,6 +38,8 @@ import org.bml.util.useragent.UserAgentUtils;
  * @author Brian M. Lima
  */
 public enum DeviceClass {
+    
+    
     /** If all other tests result false then Unknown */
     UNKNOWN(0),
     /** Any known Mobile device */
@@ -50,7 +52,7 @@ public enum DeviceClass {
     BOT(4),
     /** A Robot / Crawler */
     TABLET(5);
-  
+    
     /** Storage for the id */ 
     private final int id;
 
@@ -68,12 +70,15 @@ public enum DeviceClass {
         return id;
     }
 
-    /**Helper method for getting a DeviceClass from it's id
+    /**
+     * Returns the appropriate 
+     * Helper method for getting a DeviceClass from it's id
      * 
      * @param id the id of a known DeviceClass
      * @return A known DeviceClass or null if the id does not exist.
+     * @throws IllegalArgumentException if id is outside the known id range
      */
-    public static DeviceClass fromId(int id) {
+    public static DeviceClass fromId(final int id) throws IllegalArgumentException{
         switch (id) {
             case 0:
                 return UNKNOWN;
@@ -88,7 +93,7 @@ public enum DeviceClass {
             case 5:
                 return TABLET;
             default:
-                return null;
+                throw new IllegalArgumentException("Can not create DeviceClass with id="+id+". Id is out of range.");
         }
     }
 
@@ -96,7 +101,9 @@ public enum DeviceClass {
      * NOTE: There is no caching. It is recommended that you use DeviceType if 
      * you plan on accessing any test more than once or plan on testing for UNKNOWN. 
      * 
-     * @return the isMobile test result
+     * @param deviceClass A {@link DeviceClass} to test equality.
+     * @param userAgent A String containing a user agent
+     * @return True if the {@link userAgent} is the passed {@link DeviceClass}
      */
     public static Boolean isClass(DeviceClass deviceClass, String userAgent) {
         switch (deviceClass) {
