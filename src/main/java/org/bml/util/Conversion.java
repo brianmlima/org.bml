@@ -1,5 +1,7 @@
-
 package org.bml.util;
+
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 
 /*
  * #%L
@@ -23,24 +25,55 @@ package org.bml.util;
  *     along with ORG.BML.  If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
-/**Handy Utility for dealing with IP address encoding and decoding.
+/**
+ * <p>
+ * Encapsulation for type conversion utility methods. Currently this class contains
+ * methods used for converting int to byte[] and back. These methods are handy for
+ * storage and handling of IPV4 addresses.
+ * </p>
+ *
+ * @todo Add support for long conversions. This will enable IPV6 addresses
  * @author Brian M. Lima
  */
 public class Conversion {
 
-    public static final byte[] unsignedIntToByteArray(int value) {
+    /**
+     * Instances should <b>NOT</b> be constructed in standard programming.
+     */
+    public Conversion() {
+    }
+    
+    /**
+     * <p>
+     * Converts an unsigned integer to a byte array.
+     * </p>
+     *
+     * @param value an integer of 0 or greater
+     * @return an array of bytes representing the passed unsigned int.
+     * @pre value>=0
+     */
+    public static final byte[] unsignedIntToByteArray(final int value) {
         return new byte[]{
-                    (byte) (value >>> 24),
-                    (byte) (value >>> 16),
-                    (byte) (value >>> 8),
-                    (byte) value};
+            (byte) (value >>> 24),
+            (byte) (value >>> 16),
+            (byte) (value >>> 8),
+            (byte) value};
     }
 
-    public static final int byteArrayToUnsignedInt(byte[] b) {
-        return (b[0] << 24)
-                + ((b[1] & 0xFF) << 16)
-                + ((b[2] & 0xFF) << 8)
-                + (b[3] & 0xFF);
+    /**
+     * <p>
+     * Utility for conversion of byte[] to int.
+     * </p>
+     *
+     * @param byteArray An array of 4 bytes to convert to an unsigned int
+     * @return The int defined by the passed byte array
+     * @pre byteArray != null
+     * @pre byteArray.length == 4
+     */
+    public static final int byteArrayToUnsignedInt(byte[] byteArray) {
+        return (byteArray[0] << 24)
+                + ((byteArray[1] & 0xFF) << 16)
+                + ((byteArray[2] & 0xFF) << 8)
+                + (byteArray[3] & 0xFF);
     }
 }
