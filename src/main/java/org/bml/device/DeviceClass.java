@@ -1,4 +1,3 @@
-
 package org.bml.device;
 
 /*
@@ -23,49 +22,81 @@ package org.bml.device;
  *     along with ORG.BML.  If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
-import org.bml.util.ArgumentUtils;
 import org.bml.util.exception.DisabledException;
 import org.bml.util.useragent.UserAgentUtils;
 
 /**
- * A simple encapsulation for enumeration of classes of devices connected to the
- * internet that can be parsed from a user agent.
+ * <p>
+ * A simple encapsulation for enumeration of classes of devices connected to the that can be parsed from an http user agent.
+ * </p>
+ * <p>
+ * This device classification was built for a high speed -- low overhead
+ * classification system. In systems that do not require high speed and or where
+ * you can scale out to handle loads it is recomended that you use an RDBMS or
+ * some other configuration method to define device classes. This will allow for
+ * runtime addition of device classes. As always there is a tradeoff between the
+ * ease of use and speed of an enumeration and the ease of update.
+ * </p>
  *
- * The getId function allows you to use an id in databases to save time,
- * network, and storage resources.
+ * <p>
+ * In order to use {@link DeviceClass#isClass(org.bml.device.DeviceClass, java.lang.String)}
+ * you must ensure that the {@link UserAgentUtils#getPARSER()} !=null;</br>
+ * If the {@link UserAgentUtils} {@link UAParser} is not configured correctly
+ * this functionality will always throw a {@link DissabledException}
+ * </p>
  *
- * The fromId function allows the marshaling of an id into a DeviceClass.
+ * @todo A configuration based version of this class needs to be implemented to 
+ * allow for situations where runtime configuration is required.
+ * 
+ * @pre UserAgentUtils.getPARSER() != null;
  *
  * @author Brian M. Lima
  */
 public enum DeviceClass {
-    
-    
-    /** If all other tests result false then Unknown */
+
+    /**
+     * If all other tests result false then Unknown
+     */
     UNKNOWN(0),
-    /** Any known Mobile device */
+    /**
+     * Any known Mobile device
+     */
     MOBILE(1),
-    /** Any known Desktop Device.*/
+    /**
+     * Any known Desktop Device.
+     */
     DESKTOP(2),
-    /** Any known Smart TV */
+    /**
+     * Any known Smart TV
+     */
     SMARTTV(3),
-    /** A Robot / Crawler */
+    /**
+     * A Robot / Crawler
+     */
     BOT(4),
-    /** A Robot / Crawler */
+    /**
+     * A Tablet
+     */
     TABLET(5);
-    
-    /** Storage for the id */ 
+
+    /**
+     * Storage for the id
+     */
     private final int id;
 
-    /**Constructs a new DeviceClass with an id.
+    /**
+     * Constructs a new DeviceClass with an id.
+     *
      * @param id the id used to denote this DeviceClass in serialized form.
+     * @pre GenericValidator.isInRange(id, 0, 5);
      */
-    DeviceClass(int id) {
+    DeviceClass(final int id) {
         this.id = id;
     }
 
-    /** Getter for id
+    /**
+     * Getter for id
+     *
      * @return The id for this DeviceClass
      */
     public int getId() {
@@ -73,14 +104,16 @@ public enum DeviceClass {
     }
 
     /**
-     * Returns the appropriate 
+     * Returns the appropriate
      * Helper method for getting a DeviceClass from it's id
-     * 
+     *
      * @param id the id of a known DeviceClass
      * @return A known DeviceClass or null if the id does not exist.
      * @throws IllegalArgumentException if id is outside the known id range
+     * @pre GenericValidator.isInRange(id, 0, 5)
+     * @post DeviceClass != null ;
      */
-    public static DeviceClass fromId(final int id) throws IllegalArgumentException{
+    public static DeviceClass fromId(final int id) throws IllegalArgumentException {
         switch (id) {
             case 0:
                 return UNKNOWN;
@@ -95,30 +128,48 @@ public enum DeviceClass {
             case 5:
                 return TABLET;
             default:
-                throw new IllegalArgumentException("Can not create DeviceClass with id="+id+". Id is out of range.");
+                throw new IllegalArgumentException("Can not create DeviceClass with id=" + id + ". Id is out of range.");
         }
     }
 
-    /** Static method for DeviceClass testing of a user agent string. 
-     * NOTE: There is no caching. It is recommended that you use DeviceType if 
-     * you plan on accessing any test more than once or plan on testing for UNKNOWN. 
-     * 
+    /**
+     * Static method for DeviceClass testing of a user agent string.
+     * NOTE: There is no caching. It is recommended that you use DeviceType if
+     * you plan on accessing any test more than once or plan on testing for UNKNOWN.
+     *
      * @param deviceClass A {@link DeviceClass} to test for equality.
      * @param userAgent {@link String} containing a user agent
-     * @return boolean <p>if the {@link userAgent} is the passed {@link DeviceClass}</p>
-     * @throws DisabledException <p>If the underlying parser system has not been setup correctly or has been disabled for some reason.</p>
-     * @throws IllegalArgumentException <ol><li>if userAgent parameter is null or empty</li><li>if DeviceClass is null</li></ol>
+     * @return boolean
+     * <p>
+     * if the userAgent is the passed {@link DeviceClass}</p>
+     * @throws DisabledException
+     * <p>
+     * If the underlying parser system has not been setup correctly or has been disabled for some reason.</p>
+     *
+     * @pre UserAgentUtils#getPARSER() != null;
+     * @pre deviceClass !=null;
+     * @pre userAgent!=null;
+     * @pre !userAgent.isEmpty();
+     *
      */
-    public static boolean isClass(DeviceClass deviceClass, String userAgent) throws DisabledException, IllegalArgumentException {
-        ArgumentUtils.checkNullArg(deviceClass, "DeviceClass parameter");
-        ArgumentUtils.checkStringArg(userAgent, "user agent parameter", false, false);        
+    public static boolean isClass(DeviceClass deviceClass, String userAgent) throws DisabledException {
         switch (deviceClass) {
             case UNKNOWN: //This is unfortunate code. TODO: Think about removing the Unknown Test
-                if(UserAgentUtils.isMobileDevice(userAgent)){return false;}
-                if(UserAgentUtils.isDesktopDevice(userAgent)){return false;}
-                if(UserAgentUtils.isSmartTvDevice(userAgent)){return false;}
-                if(UserAgentUtils.isBot(userAgent)){return false;}
-                if(UserAgentUtils.isTablet(userAgent)){return false;}
+                if (UserAgentUtils.isMobileDevice(userAgent)) {
+                    return false;
+                }
+                if (UserAgentUtils.isDesktopDevice(userAgent)) {
+                    return false;
+                }
+                if (UserAgentUtils.isSmartTvDevice(userAgent)) {
+                    return false;
+                }
+                if (UserAgentUtils.isBot(userAgent)) {
+                    return false;
+                }
+                if (UserAgentUtils.isTablet(userAgent)) {
+                    return false;
+                }
                 return true;
             case MOBILE:
                 return UserAgentUtils.isMobileDevice(userAgent);

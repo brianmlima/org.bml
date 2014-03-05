@@ -26,9 +26,12 @@ import org.bml.util.exception.DisabledException;
  * #L%
  */
 /**
+ * <p>
  * Device type data structure and cached on demand testing support.
+ * </p>
  *
  * @author Brian M. Lima
+ * @pre UserAgentUtils#getPARSER() != null;
  */
 public class DeviceType {
 
@@ -60,27 +63,27 @@ public class DeviceType {
      *
      * @param userAgent An http connections user agent
      * @throws IllegalArgumentException <ol><li>if userAgent is null</li><li>if userAgent is empty</li></ol>
+     *
+     * @pre userAgent!=null;
+     * @pre !userAgent.isEmpty();
      */
     public DeviceType(String userAgent) throws IllegalArgumentException {
-        ArgumentUtils.checkStringArg(userAgent, "userAgent parameter", false, false);
         this.userAgent = userAgent;
     }
 
     /**
+     * <p>
      * Implements testing a this object for membership in any of the
      * enumerations of DeviceClass.
-     *
-     * Because of the implementation we are using currently I have taken
-     * measures to avoid re-testing and only test when necessary.
+     * </p>
      *
      * @param deviceClass The DeviceClass to test for
-     * @return True if a match is found, null if unable to test (IE: null
-     * userAgent), or True if a match is found.
+     * @return True if this userAgent is a match for the passed DeviceClass.
      * @throws DisabledException If the underlying parser is not configured and or purposely disabled.
-     * @throws IllegalArgumentException if the deviceClass parameter is null;
+     *
+     * @pre deviceClass !=null;
      */
-    public boolean test(DeviceClass deviceClass) throws DisabledException, IllegalArgumentException {
-        ArgumentUtils.checkNullArg(deviceClass, "deviceClass parameter");
+    public boolean test(DeviceClass deviceClass) throws DisabledException {
         int deviceId = deviceClass.getId();
         if (!hasTestedArray[deviceId]) {
             isDeviceArray[deviceId] = DeviceClass.isClass(deviceClass, userAgent);
@@ -94,6 +97,7 @@ public class DeviceType {
      *
      * @return The {@link DeviceClass} enum value for this {@link DeviceType} instance.
      * @throws DisabledException If the underlying parser is not configured and or purposely disabled.
+     * @pre UserAgentUtils#getPARSER() != null;
      */
     public DeviceClass getDeviceClass() throws DisabledException {
         if (this.isDesktop() == Boolean.TRUE) {
@@ -119,6 +123,7 @@ public class DeviceType {
      *
      * @return the isMobile test result
      * @throws DisabledException If the underlying parser is not configured and or purposely disabled.
+     * @pre UserAgentUtils#getPARSER() != null;
      */
     public boolean isMobile() throws DisabledException {
         return test(DeviceClass.MOBILE);
@@ -129,6 +134,7 @@ public class DeviceType {
      *
      * @return the isDesktop test result
      * @throws DisabledException If the underlying parser is not configured and or purposely disabled.
+     * @pre UserAgentUtils#getPARSER() != null;
      */
     public boolean isDesktop() throws DisabledException {
         return test(DeviceClass.DESKTOP);
@@ -139,6 +145,7 @@ public class DeviceType {
      *
      * @return the isSmartTV test result
      * @throws DisabledException If the underlying parser is not configured and or purposely disabled.
+     * @pre UserAgentUtils#getPARSER() != null;
      */
     public boolean isSmartTV() throws DisabledException {
         return test(DeviceClass.SMARTTV);
@@ -149,6 +156,7 @@ public class DeviceType {
      *
      * @return the isBot test result
      * @throws DisabledException If the underlying parser is not configured and or purposely disabled.
+     * @pre UserAgentUtils#getPARSER() != null;
      */
     public boolean isBot() throws DisabledException {
         return test(DeviceClass.BOT);
@@ -160,6 +168,7 @@ public class DeviceType {
      *
      * @return the isUnknown test result
      * @throws DisabledException If the underlying parser is not configured and or purposely disabled.
+     * @pre UserAgentUtils#getPARSER() != null;
      */
     public boolean isUnknown() throws DisabledException {
         for (DeviceClass deviceClass : DeviceClass.values()) {
