@@ -27,11 +27,11 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.bml.util.ArgumentUtils;
 import org.geotools.data.DataStore;
 import org.geotools.data.DataStoreFinder;
 import org.geotools.data.FeatureSource;
@@ -49,6 +49,8 @@ import org.geotools.feature.FeatureIterator;
  *
  * @see <a href="http://www.esri.com/library/whitepapers/pdfs/shapefile.pdf‎">ESRI Shape File Standard</a>
  * @see <a href="http://www.geoapi.org">www.geoapi.org</a>
+ * 
+ * @todo Work on thread safety. The underlying DataStore is not thread safe.
  *
  * @author Brian M. Lima
  */
@@ -74,6 +76,27 @@ public class DataStoreManager implements Closeable {
     private String typeName;
 
     /**
+     * Lock object for changing the state of the DataStore. IE: DataStore.dispose();
+     */
+    private final Object DATA_STORE_STATE_LOCK = new Object();
+
+    /**
+     * Set to true if a call to DataStore.dispose() has been not called, false otherwise
+     */
+    private boolean open = true;
+
+    /**
+     * Getter for closed boolean
+     *
+     * @return true if the underlying DataStore has been closed. False otherwise.
+     */
+    public boolean isOpen() {
+        synchronized (DATA_STORE_STATE_LOCK) {
+            return open;
+        }
+    }
+
+    /**
      * <p>
      * Denotes if the data source is injected and disables close operations</p>
      */
@@ -83,26 +106,29 @@ public class DataStoreManager implements Closeable {
      * <p>
      * Construct a new DataStoreManager for a <a href="http://www.esri.com/library/whitepapers/pdfs/shapefile.pdf‎">ESRI Shape File</a>. Warning this class will close
      * out the DataStore if finalize is called by the GC on the manager so keep
-     * your refs if you need them or better yet call close implicitly and make
+     * your references if you need them or better yet call close implicitly and make
      * new managers as necessary. This is important because shape files are very
      * easily corrupted, as they are loosely based on shemas, if the store is
-     * not closed correctly you will have edge issues
+     * not closed correctly you will have edge issues.
      * </p>
      *
      * @param theShapeFile <a href="http://www.esri.com/library/whitepapers/pdfs/shapefile.pdf‎">ESRI Shape File</a> to manage.
      * @throws IOException Per call to {@link #openDataStore(java.io.File)}
      * @throws IllegalArgumentException if any parameters are null or otherwise un-fit.
+     *
+     * @pre theShapeFile!=null
+     * @pre theShapeFile is an ESRI standard shape file.
      */
     public DataStoreManager(final File theShapeFile) throws IOException {
-        //Sanity
-        if (theShapeFile == null) {
-            IllegalArgumentException e = new IllegalArgumentException("Can not create a new DataStoreManager with a null shapeFile.");
-            if (LOG.isWarnEnabled()) {
-                LOG.warn("Null Shape File passed", e);
+        try {//SANITY
+            ArgumentUtils.checkFileArg(theShapeFile, "DataStoreManager theShapeFile", true, true);
+        } catch (IllegalArgumentException e) {//LOG IT
+            if (LOG.isErrorEnabled()) {
+                LOG.error("Null Argument passed. Pre-conditions unsatisfied.", e);
             }
             throw e;
         }
-
+        //EXEC
         this.shapeFile = theShapeFile;
         this.dataStore = openDataStore(this.shapeFile);
         this.setTypeName();
@@ -118,28 +144,28 @@ public class DataStoreManager implements Closeable {
      * @param theDataStore An existing {@link DataStore}
      * @throws IOException Per call to {@link #setTypeName()}
      * @throws IllegalArgumentException if any parameters are null or otherwise un-fit.
+     *
+     * @pre theShapeFile!=null
+     * @pre theShapeFile.exists()
+     * @pre theShapeFile is an ESRI standard shape file.
+     * @pre theDataStore !=null
      */
     public DataStoreManager(final File theShapeFile, final DataStore theDataStore) throws IOException, IllegalArgumentException {
-        //Sanity
-        if (theShapeFile == null) {
-            IllegalArgumentException e = new IllegalArgumentException("Can not create a new DataStoreManager with a null shapeFile.");
-            if (LOG.isWarnEnabled()) {
-                LOG.warn("Null Shape File passed", e);
-            }
-            throw e;
-        }
-        if (theDataStore == null) {
-            IllegalArgumentException e = new IllegalArgumentException("Can not create a new DataStoreManager with a null DataStore.");
-            if (LOG.isWarnEnabled()) {
-                LOG.warn("Null DataStore passed", e);
-            }
-            throw e;
-        }
 
+        try {//SANITY
+            ArgumentUtils.checkFileArg(theShapeFile, "DataStoreManager theShapeFile", true, true);
+            ArgumentUtils.checkNullArg(theDataStore, "DataStoreManager theDataStore");
+        } catch (IllegalArgumentException e) {//LOG IT
+            if (LOG.isErrorEnabled()) {
+                LOG.error("Null Argument passed. Pre-conditions unsatisfied.", e);
+            }
+            throw e;
+        }
+        //EXEC
         this.shapeFile = theShapeFile;
         this.dataStore = theDataStore;
         this.setTypeName();
-        this.isInjected = true;
+        this.isInjected = true; //Ensure DataStore is not closed on finalize
     }
 
     /**
@@ -147,28 +173,38 @@ public class DataStoreManager implements Closeable {
      * Creates a {@link DataStore} based on the passed <a href="http://www.esri.com/library/whitepapers/pdfs/shapefile.pdf‎">ESRI Shape File</a>.
      * </p>
      *
-     * @param shapeFile <a href="http://www.esri.com/library/whitepapers/pdfs/shapefile.pdf‎">ESRI Shape File</a> to manage.
+     * @param theShapeFile <a href="http://www.esri.com/library/whitepapers/pdfs/shapefile.pdf‎">ESRI Shape File</a> to manage.
      * @return A {@link DataStore} based on the passed <a href="http://www.esri.com/library/whitepapers/pdfs/shapefile.pdf‎">ESRI Shape File</a>.
      * @throws IOException Per call to {@link DataStoreFinder#getDataStore(java.util.Map)}.
-     * @throws IllegalArgumentException if any parameters are null or otherwise un-fit.
+     * @throws IllegalArgumentException if any pre-conditions are not met.
+     *
+     * @pre theShapeFile!=null
+     * @pre theShapeFile.exists()
+     * @pre theShapeFile is an ESRI standard shape file.
      */
-    public static DataStore openDataStore(File shapeFile) throws IOException, IllegalArgumentException {
-        //Sanity
-        if (shapeFile == null) {
-            IllegalArgumentException e = new IllegalArgumentException("Can not open a new DataStore with a null shapeFile.");
-            if (LOG.isWarnEnabled()) {
+    public static DataStore openDataStore(File theShapeFile) throws IOException, IllegalArgumentException {
+
+        try {//SANITY
+            ArgumentUtils.checkFileArg(theShapeFile, "DataStoreManager theShapeFile", true, true);
+        } catch (IllegalArgumentException e) {
+            if (LOG.isWarnEnabled()) {//LOG
                 LOG.warn("Null Shape File passed", e);
             }
             throw e;
         }
-        Map config = Collections.singletonMap("url", shapeFile.toURI().toURL());
+
+        Map config = Collections.singletonMap("url", theShapeFile.toURI().toURL());
         DataStore dataStore = DataStoreFinder.getDataStore(config);
         return dataStore;
     }
 
     /**
+     * <p>
+     * Sets the type names contained in this objects DataStore
+     * </p>
      *
-     * @throws IOException
+     * @throws IOException if there is an IO error with the underlying DataStore
+     * @pre this.isOpen()
      */
     private void setTypeName() throws IOException {
         String[] typeNames = this.dataStore.getTypeNames();
@@ -177,22 +213,28 @@ public class DataStoreManager implements Closeable {
 
     /**
      * <p>
-     * Closes the DataStore managed by this class and will eventually flush out
-     * shape files to KML for manual check viewing. Also completes
-     * {@link java.io.Closeable} contract</p>
+     * Closes and disposes of the DataStore managed by this class and will eventually flush out
+     * shape files to KML for manual check viewing. This method is not thread safe.
+     * Synchronization for writes needs to be maintained to avoid closing the DataStore during writes.
+     * Completes the {@link java.io.Closeable} contract</p>
+     *
+     * @pre this.isOpen()
      */
     public void close() {
-        if (dataStore != null) {
-            if (LOG.isInfoEnabled()) {
-                try {
-                    LOG.info("Closing DataStore " + dataStore.getInfo().getTitle());
-                } catch (NullPointerException npe) {
-                    if (LOG.isWarnEnabled()) {
-                        LOG.warn("Closing DataStore that has no title or ServiceInfo");
+        synchronized (DATA_STORE_STATE_LOCK) {
+            if (dataStore != null) {
+                if (LOG.isInfoEnabled()) {
+                    try {
+                        LOG.info("Closing DataStore " + dataStore.getInfo().getTitle());
+                    } catch (NullPointerException npe) {
+                        if (LOG.isWarnEnabled()) {
+                            LOG.warn("Closing DataStore that has no title or ServiceInfo");
+                        }
                     }
                 }
+                dataStore.dispose();
             }
-            dataStore.dispose();
+            this.open=false;
         }
     }
 
@@ -202,7 +244,8 @@ public class DataStoreManager implements Closeable {
      * large memory map</p>
      *
      * @return a FeatureIterator for this managers data store
-     * @throws IOException
+     * @throws IOException on DataStore error
+     * @pre this.isOpen()
      */
     public FeatureIterator openFeatureIterator() throws IOException {
         FeatureSource featureSource = dataStore.getFeatureSource(typeName);
@@ -216,8 +259,9 @@ public class DataStoreManager implements Closeable {
      * an in memory map so it should be avoided until the reality of the
      * implementation is known</p>
      *
-     * @return a feature collection for this data store
-     * @throws IOException
+     * @return FeatureCollection A feature collection for this {@link DataStore}
+     * @throws IOException if there is an issue with the underlying {@link DataStore}
+     * @pre this.isOpen()
      */
     public FeatureCollection getFeatureCollection() throws IOException {
         FeatureSource featureSource = dataStore.getFeatureSource(typeName);
@@ -234,6 +278,7 @@ public class DataStoreManager implements Closeable {
      * @param thePrintStream A {@link PrintStream} to write the type names to.
      * @throws IOException Per calls {@link DataStore#getTypeNames()} or {@link PrintStream#println(java.lang.String)}
      * @throws IllegalArgumentException if any parameters are null or otherwise un-fit.
+     * @pre this.isOpen()
      */
     public void printTypeNames(final PrintStream thePrintStream) throws IllegalArgumentException, IOException {
         if (thePrintStream == null) {
@@ -270,9 +315,12 @@ public class DataStoreManager implements Closeable {
         return hash;
     }
 
+    
     @Override
     protected void finalize() throws Throwable {
         super.finalize();
-        this.close();
+        if (!this.isInjected) {
+            this.close();
+        }
     }
 }
