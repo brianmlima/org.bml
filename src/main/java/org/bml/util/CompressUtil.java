@@ -66,7 +66,7 @@ public class CompressUtil {
      * <p>
      * <b>TODO: This method uses {@link File#listFiles()} which creates an array
      * of unknown size. This is an unsafe operation that should be replaced by an
-     * on-demand loaded {@link Iterator<File>}</b>
+     * on-demand loaded Iterator<File></b>
      * </p>
      *
      * @param theOutputStream {@link TarArchiveOutputStream} to write a file to.
@@ -80,8 +80,8 @@ public class CompressUtil {
     public static void addFileToTar(final TarArchiveOutputStream theOutputStream, final File theFileToArchive, final String theArchivePath) throws FileNotFoundException, IOException {
         //Sanity
         ArgumentUtils.checkFileArg(theFileToArchive, "The File to Archive", true, true);
-        ArgumentUtils.checkNullArg(theOutputStream, "TarArchiveOutputStream");        
-        
+        ArgumentUtils.checkNullArg(theOutputStream, "TarArchiveOutputStream");
+
         //The full path and name of the file as it will be found in the archive
         String entryName = null;
         //Allow compressing to the root of the archive.
@@ -162,14 +162,19 @@ public class CompressUtil {
      * @param theArchiveFile path to zip {}
      * @param theDestDirectory path to extract zip file to. Created if it doesn't
      * exist.
-     * @throws IllegalArgumentException If arguments are null or otherwise invalid to the point they should be checked before passage. Per {@link ArgumentUtils#checkFileArg(java.io.File, java.lang.String, boolean)}
+     * @throws IllegalArgumentException If arguments are null or otherwise invalid to the point they should be checked before passage. Per {@link ArgumentUtils#checkFileArg(java.io.File, java.lang.String, boolean, boolean) }
+     * @pre theArchiveFile !=null
+     * @pre theArchiveFile.isFile()
+     * @pre theArchiveFile.exists()
+     * @pre theDestDirectory!=null
+     * @pre theDestDirectory.isDirectory();
      */
     public static void extractZip(final File theArchiveFile, final File theDestDirectory) {
         ArgumentUtils.checkFileArg(theArchiveFile, "The Zip Archive File", true, true);
         ArgumentUtils.checkFileArg(theDestDirectory, "The Unzip Destination directory", false, true);
         try {
             String[] zipRootFolder = new String[]{null};
-            unzipFolder(theArchiveFile, theDestDirectory, theArchiveFile.length(), zipRootFolder);
+            unzipFolder(theArchiveFile, theDestDirectory, theArchiveFile.length(), zipRootFolder, 1048576);
         } catch (IOException ioe) {
             if (LOG.isWarnEnabled()) {
                 LOG.warn("IOException caught while attempting to unzip File=" + theArchiveFile.getAbsolutePath(), ioe);
@@ -178,18 +183,18 @@ public class CompressUtil {
     }
 
     /**
-     * TODO: clean up this method. It is too complex and unclear as to exactly how it acomplishes its task.
+     * TODO: clean up this method. It is too complex and unclear as to exactly how it accomplishes its task.
      *
      * @param archiveFile An zip archive {@link File} to expand.
-     * @param compressedSize The size of the archive file IE: <code>archiveFile.length();</code>. Must meet conditions <code>compressedSize>0 && compressedSize<Long.MAX_LONG</code>. Enforced by {@link ArgumentUtils#checkLongArg(long, java.lang.String, long, long)}
+     * @param compressedSize The size of the archive file IE: <code>archiveFile.length();</code>. Must meet conditions <code>compressedSize>0 && compressedSize<Long.MAX_LONG</code>. Enforced by {@link ArgumentUtils#checkLongArg(long, java.lang.String, long, long) }
      * @param zipDestDir
      * @param outputZipRootFolder
-     * @return
+     * @return true on success, false on error.
      * @throws IOException
      * @throws IllegalArgumentException If arguments are null or otherwise invalid to the point they should be checked before passage.
      *
      */
-    private static boolean unzipFolder(final File archiveFile, final File zipDestDir, final long compressedSize, final String[] outputZipRootFolder) throws IOException {
+    private static boolean unzipFolder(final File archiveFile, final File zipDestDir, final long compressedSize, final String[] outputZipRootFolder, final int byteBufferLength) throws IOException {
         ArgumentUtils.checkFileArg(archiveFile, "A Zip file to unpack.", true, true);
         ArgumentUtils.checkFileArg(zipDestDir, "A Directory to unpack a Zip file to.", false, true);
         ArgumentUtils.checkLongArg(compressedSize, "The size of the compressed File per File.length() ", 1l, Long.MAX_VALUE);
@@ -198,7 +203,7 @@ public class CompressUtil {
         Enumeration entries;
         ZipArchiveEntry aZipArchiveEntry;
         String name;
-        byte[] aByteBuffer = new byte[65536];
+        byte[] aByteBuffer = new byte[byteBufferLength];
         File destinationFile, parentFolder;
         FileOutputStream fos = null;
         InputStream entryContent;
