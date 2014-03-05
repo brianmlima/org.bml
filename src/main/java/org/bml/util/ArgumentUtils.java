@@ -22,8 +22,9 @@ package org.bml.util;
  *     along with ORG.BML.  If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
 import java.io.File;
+import org.apache.commons.logging.Log;
+import org.apache.commons.validator.routines.EmailValidator;
 
 /**
  * <p>
@@ -37,8 +38,14 @@ import java.io.File;
  * This class is the core of a belief that {@link IllegalArgumentException} should be
  * thrown when ever a caller should have checked parameters. This does lead to
  * a situation where parameters are likely to be checked multiple times, however
- * it is reasonable in most situations to sacrifice a small amount of performance
- * for absolute stability.
+ * it is reasonable in most situations to sacrifice a measured amount of performance
+ * for absolute stability. This mantra follows, unforseen errors should not
+ * bring a system down. Errors in passed parameters will happen, even in 0
+ * defect systems where all coding and engineering standards are strictly
+ * adhered to. Generally it has been my experience that code that expects only
+ * design by contract pre and post conditions without validation fail hard.
+ * I believe that even systems like the above should not fail hard and should be
+ * engineered to notify us of the error and move on.
  * </p>
  *
  * @author Brian M. Lima
@@ -72,7 +79,7 @@ public class ArgumentUtils {
      * Checks a long for min and max values. Throws an {@link IllegalArgumentException} if the long does not pass checks.
      * </p>
      *
-     * @param checkLong The {@link long} to be checked.
+     * @param checkLong The long to be checked.
      * @param name The name used to identify the variable - to be checked, in exception messages.
      * @param minLong The minimum value of the passed long.
      * @param maxLong The maximum value of the passed long.
@@ -119,14 +126,14 @@ public class ArgumentUtils {
      * <p>
      * Helper method for running file check sanity.
      * </p>
-     * 
+     *
      * <ol>
      * <lh><b>Check Operations</b></lh>
-     * <li>Null - Throws {@link IllegalArgumentException} if <code>File==null</code></li>
-     * <li>Exists - Throws {@link IllegalArgumentException} if <code>exists && !File.exists</code></li>
-     * <li>Read - Throws {@link IllegalArgumentException} if <code>!File.canRead()</code></li>
-     * <li>File - Throws {@link IllegalArgumentException} if <code>isFile && !File.isFile()</code></li>
-     * <li>Directory - Throws {@link IllegalArgumentException} if <code>!isFile && !File.isDirectory()</code></li>
+     * <li>Null - Throws IllegalArgumentException if <code>File==null</code></li>
+     * <li>Exists - Throws IllegalArgumentException if <code>exists && !File.exists</code></li>
+     * <li>Read - Throws IllegalArgumentException if <code>!File.canRead()</code></li>
+     * <li>File - Throws IllegalArgumentException if <code>isFile && !File.isFile()</code></li>
+     * <li>Directory - Throws IllegalArgumentException if <code>!isFile && !File.isDirectory()</code></li>
      * </ol>
      *
      * @param toCheck The File object to examine.
@@ -157,4 +164,89 @@ public class ArgumentUtils {
         }
     }
 
+    /**
+     * Checks an array and throws an {@link IllegalArgumentException} if any of the conditions are not met.
+     *
+     * @param array The array of {@link String} to check.
+     * @param name The print friendly name of the array used in exception messages.
+     * @param allowNullArray If true the check will allow a null array. If false and the array is null an {@link IllegalArgumentException} is thrown.
+     * @param minArrayLength An integer of 0 or greater. If the arrays length is less than this parameter an {@link IllegalArgumentException} is thrown.
+     * @param maxArrayLength An integer of 1 or greater. If the arrays length is greater than this parameter an {@link IllegalArgumentException} is thrown.
+     * @throws IllegalArgumentException if any of the conditions of the array or it's values are not met.
+     * @pre name != null
+     * @pre minArrayLength >= 0
+     * @pre maxArrayLength >= minArrayLength
+     */
+    public static void checkArray(final Object[] array, final String name, boolean allowNullArray, final int minArrayLength, final int maxArrayLength) throws IllegalArgumentException {
+        
+        if (array == null) {
+            if (allowNullArray) {
+                return;
+            } else {
+                throw new IllegalArgumentException("Array " + name + " can not be null.");
+            }
+        }
+
+        if (array.length < minArrayLength) {
+            throw new IllegalArgumentException("Array " + name + " length " + array.length + " is less than minimum " + minArrayLength);
+        }
+        if (array.length < maxArrayLength) {
+            throw new IllegalArgumentException("Array " + name + " length " + array.length + " is greater than maximum " + maxArrayLength);
+        }
+    }
+
+    /**
+     * <p>
+     * Checks a {@link String} array and it's values and throws an {@link IllegalArgumentException} if any of the conditions are not met.
+     * 
+     * </p>
+     * @param array The array of {@link String} to check.
+     * @param name The print friendly name of the array used in exception messages.
+     * @param allowNullArray If true the check will allow a null array. If false and the array is null an {@link IllegalArgumentException} is thrown.
+     * @param minArrayLength An integer of 0 or greater. If the arrays length is less than this parameter an {@link IllegalArgumentException} is thrown.
+     * @param maxArrayLength An integer of 1 or greater. If the arrays length is greater than this parameter an {@link IllegalArgumentException} is thrown.
+     * @param allowNullValues If true the check will allow null array elements. If false and an array element is null an {@link IllegalArgumentException} is thrown.
+     * @param allowEmptyValues If true the check will allow empty array elements. If false and an array element is empty an {@link IllegalArgumentException} is thrown.
+     * @throws IllegalArgumentException if any of the conditions of the array or it's values are not met.
+     * @pre name !=null
+     * @pre minArrayLength >= 0
+     * @pre maxArrayLength >= minArrayLength
+     */
+    public static void checkStringArray(final String[] array, final String name, final boolean allowNullArray, final int minArrayLength, final int maxArrayLength, final boolean allowNullValues, final boolean allowEmptyValues) throws IllegalArgumentException {
+        //check base array
+        checkArray(array, name, allowNullArray, minArrayLength, maxArrayLength);
+        //return if allow null and is null
+        if (array == null) {
+            return;
+        }
+        //short circut if there is no reason to continue checking.
+        if (allowNullValues && allowEmptyValues) {
+            return;
+        }
+
+        String namePrefix = "Array " + name + " value index ";
+        //check values
+        for (int c = 0; c < array.length; c++) {
+            checkStringArg(array[c], namePrefix + c, allowNullValues, allowEmptyValues);
+        }
+    }
+
+    /**
+     * <p>
+     * Validation method for email addresses both local and network.
+     * </p>
+     * @param email The potential email address to be validated.
+     * @param allowLocal True if the email address can be a local address, false otherwise
+     * @throws IllegalArgumentException if any pre-conditions are not met or if the passed email does not validate as an email address.
+     * @pre email != null
+     * @pre !email.isEmpty()
+     */
+    public static void checkEmail(final String email, final boolean allowLocal) throws IllegalArgumentException {
+        ArgumentUtils.checkStringArg(email, "email address", false, false);
+        //This may be able to be cached. There are stil some reported thread saftey issues with commons validator
+        EmailValidator validator = EmailValidator.getInstance(allowLocal);
+        if (!validator.isValid(email)) {
+            throw new IllegalArgumentException("String passed does not pass vaidation by " + validator.getClass().getName() + " implementation. Not a vaild email address.");
+        }
+    }
 }
