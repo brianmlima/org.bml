@@ -29,7 +29,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.bml.util.Conversion;
+import org.bml.util.ConversionUtils;
 
 /**Encapsulation for a common operation throughout org.bml.util.
  * @author Brian M. Lima
@@ -56,7 +56,7 @@ public class NetworkUtils {
         }
         try {
             InetAddress ip = InetAddress.getByName(sIp);
-            Integer theIPOut = Conversion.byteArrayToUnsignedInt(ip.getAddress());
+            Integer theIPOut = ConversionUtils.byteArrayToUnsignedInt(ip.getAddress());
             return theIPOut;
         } catch (UnknownHostException ex) {
             if (LOG.isDebugEnabled()) {

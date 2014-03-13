@@ -36,7 +36,7 @@ import org.apache.commons.dbutils.DbUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.bml.util.Conversion;
+import org.bml.util.ConversionUtils;
 
 /**
  * @author Brian M. Lima
@@ -74,7 +74,7 @@ public class GISData {
         InetAddress ip;
         try {
             ip = InetAddress.getByName(ipAddress);
-            ps.setInt(1, Conversion.byteArrayToUnsignedInt(ip.getAddress()));
+            ps.setInt(1, ConversionUtils.byteArrayToUnsignedInt(ip.getAddress()));
         } catch (UnknownHostException ex) {
             LOG.warn("UnknownHostException Found while converting IPV4 adress to unsigned int.", ex);
             throw ex;

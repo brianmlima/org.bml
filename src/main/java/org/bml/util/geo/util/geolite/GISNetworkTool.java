@@ -41,7 +41,7 @@ import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
-import org.bml.util.CompressUtil;
+import org.bml.util.CompressUtils;
 import org.bml.util.io.IOUtils;
 
 /**
@@ -76,6 +76,7 @@ public class GISNetworkTool {
   /**
    * TODO: Clean up and log on failure. Currently this method just fails and returns with a vague message to STDOut
    * @return true on success, false otherwise
+   * @todo code better more expressive error handling
    * @throws Exception 
    */
   public static boolean initFromNetwork() throws Exception {
@@ -97,8 +98,8 @@ public class GISNetworkTool {
     getFileFromNet(stringCountryZipURLIn, stringCountryZipFileOut);
     getFileFromNet(stringLatestCityZipURLIn, stringLatestCityZipFileOut);
 
-    CompressUtil.extractZip(new File(stringCountryZipFileOut), baseDir);
-    CompressUtil.extractZip(new File(stringLatestCityZipFileOut), baseDir);
+    CompressUtils.extractZip(new File(stringCountryZipFileOut), baseDir);
+    CompressUtils.extractZip(new File(stringLatestCityZipFileOut), baseDir);
 
     File blockFile = getBlockFile(baseDir);
 

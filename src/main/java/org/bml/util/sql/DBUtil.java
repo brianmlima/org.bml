@@ -39,7 +39,7 @@ import java.util.Map;
 import java.util.Properties;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.bml.util.Conversion;
+import org.bml.util.ConversionUtils;
 import org.bml.util.TimeUtils;
 
 /**
@@ -328,7 +328,7 @@ public abstract class DBUtil {
     InetAddress ip;
     try {
       ip = InetAddress.getByName(val);
-      ps.setInt(fieldId, Conversion.byteArrayToUnsignedInt(ip.getAddress()));
+      ps.setInt(fieldId, ConversionUtils.byteArrayToUnsignedInt(ip.getAddress()));
     } catch (UnknownHostException ex) {
       if (LOG.isDebugEnabled()) {
         LOG.debug("UnknownHostException Found while converting IPV4 adress to unsigned int.", ex);

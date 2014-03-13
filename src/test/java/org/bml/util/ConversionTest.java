@@ -42,13 +42,13 @@ public class ConversionTest extends TestCase {
     }
 
     /**
-     * Test of unsignedIntToByteArray method, of class Conversion.
+     * Test of unsignedIntToByteArray method, of class ConversionUtils.
      */
     public void testUnsignedIntToByteArray() {
         System.out.println("unsignedIntToByteArray");
         int value = 0;
         byte[] expResult = new byte[]{0, 0, 0, 0};
-        byte[] result = Conversion.unsignedIntToByteArray(value);
+        byte[] result = ConversionUtils.unsignedIntToByteArray(value);
         assertEquals(expResult, result);
         if (!Arrays.equals(result, expResult)) {
             fail();
@@ -56,13 +56,13 @@ public class ConversionTest extends TestCase {
     }
 
     /**
-     * Test of byteArrayToUnsignedInt method, of class Conversion.
+     * Test of byteArrayToUnsignedInt method, of class ConversionUtils.
      */
     public void testByteArrayToUnsignedInt() {
         System.out.println("byteArrayToUnsignedInt");
         byte[] byteArray = new byte[]{0, 0, 0, 0};
         int expResult = 0;
-        int result = Conversion.byteArrayToUnsignedInt(byteArray);
+        int result = ConversionUtils.byteArrayToUnsignedInt(byteArray);
         assertEquals(expResult, result);
         if (result != expResult) {
             fail();
