@@ -22,18 +22,15 @@ package org.bml.util;
  *     along with ORG.BML.  If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
+import com.google.common.base.Preconditions;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.Enumeration;
-import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
-import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
-import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
-import org.apache.commons.compress.archivers.zip.ZipFile;
-import org.apache.commons.lang.StringUtils;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.bml.util.io.IOUtils;
@@ -48,225 +45,126 @@ import org.bml.util.io.IOUtils;
 public class CompressUtil {
 
     /**
+     * Enables or disables precondition checking.
+     */
+    public static boolean CHECKED = true;
+
+    public static final int DEFAULT_BUFFER_SIZE = 2097152;
+
+    /**
      * Standard Commons Logging {@link Log}
      */
     private static final Log LOG = LogFactory.getLog(CompressUtil.class);
 
     /**
-     * <p>
-     * Adds a {@link File} or a directory to a tar archive. Recursivly adds file
-     * in a directory. <b>NOTE</b>: Compression is supported by creating the
-     * {@link TarArchiveOutputStream} as <code>TarArchiveOutputStream taos = new TarArchiveOutputStream(new GZIPOutputStream(new BufferedOutputStream(new FileOutputStream(aFile, false))));</code>
-     * </p>
-     * <p>
-     * <b>NOTE:</b> This implementation is recursive in order to handle decent
-     * into directories. Normally recursion is not allowed in No-Fault standards,
-     * however in this case the file system would have to descend more levels
-     * than the stack can handle which is possible but extreemly unlikely.</p>
-     * <p>
-     * <b>TODO: This method uses {@link File#listFiles()} which creates an array
-     * of unknown size. This is an unsafe operation that should be replaced by an
-     * on-demand loaded Iterator<File></b>
-     * </p>
-     *
-     * @param theOutputStream {@link TarArchiveOutputStream} to write a file to.
-     * @param theFileToArchive {@link File} to add to the archive.
-     * @param theArchivePath The base path in the archive to compress the {@link File} to.
-     * This can be thought of the directory the file will decompress to.
-     * @throws IOException Per {@link TarArchiveOutputStream#putArchiveEntry(org.apache.commons.compress.archivers.ArchiveEntry)} , {@link TarArchiveOutputStream#closeArchiveEntry()}
-     * @throws FileNotFoundException Per {@link IOUtils#copy(java.io.InputStream, java.io.OutputStream)}
-     * @throws IllegalArgumentException If arguments are null or otherwise invalid to the point they should be checked before passage.
+     * Get the path separator at runtime for the OS.
      */
-    public static void addFileToTar(final TarArchiveOutputStream theOutputStream, final File theFileToArchive, final String theArchivePath) throws FileNotFoundException, IOException {
-        //Sanity
-        ArgumentUtils.checkFileArg(theFileToArchive, "The File to Archive", true, true);
-        ArgumentUtils.checkNullArg(theOutputStream, "TarArchiveOutputStream");
+    private static final char PATH_SEP = System.getProperty("file.separator").charAt(0);
 
-        //The full path and name of the file as it will be found in the archive
-        String entryName = null;
-        //Allow compressing to the root of the archive.
-        if (theArchivePath == null || theArchivePath.length() == 0) {
-            entryName = StringUtils.EMPTY;
-        }
+    /**
+     * Matches zip and jar extensions. Used for surface format checking.
+     */
+    private static final String ZIP_MIME_PATTERN = "(.*[zZ][iI][pP])|(.*[jJ][aA][rR])|(.*[wW][aA][rR])";
 
-        //Add trailing '/' if pathInArchive is not zero length and does not end in an '/'
-        if (theArchivePath != null && theArchivePath.length() > 0) {
-            if (theArchivePath.charAt(theArchivePath.length()) != '/') {
-                entryName = theArchivePath + '/' + theFileToArchive.getName();
-            } else {
-                entryName = theArchivePath + theFileToArchive.getName();
-            }
-        }
-        //The entry to be archived
-        TarArchiveEntry tarEntry = new TarArchiveEntry(theFileToArchive, entryName);
-        try {
-            theOutputStream.putArchiveEntry(tarEntry);
-        } catch (IOException ioe) {
-            if (LOG.isWarnEnabled()) {
-                LOG.warn("Encountered an IOException while putting a new archive entry FILE=" + theFileToArchive.getAbsolutePath() + " ARCHIVE_PATH=" + entryName, ioe);
-            }
-            throw ioe;
-        }
-
-        if (theFileToArchive.isFile()) {
-            try {
-                //copy file from input stream to output stream
-                IOUtils.copy(new FileInputStream(theFileToArchive), theOutputStream);
-            } catch (FileNotFoundException fnfe) {
-                if (LOG.isWarnEnabled()) {
-                    LOG.warn("Encountered an FileNotFoundException while copying a new archive entry FILE=" + theFileToArchive.getAbsolutePath() + " ARCHIVE_PATH=" + entryName, fnfe);
-                }
-                throw fnfe;
-            } catch (IOException ioe) {
-                if (LOG.isWarnEnabled()) {
-                    LOG.warn("Encountered an IOException while copying a new archive entry FILE=" + theFileToArchive.getAbsolutePath() + " ARCHIVE_PATH=" + entryName, ioe);
-                }
-                throw ioe;
-            }
-            try {
-                //close the archive entry.
-                theOutputStream.closeArchiveEntry();
-            } catch (IOException ioe) {
-                if (LOG.isWarnEnabled()) {
-                    LOG.warn("Encountered an IOException while closing an archive entry FILE=" + theFileToArchive.getAbsolutePath() + " ARCHIVE_PATH=" + entryName, ioe);
-                }
-                throw ioe;
-            }
-        } else { //The file to archive is a directory, decend and archive.
-            try {
-                //Close the entry as it is not necessary.
-                theOutputStream.closeArchiveEntry();
-            } catch (IOException ioe) {
-                if (LOG.isWarnEnabled()) {
-                    LOG.warn("Encountered an IOException while closing an archive entry FILE=" + theFileToArchive.getAbsolutePath() + " ARCHIVE_PATH=" + entryName, ioe);
-                }
-                throw ioe;
-            }
-            //This should be done wit an iterator that does not read an indeterminately large array.
-            File[] children = theFileToArchive.listFiles();
-            if (children != null) {
-                for (File child : children) {
-                    System.out.println(child.getName());
-                    addFileToTar(theOutputStream, child, entryName + "/");
-                }
-            }
-        }
+    /**
+     * Extracts a zip | jar | war archive to the specified desitnation directory.
+     * Uses the default buffer size for read operations.
+     *
+     * @param zipFile
+     * @param destDir
+     * @throws IOException If there is an issue with the archive file or the file system.
+     * @throws NullPointerException if any of the arguments are null.
+     * @throws IllegalArgumentException if any of the arguments do not pass the
+     * preconditions other than null tests. NOTE: This exception wil not be thrown
+     * if this classes CHECKED member is set to false
+     *
+     * @pre zipFile!=null
+     * @pre zipFile.exists()
+     * @pre zipFile.canRead()
+     * @pre zipFile.getName().matches("(.*[zZ][iI][pP])|(.*[jJ][aA][rR])")
+     *
+     * @pre destDir!=null
+     * @pre destDir.exists()
+     * @pre destDir.isDirectory()
+     * @pre destDir.canWrite()
+     */
+    public static void extractZip(final File zipFile, final File destDir) throws IOException, IllegalArgumentException, NullPointerException {
+        unzipFilesToPath(zipFile, destDir, CompressUtil.DEFAULT_BUFFER_SIZE);
     }
 
     /**
-     * <p>
-     * Extract zip file at the specified destination path. NB:archive must consist
-     * of a single root folder containing everything else.
-     * </p>
+     * Extracts a zip | jar | war archive to the specified desitnation directory.
+     * Uses the passed buffer size for read operations.
      *
-     * @param theArchiveFile path to zip {}
-     * @param theDestDirectory path to extract zip file to. Created if it doesn't
-     * exist.
-     * @throws IllegalArgumentException If arguments are null or otherwise invalid to the point they should be checked before passage. Per {@link ArgumentUtils#checkFileArg(java.io.File, java.lang.String, boolean, boolean) }
-     * @pre theArchiveFile !=null
-     * @pre theArchiveFile.isFile()
-     * @pre theArchiveFile.exists()
-     * @pre theDestDirectory!=null
-     * @pre theDestDirectory.isDirectory();
+     * @param zipFile
+     * @param destDir
+     * @param bufferSize
+     * @throws IOException If there is an issue with the archive file or the file system.
+     * @throws NullPointerException if any of the arguments are null.
+     * @throws IllegalArgumentException if any of the arguments do not pass the
+     * preconditions other than null tests. NOTE: This exception wil not be thrown
+     * if this classes CHECKED member is set to false
+     *
+     * @pre zipFile!=null
+     * @pre zipFile.exists()
+     * @pre zipFile.canRead()
+     * @pre zipFile.getName().matches("(.*[zZ][iI][pP])|(.*[jJ][aA][rR])")
+     *
+     * @pre destDir!=null
+     * @pre destDir.exists()
+     * @pre destDir.isDirectory()
+     * @pre destDir.canWrite()
+     *
+     * @pre bufferSize > 0
      */
-    public static void extractZip(final File theArchiveFile, final File theDestDirectory) {
-        ArgumentUtils.checkFileArg(theArchiveFile, "The Zip Archive File", true, true);
-        ArgumentUtils.checkFileArg(theDestDirectory, "The Unzip Destination directory", false, true);
-        try {
-            String[] zipRootFolder = new String[]{null};
-            unzipFolder(theArchiveFile, theDestDirectory, theArchiveFile.length(), zipRootFolder, 1048576);
-        } catch (IOException ioe) {
-            if (LOG.isWarnEnabled()) {
-                LOG.warn("IOException caught while attempting to unzip File=" + theArchiveFile.getAbsolutePath(), ioe);
-            }
+    public static void unzipFilesToPath(final File zipFile, final File destDir, final int bufferSize) throws IOException, IllegalArgumentException, NullPointerException {
+
+        //zipFilePath.toLowerCase().endsWith(zipFilePath)
+        if (CHECKED) {
+            final String userName = User.getSystemUserName();//use cahced if possible
+            //zipFile
+            Preconditions.checkNotNull(zipFile, "Can not unzip null zipFile");
+            Preconditions.checkArgument(zipFile.getName().matches(ZIP_MIME_PATTERN), "Zip File at %s does not match the extensions allowed by the regex %s", zipFile, ZIP_MIME_PATTERN);
+            Preconditions.checkArgument(zipFile.exists(), "Can not unzip file at %s. It does not exist.", zipFile);
+            Preconditions.checkArgument(zipFile.canRead(), "Can not extract archive with no read permissions. Check File permissions. USER=%s FILE=%s", System.getProperty("user.name"), zipFile);
+            //destDir
+            Preconditions.checkNotNull(destDir, "Can not extract zipFileName=%s to a null destination", zipFile);
+            Preconditions.checkArgument(destDir.isDirectory(), "Can not extract zipFileName %s to a destination %s that is not a directory", zipFile, destDir);
+            Preconditions.checkArgument(destDir.exists(), "Can not extract zipFileName %s to a non existant destination %s", zipFile, destDir);
+            Preconditions.checkArgument(destDir.canWrite(), "Can not extract archive with no write permissions. Check File permissions. USER=%s FILE=%s", System.getProperty("user.name"), destDir);
+            //bufferSize
+            Preconditions.checkArgument(bufferSize > 0, "Can not extract archive %s to %s with a buffer size less than 1 size = %s", zipFile, destDir, bufferSize);
+
         }
-    }
 
-    /**
-     * TODO: clean up this method. It is too complex and unclear as to exactly how it accomplishes its task.
-     *
-     * @param archiveFile An zip archive {@link File} to expand.
-     * @param compressedSize The size of the archive file IE: <code>archiveFile.length();</code>. Must meet conditions <code>compressedSize>0 && compressedSize<Long.MAX_LONG</code>. Enforced by {@link ArgumentUtils#checkLongArg(long, java.lang.String, long, long) }
-     * @param zipDestDir
-     * @param outputZipRootFolder
-     * @return true on success, false on error.
-     * @throws IOException
-     * @throws IllegalArgumentException If arguments are null or otherwise invalid to the point they should be checked before passage.
-     *
-     */
-    private static boolean unzipFolder(final File archiveFile, final File zipDestDir, final long compressedSize, final String[] outputZipRootFolder, final int byteBufferLength) throws IOException {
-        ArgumentUtils.checkFileArg(archiveFile, "A Zip file to unpack.", true, true);
-        ArgumentUtils.checkFileArg(zipDestDir, "A Directory to unpack a Zip file to.", false, true);
-        ArgumentUtils.checkLongArg(compressedSize, "The size of the compressed File per File.length() ", 1l, Long.MAX_VALUE);
-
-        ZipFile zipFile = null;
-        Enumeration entries;
-        ZipArchiveEntry aZipArchiveEntry;
-        String name;
-        byte[] aByteBuffer = new byte[byteBufferLength];
-        File destinationFile, parentFolder;
-        FileOutputStream fos = null;
-        InputStream entryContent;
+        final FileInputStream fileInputStream = new FileInputStream(zipFile);
+        final ZipInputStream zipInputStream = new ZipInputStream(new BufferedInputStream(fileInputStream));
+        final String destBasePath = destDir.getAbsolutePath() + PATH_SEP;
 
         try {
-            zipFile = new ZipFile(archiveFile);
-
-            entries = zipFile.getEntries();
-            while (entries.hasMoreElements()) {
-                aZipArchiveEntry = (ZipArchiveEntry) entries.nextElement();
-                name = aZipArchiveEntry.getName();
-                name = name.replace('\\', '/');
-                int i = name.indexOf('/');
-                if (i > 0) {
-                    outputZipRootFolder[0] = name.substring(0, i);
-                } else {
-                    name = name.substring(i + 1);
+            ZipEntry zipEntry;
+            BufferedOutputStream destBufferedOutputStream;
+            int byteCount;
+            byte[] data;
+            while ((zipEntry = zipInputStream.getNextEntry()) != null) {
+                destBufferedOutputStream = new BufferedOutputStream(new FileOutputStream(destBasePath + zipEntry.getName()), bufferSize);
+                data = new byte[bufferSize];
+                while ((byteCount = zipInputStream.read(data, 0, bufferSize)) != -1) {
+                    destBufferedOutputStream.write(data, 0, byteCount);
                 }
-
-                destinationFile = new File(zipDestDir, name);
-                if (name.endsWith("/")) {
-                    if (!destinationFile.isDirectory() && !destinationFile.mkdirs()) {//unable to create directories    
-                        if (LOG.isWarnEnabled()) {
-                            LOG.warn("Error creating temp directory:" + destinationFile.getPath());
-                        }
-                        return false;
-                    }
-                    continue;
-                } else if (name.indexOf('/') != -1) {
-                    // Create the the parent directory if it doesn't exist
-                    parentFolder = destinationFile.getParentFile();
-                    if (!parentFolder.isDirectory()) {
-                        if (!parentFolder.mkdirs()) {
-                            if (LOG.isWarnEnabled()) {
-                                LOG.warn("Error creating temp directory:" + parentFolder.getPath());
-                            }
-                            return false;
-                        }
-                    }
-                }
-
-                try {
-                    fos = new FileOutputStream(destinationFile);
-                    int n;
-                    entryContent = zipFile.getInputStream(aZipArchiveEntry);
-                    while ((n = entryContent.read(aByteBuffer)) != -1) {
-                        if (n > 0) {
-                            fos.write(aByteBuffer, 0, n);
-                        }
-                    }
-                } finally {
-                    IOUtils.closeQuietly(fos);
-                }
+                destBufferedOutputStream.flush();
+                destBufferedOutputStream.close();
             }
-            return true;
-
+            fileInputStream.close();
+            zipInputStream.close();
         } catch (IOException ioe) {
             if (LOG.isWarnEnabled()) {
-                LOG.warn("IOException caught while Unzipping File=" + archiveFile.getAbsolutePath(), ioe);
+                LOG.warn(String.format("IOException caught while unziping archive %s to %s", zipFile, destDir), ioe);
             }
             throw ioe;
         } finally {
-            IOUtils.closeQuietly(zipFile);
+            IOUtils.closeQuietly(fileInputStream);
+            IOUtils.closeQuietly(zipInputStream);
         }
     }
 
