@@ -36,7 +36,7 @@ import org.apache.commons.logging.LogFactory;
  * @todo Add support for long conversions. This will enable IPV6 addresses
  * @author Brian M. Lima
  */
-public class Conversion {
+public class ConversionUtils {
 
     /**
      * Enables or disables precondition checking.
@@ -46,12 +46,12 @@ public class Conversion {
     /**
      * Standard Commons Logging {@link Log}
      */
-    private static final Log LOG = LogFactory.getLog(Conversion.class);
+    private static final Log LOG = LogFactory.getLog(ConversionUtils.class);
 
     /**
      * Instances should <b>NOT</b> be constructed in standard programming.
      */
-    public Conversion() {
+    public ConversionUtils() {
     }
 
     /**

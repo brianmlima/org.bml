@@ -33,9 +33,9 @@ import org.apache.commons.logging.LogFactory;
 /**Helper for printing stack traces.
  * @author Brian M. Lima
  */
-public class StackTraceUtil {
+public class StackTraceUtils {
 
-    private static Log LOG = LogFactory.getLog(StackTraceUtil.class);
+    private static Log LOG = LogFactory.getLog(StackTraceUtils.class);
 
     public static String getStackTrace(Throwable aThrowable) {
         final Writer result = new StringWriter();

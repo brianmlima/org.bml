@@ -42,7 +42,7 @@ import org.bml.util.io.IOUtils;
  *
  * @author Brian M. Lima
  */
-public class CompressUtil {
+public class CompressUtils {
 
     /**
      * Enables or disables precondition checking.
@@ -57,7 +57,7 @@ public class CompressUtil {
     /**
      * Standard Commons Logging {@link Log}
      */
-    private static final Log LOG = LogFactory.getLog(CompressUtil.class);
+    private static final Log LOG = LogFactory.getLog(CompressUtils.class);
 
     /**
      * Get the path separator at runtime for the OS.
@@ -92,7 +92,7 @@ public class CompressUtil {
      * @pre destDir.canWrite()
      */
     public static void extractZip(final File zipFile, final File destDir) throws IOException, IllegalArgumentException, NullPointerException {
-        unzipFilesToPath(zipFile, destDir, CompressUtil.DEFAULT_BUFFER_SIZE);
+        unzipFilesToPath(zipFile, destDir, CompressUtils.DEFAULT_BUFFER_SIZE);
     }
 
     /**
