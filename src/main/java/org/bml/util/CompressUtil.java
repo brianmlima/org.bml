@@ -49,6 +49,9 @@ public class CompressUtil {
      */
     public static boolean CHECKED = true;
 
+    /**
+     * The default read buffer size used when not explicitely passed.
+     */
     public static final int DEFAULT_BUFFER_SIZE = 2097152;
 
     /**
