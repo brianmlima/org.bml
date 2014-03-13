@@ -1,7 +1,8 @@
 package org.bml.util;
 
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.StringUtils;
+import com.google.common.base.Preconditions;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /*
  * #%L
@@ -38,11 +39,21 @@ import org.apache.commons.lang.StringUtils;
 public class Conversion {
 
     /**
+     * Enables or disables precondition checking.
+     */
+    public static boolean CHECKED = true;
+
+    /**
+     * Standard Commons Logging {@link Log}
+     */
+    private static final Log LOG = LogFactory.getLog(Conversion.class);
+
+    /**
      * Instances should <b>NOT</b> be constructed in standard programming.
      */
     public Conversion() {
     }
-    
+
     /**
      * <p>
      * Converts an unsigned integer to a byte array.
@@ -50,27 +61,39 @@ public class Conversion {
      *
      * @param value an integer of 0 or greater
      * @return an array of bytes representing the passed unsigned int.
+     * @throws IllegalArgumentException if the value passed is less than 0
      * @pre value>=0
      */
-    public static final byte[] unsignedIntToByteArray(final int value) {
+    public static final byte[] unsignedIntToByteArray(final int value) throws IllegalArgumentException {
+        if (CHECKED) {
+            Preconditions.checkArgument(value > -1, "Passed integer value is less than 0 value=%s", value);
+        }
         return new byte[]{
             (byte) (value >>> 24),
             (byte) (value >>> 16),
             (byte) (value >>> 8),
             (byte) value};
     }
-
+    
     /**
      * <p>
      * Utility for conversion of byte[] to int.
      * </p>
      *
      * @param byteArray An array of 4 bytes to convert to an unsigned int
-     * @return The int defined by the passed byte array
+     * @return The int defined by the passed byte array.
+     * 
+     * @throws NullPointerException if the byteArray parameter is passed as null.
+     * @throws IllegalArgumentException if the byte array passed length is not 4.
+     * 
      * @pre byteArray != null
      * @pre byteArray.length == 4
      */
-    public static final int byteArrayToUnsignedInt(byte[] byteArray) {
+    public static final int byteArrayToUnsignedInt(byte[] byteArray) throws NullPointerException, IllegalArgumentException {
+        if (CHECKED) {
+            Preconditions.checkNotNull(byteArray, "Can not convert a null byte array to an unsigned integer");
+            Preconditions.checkArgument(byteArray.length == 4, "Can not convert byte array to unsigned int expected length of 4 found %s", byteArray.length);
+        }
         return (byteArray[0] << 24)
                 + ((byteArray[1] & 0xFF) << 16)
                 + ((byteArray[2] & 0xFF) << 8)
