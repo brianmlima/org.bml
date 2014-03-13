@@ -50,7 +50,7 @@ public class SearchUtils {
      * This allows the search to be focused to a predefined part of
      * theSearchBase array.
      * @param theKey The integer to search for.
-     * @return
+     * @return the nearest low integer to theKey
      */
     public static int binarySearchLower(int[] theSearchBase, int theLowerBound, int theUpperBound, int theKey) {
         //Argument sanity checking.
@@ -96,7 +96,7 @@ public class SearchUtils {
      * This allows the search to be focused to a predefined part of
      * theSearchBase array.
      * @param theKey The integer to search for.
-     * @return
+     * @return the nearest low integer to theKey 
      */
     public static Integer binarySearchLower(final Integer[] theSearchBase, final int theLowerBound, final int theUpperBound, final int theKey) {
         //Argument sanity checking.

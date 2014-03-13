@@ -40,7 +40,7 @@ import org.bml.util.sql.DBUtil;
 import org.bml.util.threads.BlockingQueueWorkerThread;
 
 /**
- * An extension of {@link BlockingQueueWorkerThread<ParseError>} charged with 
+ * An extension of {@link BlockingQueueWorkerThread} charged with 
  * pulling {@link ParseError} objects from a {@link BlockingQueue} and storing them in 
  * 
  * 

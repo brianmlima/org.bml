@@ -81,7 +81,7 @@ public class SecondBasedCounter {
   
   /**
    * 
-   * @return 
+   * @return An array of AtomicInteger representing the second counters
    */
   public AtomicInteger[] getCounterArray(){
       return counterArray;
@@ -134,7 +134,7 @@ public class SecondBasedCounter {
    * Either way this method an be overridden if a faster or more appropriate 
    * calculation is found.
    *
-   * @return
+   * @return an int between 0 and 59 denoting the current second
    */
   public static int getCurrentSecondID() {
     return Calendar.getInstance(TimeZone.getTimeZone("UTC".intern())).get(Calendar.SECOND);

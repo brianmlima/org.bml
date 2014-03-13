@@ -45,7 +45,7 @@ public interface RateLimitedTask<R, C> {
      * Map.
      * @param timeout A long denoting the ammount of time to wait for a call to
      * complete.
-     * @return
+     * @return R an object that is the result of a successful call.
      * @throws RateExceededException if the rate limit of the underlying system
      * is exceeded.
      * @throws DisabledException If the underlying system has been disabled.

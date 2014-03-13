@@ -40,7 +40,7 @@ public interface UAParser {
     /**
      * 
      * @param userAgent
-     * @return
+     * @return true if the userAgent represents a mobile browser.
      * @throws IllegalArgumentException 
      */
     public boolean isMobileBrowser(String userAgent) throws IllegalArgumentException;

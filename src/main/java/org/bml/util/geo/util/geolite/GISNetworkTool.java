@@ -75,7 +75,7 @@ public class GISNetworkTool {
   
   /**
    * TODO: Clean up and log on failure. Currently this method just fails and returns with a vague message to STDOut
-   * @return
+   * @return true on success, false otherwise
    * @throws Exception 
    */
   public static boolean initFromNetwork() throws Exception {

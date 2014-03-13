@@ -54,13 +54,16 @@ public abstract class BServer {
   public BServer() {;
   }
 
-  /**
-   * The runInvProxy class starts a new server socket and listens for
+ /**
+ * The runInvProxy class starts a new server socket and listens for
    * connections from clients. Upon recieving a connection, it starts a new
    * InvProxyThread to process the connection.
-   *
-   * @param aParm: ParmDB - A parameter object containing parameters
-   */
+  * @param aPort The port to attach to
+  * @param aNumThreads the number of worker threads
+  * @param aSleepTime sleep time in between checks
+  * @param aMaxQueueLength the max requests to queue up
+  * @param accessLog a Log to write access info 
+  */
   public void runInvProxy(int aPort, int aNumThreads, long aSleepTime, int aMaxQueueLength, Log accessLog) {
     this.accessLog = accessLog;
 
@@ -150,9 +153,8 @@ public abstract class BServer {
    * The abstract ProcessConnection method passes the user an input and output
    * stream, and allows them to control data flow over a socket.
    *
-   * @param aIn: ObjectInputStream - Socket object input stream
-   * @param aOut: ObjectOutputStream - Socket object output stream
-   * @param aLog: Log - A loging object
+   * @param aIn ObjectInputStream - Socket object input stream
+   * @param aOut ObjectOutputStream - Socket object output stream
    */
   public abstract void processConnection(ObjectInputStream aIn, ObjectOutputStream aOut);
 

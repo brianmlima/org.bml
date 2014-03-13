@@ -30,7 +30,6 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.TimeUnit;
 import org.apache.commons.pool.PoolableObjectFactory;
-import org.bml.util.ObjectFactory;
 import org.bml.util.elasticconsumer.ElasticConsumer;
 
 /**

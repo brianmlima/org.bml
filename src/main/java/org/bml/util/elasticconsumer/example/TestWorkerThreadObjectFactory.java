@@ -62,7 +62,6 @@ public class TestWorkerThreadObjectFactory implements PoolableObjectFactory<Test
 
     /**Destruction method. Not necessary in the test case but handy in cleanup operations.
      * @param obj TestWorkerThread to be destroyed.
-     * @return always true;
      */
     public void destroyObject(TestWorkerThread obj) throws Exception {
         obj.setShouldRun(false);

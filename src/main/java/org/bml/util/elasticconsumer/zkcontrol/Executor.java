@@ -68,7 +68,6 @@ public class Executor extends WorkerThread implements Watcher, DataMonitorListen
     /***************************************************************************
      * We do process any events ourselves, we just need to forward them on.
      *
-     * @see org.apache.zookeeper.Watcher#process(org.apache.zookeeper.proto.WatcherEvent)
      */
     public void process(WatchedEvent event) {
         theDataMonitor.process(event);

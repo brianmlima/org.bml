@@ -62,35 +62,35 @@ public class MailUtils {
     
     /**
      * Simple mail utility
-     * @param adds email addresses to send the mail to
-     * @param subject the subject of the email.
-     * @param body The body of the mail
-     * @param host the smtp host
+     * @param sendToAdresses email addresses to send the mail to
+     * @param emailSubjectLine the subject of the email.
+     * @param emailBody The body of the mail
+     * @param smtpHost the smtp host
      * @param sender the mail address that is the sender
-     * @param password the password for the sender
-     * @param port the port to contact the smtp server on
+     * @param smtpPassword the password for the sender
+     * @param smtpPort the port to contact the smtp server on
      * @return boolean true on success and false on error
      */
-    public static boolean sendMail(String[] adds, String subject, String body,String host,String sender,String password,String port) {
-        if ((adds == null) || (adds.length == 0)) {
+    public static boolean sendMail(final String[] sendToAdresses, final String emailSubjectLine, final String emailBody,final String smtpHost,String sender,String smtpPassword,final int smtpPort) {
+        if ((sendToAdresses == null) || (sendToAdresses.length == 0)) {
             return false;
         }
 
-        if ((subject == null) || (body == null)) {
+        if ((emailSubjectLine == null) || (emailBody == null)) {
             return false;
         }
 
         try {
-            Address[] addresses = new Address[adds.length];
-            for (int i = 0; i < adds.length; i++) {
-                addresses[i] = new InternetAddress(adds[i]);
+            Address[] addresses = new Address[sendToAdresses.length];
+            for (int i = 0; i < sendToAdresses.length; i++) {
+                addresses[i] = new InternetAddress(sendToAdresses[i]);
             }
 
             Properties props = System.getProperties();
-            props.setProperty("mail.smtp.host", host);
-            props.setProperty("mail.smtp.localhost", host);
+            props.setProperty("mail.smtp.host", smtpHost);
+            props.setProperty("mail.smtp.localhost", smtpHost);
             props.setProperty("mail.smtp.auth", "true");
-            props.setProperty("mail.smtp.port", port);
+            props.setProperty("mail.smtp.port", String.valueOf(smtpPort));
             props.put("mail.smtp.starttls.enable", "true");
 
             Session session = Session.getDefaultInstance(props, null);
@@ -98,12 +98,12 @@ public class MailUtils {
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress(sender));
             message.setRecipients(Message.RecipientType.TO, addresses);
-            message.setSubject(subject);
-            message.setContent(body, "text/plain");
+            message.setSubject(emailSubjectLine);
+            message.setContent(emailBody, "text/plain");
             message.saveChanges();
 
             Transport transport = session.getTransport("smtp");
-            transport.connect(host, sender, password);
+            transport.connect(smtpHost, sender, smtpPassword);
             transport.sendMessage(message, message.getAllRecipients());
             transport.close();
         } catch (Throwable t) {

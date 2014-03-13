@@ -124,8 +124,8 @@ public class GISControler {
 
   /**
    *
-   * @param ip
-   * @return
+   * @param ip An IP address as an integer to find a starting ip of the range the passed IP is a member of.
+   * @return the numeric representation of the starting IP the passed IP is a member of.
    * @throws UnavailableException
    */
   public static Integer getStartIp(Integer ip) throws UnavailableException {
@@ -135,8 +135,8 @@ public class GISControler {
 
   /**
    *
-   * @param ipString
-   * @return
+   * @param ipString a octal string representation of an IP address
+   * @return The numeric representation of the starting IP the passed IP is a member of.
    * @throws UnknownHostException
    * @throws UnavailableException
    */
@@ -157,8 +157,8 @@ public class GISControler {
 
   /**
    *
-   * @param theStartIp
-   * @return
+   * @param theStartIp the low or starting ip of a range to lookup a {@link GeoLiteCityBlock}
+   * @return an {@link GeoLiteCityBlock} the passed starting ip refrences
    * @throws UnavailableException
    */
   public static GeoLiteCityBlock getBlock(final Integer theStartIp) throws UnavailableException {
@@ -179,8 +179,8 @@ public class GISControler {
 
   /**
    *
-   * @param sip
-   * @return
+   * @param ipString An IP to lookup a {@link GeoLiteCityBlock} for
+   * @return an {@link GeoLiteCityBlock} the passed starting ip refrences
    * @throws UnknownHostException
    * @throws UnavailableException
    */
@@ -196,7 +196,7 @@ public class GISControler {
   /**
    *
    * @param ip
-   * @return
+   * @return todo
    * @throws UnavailableException
    */
   public static Map<String, String> getParamMap(Integer ip) throws UnavailableException {
@@ -215,8 +215,8 @@ public class GISControler {
 
   /**
    *
-   * @param sIp
-   * @return
+   * @param theIpString
+   * @return todo
    * @throws UnknownHostException
    * @throws UnavailableException
    */

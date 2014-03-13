@@ -42,12 +42,12 @@ public class LoadProducer extends WorkerThread {
     /*The total succesfull offers made*/
     private int doneTotal = 0;
 
-    /**Creates a new LoadProducer for ElasticConsumer<ProcData>  testing.
-     * @param aElasticConsumer a ElasticConsumer<ProcData> to place a load on.
+    /**Creates a new LoadProducer for ElasticConsumer<ProcData,TestWorkerThread>  testing.
+     * @param anElasticConsumer a ElasticConsumer<ProcData,TestWorkerThread> to place a load on.
      */
-    public LoadProducer(ElasticConsumer<ProcData,TestWorkerThread> aClientLimitor) {
+    public LoadProducer(ElasticConsumer<ProcData,TestWorkerThread> anElasticConsumer) {
         super();
-        this.anElasticConsumer = aClientLimitor;
+        this.anElasticConsumer = anElasticConsumer;
     }
 
     /**Override of Thread.start();

@@ -24,7 +24,7 @@ package org.bml.util.useragent;
  */
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.bml.util.ArgumentUtils;
+import org.bml.util.args.ArgumentUtils;
 import org.bml.util.exception.DisabledException;
 
 /**

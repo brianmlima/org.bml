@@ -22,7 +22,6 @@ package org.bml.util.elasticconsumer;
  *     along with ORG.BML.  If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -41,20 +40,18 @@ import org.bml.util.threads.WorkerThread;
  * DESCRIPTION: The ElasticConsumer is designed to as an extendable component
  * that allows a process to be threaded out but have either a widely varying
  * processing time and or want to be able to tune resource allocation at
- * runtime. It is a generic implementation of a scaling consumer end of a producer 
+ * runtime. It is a generic implementation of a scaling consumer end of a producer
  * consumer pattern
  *
  * This particular version latches onto a BlockingQueue and continues working.
  *
- * See {@link ElasticConsumerTest} for an example with a test harness.
- *
  * @author Brian M. Lima
- * @param <D> The Data container class for data that is to be consumed. This is 
+ * @param <D> The Data container class for data that is to be consumed. This is
  * the result of a producer in a producer consumer pattern.
- * @param <W> The extension of @{link WorkerThread} that is the Consumer in this 
+ * @param <W> The extension of {@link WorkerThread} that is the Consumer in this
  * producer consumer pattern.
  */
-public class ElasticConsumer<D,W extends WorkerThread> extends WorkerThread {
+public class ElasticConsumer<D, W extends WorkerThread> extends WorkerThread {
 
     /**
      * I have to figure out what the correct pattern for logging is. 1. Static
@@ -328,7 +325,9 @@ public class ElasticConsumer<D,W extends WorkerThread> extends WorkerThread {
         return doOffer(theObject, theTimeout, theTimeUnit);
     }
 
-    /** Performs the offer. does not handle nulls or bad arguments.
+    /**
+     * Performs the offer. does not handle nulls or bad arguments.
+     *
      * @param theObject T The object to be offered to the queue.
      * @param theTimeout long denoting the number of time units to use during the
      * blocking offer call.
@@ -354,7 +353,7 @@ public class ElasticConsumer<D,W extends WorkerThread> extends WorkerThread {
         try {
             return threadFactory.makeObject();
         } catch (Exception ex) {
-            if(log.isFatalEnabled()){
+            if (log.isFatalEnabled()) {
                 log.fatal("Unable to operate. WorkerThread factory is throwing Exceptions on makeObject");
             }
         }
@@ -494,8 +493,8 @@ public class ElasticConsumer<D,W extends WorkerThread> extends WorkerThread {
     }
 
     /**
-     * hy
-     * @return 
+     *
+     * @return the accumulation of <code>WorkerThread.flush();</code> for the subjugate {@link WorkerThread} extensions.
      */
     @Override
     public synchronized int flush() {

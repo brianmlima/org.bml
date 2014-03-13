@@ -57,7 +57,7 @@ public class LinuxInteractor {
      *
      * @param command The shell command to execute
      * @param waitForResponse Block until command execution has finish
-     * @return
+     * @return The results of the command in a String
      */
     public static String executeCommand(String command, boolean waitForResponse) {
         String response="";

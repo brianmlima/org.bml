@@ -90,7 +90,7 @@ public class ParseErrorTable {
     /**
      * <p>
      * The SQL statement used for creating a {@link PreparedStatement} via
-     * {@link java.sql.Connection#prepareStatement(java.lang.String) for
+     * {@link java.sql.Connection#prepareStatement(java.lang.String)} for
      * insertion into the table named by {@link ParseErrorTable#TABLE_NAME}
      * </p>
      */
@@ -162,14 +162,14 @@ public class ParseErrorTable {
      * </p>
      *
      * @param thPreparedStatement {@link PreparedStatement} to populate values from the passed tehParamMap
-     * @param theParamMap A {@link Map<String,String>} containing <Column Name, Value> for a single statement.
+     * @param theParamMap A Map<String,String> containing <Column Name, Value> for a single statement.
      * @param removeUsedFromMap {@link Boolean} if {@link Boolean#TRUE} entries
      * in theParamMap will be removed as they are set in thePreparedStatement.
      * This allows error checking for unused parameters but is generally set to
      * {@link Boolean#FALSE} in production.
      * @throws SQLException Per call to {@link PreparedStatement#setString(int, java.lang.String)}
-     * @see {@link SQLException}
-     * @see {@link PreparedStatement}
+     * @see SQLException
+     * @see PreparedStatement
      */
     public static void populatePreparedStatement(final PreparedStatement thPreparedStatement, final Map<String, String> theParamMap, final Boolean removeUsedFromMap) throws SQLException {
         for (Map.Entry<String, Class> e : COLUMN_TYPE_MAP.entrySet()) {

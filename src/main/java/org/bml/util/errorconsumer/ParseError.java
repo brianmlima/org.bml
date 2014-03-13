@@ -54,7 +54,7 @@ public class ParseError extends Throwable {
     private String reason = null;
 
     /**
-     * @param request A String representation of the request URI.
+     * @param queryString A String representation of the request URI.
      * @param error A String description of the error encountered.
      */
     public ParseError(String className, String queryString, String error) {
@@ -92,9 +92,9 @@ public class ParseError extends Throwable {
     }
 
     /**
-     * A String description of the error encountered.
+     * A String description of the reason for the error.
      *
-     * @param error the error to set
+     * @param reason the reason the error occurred
      */
     public void setReason(String reason) {
         this.reason = reason;

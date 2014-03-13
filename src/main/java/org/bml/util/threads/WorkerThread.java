@@ -433,7 +433,7 @@ public abstract class WorkerThread extends Thread {
     private String logPrefix = null, logName = null;
 
     /**
-     * @return
+     * @return {@link String} containing the prefix for any logging messages from this {@link WorkerThread} instance
      */
     public String getLogPrefix() {
         if (logPrefix == null) {

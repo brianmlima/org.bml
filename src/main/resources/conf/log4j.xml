@@ -54,18 +54,11 @@
         <appender-ref ref="FILE" />
     </logger>    
 
-
-    <!--    
-    <logger name="org.crsh.plugin.PluginManager" additivity="false" >
-        <level value="WARN" />
+    <logger name="org.bml.util.errorconsumer.ParseErrorTable" additivity="false" >
+        <level value="INFO" />
         <appender-ref ref="FILE" />
     </logger>    
-    
-        <logger name="hsqldb.db.HSQLDB43B5BB66D2.ENGINE" additivity="false" >
-            <level value="INFO" />
-            <appender-ref ref="FILE" />
-        </logger>    
-    -->
+
     <root> 
         <priority value ="info" />
         <appender-ref ref="FILE" /> 

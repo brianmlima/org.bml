@@ -35,6 +35,17 @@ import org.bml.util.Conversion;
  * @author Brian M. Lima
  */
 public class NetworkUtils {
+    
+    
+    /**
+     * The minimum value an IPV4 network port can have. NOTE: 0 is a reserved port however it is still available so it is included here
+     */
+    public static final int MIN_IPV4_NETWORK_PORT=0;
+    /**
+     * The maximum value an IPV4 network port can have. NOTE: this includes ephemeral ports.
+     */
+    public static final int MAX_IPV4_NETWORK_PORT=65535;
+    
 
     private static final Log LOG = LogFactory.getLog(NetworkUtils.class);
     private static final String SIMPLE_NAME = NetworkUtils.class.getSimpleName();
@@ -54,12 +65,6 @@ public class NetworkUtils {
             throw ex;
         }
     }
-    
-    
-    public static void main(String args[]){
-        getThisHostName();
-    }
-    
     
     /**
      * Order of host name source.

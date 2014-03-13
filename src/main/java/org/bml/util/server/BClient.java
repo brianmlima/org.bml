@@ -58,8 +58,8 @@ public class BClient {
      *The Connect method creates a connection to a specified
      *host and port, and opens an object input and object ouput
      *stream.
-     *@param aHost: String - A host name or ip
-     *@param aPort: int - The port the host server is running on
+     *@param aHost String - A host name or ip
+     *@param aPort int - The port the host server is running on
      *@return boolean - true if connected successfully
      */
     public boolean connect(String aHost, int aPort) {
