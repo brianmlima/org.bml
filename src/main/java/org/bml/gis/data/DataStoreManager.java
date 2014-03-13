@@ -251,7 +251,7 @@ public class DataStoreManager implements Closeable {
             Preconditions.checkState(types != null, "DataStoreManager: DataStore.getTypeNames() is returning null. Can not manage a DataStore with no types.");
             synchronized (this.TYPE_NAME_STATE_LOCK) {
                 //Use ordered set implementation to make debugging and listing consistent
-                this.typeNameSet = Collections.unmodifiableSet(new LinkedHashSet<>(Arrays.asList(types)));
+                this.typeNameSet = Collections.unmodifiableSet(new LinkedHashSet<String>(Arrays.asList(types)));
             }
         }
     }
