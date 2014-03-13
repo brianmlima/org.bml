@@ -28,13 +28,13 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.commons.lang.CharEncoding;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.WatchedEvent;
 import org.apache.zookeeper.Watcher;
 import org.apache.zookeeper.ZooKeeper;
-import org.bml.util.EncodingUtils;
 import org.bml.util.elasticconsumer.ElasticConsumer;
 import org.bml.util.threads.WorkerThread;
 import org.bml.util.zoo.DataMonitorListener;
@@ -45,7 +45,7 @@ import org.bml.util.zoo.DataMonitorListener;
  */
 public class Executor extends WorkerThread implements Watcher, DataMonitorListener {
 
-    private static Log LOG = LogFactory.getLog(Executor.class);
+    private static final Log LOG = LogFactory.getLog(Executor.class);
     private String zNode;
     private DataMonitor theDataMonitor;
     private ZooKeeper theZookeeper;
@@ -68,7 +68,9 @@ public class Executor extends WorkerThread implements Watcher, DataMonitorListen
     /***************************************************************************
      * We do process any events ourselves, we just need to forward them on.
      *
+     * @param event
      */
+    @Override
     public void process(WatchedEvent event) {
         theDataMonitor.process(event);
     }
@@ -109,7 +111,7 @@ public class Executor extends WorkerThread implements Watcher, DataMonitorListen
         } else {
             try {
                 this.theElasticConsumer.flush();
-                System.out.println(new String(data, EncodingUtils.UTF8));
+                System.out.println(new String(data, CharEncoding.UTF_8));
                 try {
                     theZookeeper.setData(zNode, "false".getBytes(), 1);
                 } catch (KeeperException ex) {
