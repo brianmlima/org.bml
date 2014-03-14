@@ -97,7 +97,8 @@ public class NetworkUtils {
 
     /**
      * <p>
-     * Attempt to resolve this computers host name.
+     * Attempt to resolve this computers host name. In its current state this 
+     * method only calls 'hostname'.
      * </p>
      * <p>
      * <b>WARNING:</b>This method uses Runtime and a Process. It also waits for
@@ -113,14 +114,18 @@ public class NetworkUtils {
      * </p>
      *
      * @return The host name of the server that this code runs on.
-     * @todo implement multiple hostname attempts and try to guess the rite one for the OS.
+     *
+     * @throws java.io.IOException If there is a problem with {@link Process} IO
+     * @throws java.lang.InterruptedException if this thread is interrupted while
+     * it is waiting for a process to complete.
+     * 
+     * @todo Implement multiple hostname attempts and try to guess the rite one for the OS.
      */
     public static String getThisHostName() throws IOException, InterruptedException {
         String hostname = null;
         Process process;
         StringWriter writer = new StringWriter();
         InputStream processInputStream;
-        //get Runtime
         Runtime runtime = Runtime.getRuntime();
         try {
             //Attempt hostname call
