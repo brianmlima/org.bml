@@ -72,9 +72,10 @@ public class Pixel {
     }
 
     /**
+     * <p>
      * Writes a single pixel square transparent gif to the passed OutputStream.
      * Very handy for implementing empty call backs in web API's
-     *
+     *</p>
      * @param out The
      * @throws IOException OutputStream to write a pixel to.
      * @throws NullPointerException if passed OutputStream is null.
