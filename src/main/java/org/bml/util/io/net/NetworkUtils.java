@@ -26,7 +26,6 @@ package org.bml.util.io.net;
 import com.google.common.base.Preconditions;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.StringWriter;
 import java.net.InetAddress;
 import java.net.UnknownHostException;

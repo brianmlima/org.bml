@@ -70,7 +70,7 @@ public class CompressUtils {
     private static final String ZIP_MIME_PATTERN = "(.*[zZ][iI][pP])|(.*[jJ][aA][rR])|(.*[wW][aA][rR])";
 
     /**
-     * Extracts a zip | jar | war archive to the specified desitnation directory.
+     * Extracts a zip | jar | war archive to the specified directory.
      * Uses the default buffer size for read operations.
      *
      * @param zipFile
@@ -96,7 +96,7 @@ public class CompressUtils {
     }
 
     /**
-     * Extracts a zip | jar | war archive to the specified desitnation directory.
+     * Extracts a zip | jar | war archive to the specified directory.
      * Uses the passed buffer size for read operations.
      *
      * @param zipFile
