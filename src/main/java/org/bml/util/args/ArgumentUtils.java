@@ -129,20 +129,7 @@ public class ArgumentUtils {
         }
     }
 
-    /**
-     * <p>
-     * Checks a {@link String} for null and empty. Throws an {@link IllegalArgumentException} if the String does not pass checks.
-     * </p>
-     *
-     * @param checkString The {@link String} to be checked.
-     * @param name The name used to identify the String to be checked in exception messages.
-     * @param validator an implementation of {@link ArgumentValidator}
-     * @throws IllegalArgumentException If any of the check conditions are not met.
- *@deprecated This class and method has been depreciated in favor of a combination of {@link org.apache.commons.validator.Validator} and {@link com.google.common.base.Preconditions} framework which provides the same and broader functionality with greater flexibility.
-     */
-    public static void checkStringArg(final String checkString, final String name, final ArgumentValidator<String> validator) {
-        validator.check(checkString, name);
-    }
+
 
     /**
      * <p>
@@ -259,37 +246,6 @@ public class ArgumentUtils {
 
     /**
      * <p>
-     * Checks a {@link String} array and it's values and throws an {@link IllegalArgumentException} if any of the conditions are not met.
-     *
-     * </p>
-     *
-     * @param array The array of {@link String} to check.
-     * @param name The print friendly name of the array used in exception messages.
-     * @param allowNullArray If true the check will allow a null array. If false and the array is null an {@link IllegalArgumentException} is thrown.
-     * @param minArrayLength An integer of 0 or greater. If the arrays length is less than this parameter an {@link IllegalArgumentException} is thrown.
-     * @param maxArrayLength An integer of 1 or greater. If the arrays length is greater than this parameter an {@link IllegalArgumentException} is thrown.
-     * @throws IllegalArgumentException if any of the conditions of the array or it's values are not met.
- *@deprecated This class and method has been depreciated in favor of a combination of {@link org.apache.commons.validator.Validator} and {@link com.google.common.base.Preconditions} framework which provides the same and broader functionality with greater flexibility.
-     * @pre name !=null
-     * @pre minArrayLength >= 0
-     * @pre maxArrayLength >= minArrayLength
-     */
-    public static void checkStringArray(final String[] array, final String name, final boolean allowNullArray, final int minArrayLength, final int maxArrayLength, final ArgumentValidator<String> valueValidator) throws IllegalArgumentException {
-        //check base array
-        checkArray(array, name, allowNullArray, minArrayLength, maxArrayLength);
-        //return if allow null and is null
-        if (array == null) {
-            return;
-        }
-        String namePrefix = "Array " + name + " value index ";
-        //check values
-        for (int c = 0; c < array.length; c++) {
-            valueValidator.check(array[c], namePrefix + c);
-        }
-    }
-
-    /**
-     * <p>
      * Validation method for email addresses both local and network.
      * </p>
      *
@@ -309,24 +265,7 @@ public class ArgumentUtils {
         }
     }
 
-    /**
-     * 
-     * @param allowLocal
-     * @return 
- *@deprecated This class and method has been depreciated in favor of a combination of {@link org.apache.commons.validator.Validator} and {@link com.google.common.base.Preconditions} framework which provides the same and broader functionality with greater flexibility.
-     */
-    public static ArgumentValidator<String> getEmailArgumentValidator(final boolean allowLocal) {
-        return new ArgumentValidator<String>() {
-            EmailValidator validator = EmailValidator.getInstance(allowLocal);
 
-            @Override
-            public void check(String argument, String name) throws IllegalArgumentException {
-                if (!validator.isValid(argument)) {
-                    throw new UnsupportedOperationException("Argument " + name + " is not a valid email address");
-                }
-            }
-        };
-    }
 
     /**
      * <p>
