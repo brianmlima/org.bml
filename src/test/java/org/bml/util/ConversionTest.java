@@ -49,7 +49,7 @@ public class ConversionTest extends TestCase {
         int value = 0;
         byte[] expResult = new byte[]{0, 0, 0, 0};
         byte[] result = ConversionUtils.unsignedIntToByteArray(value);
-        assertEquals(expResult, result);
+        
         if (!Arrays.equals(result, expResult)) {
             fail();
         }
@@ -63,6 +63,7 @@ public class ConversionTest extends TestCase {
         byte[] byteArray = new byte[]{0, 0, 0, 0};
         int expResult = 0;
         int result = ConversionUtils.byteArrayToUnsignedInt(byteArray);
+        
         assertEquals(expResult, result);
         if (result != expResult) {
             fail();
