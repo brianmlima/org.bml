@@ -1,4 +1,4 @@
-package org.bml.util.ratelimitor;
+package org.bml.util.exception;
 
 /*
  * #%L
@@ -40,6 +40,7 @@ public class RateExceededException extends Exception {
      * again. Set to -1 if never and 0 if unknown.
      */
     private final long waitForRetry;
+    private final long rate;
     
     /**
      * Constructs an instance of <code>RateExceededException</code> with the
@@ -49,9 +50,10 @@ public class RateExceededException extends Exception {
      * @param waitForRetry the amount of time in mills a caller should wait to
      * try again. Set to -1 if never, 0 if unknown
      */
-    public RateExceededException(final String message, final long waitForRetry) {
+    public RateExceededException(final String message, final long rate, final long waitForRetry) {
         super(message);
         this.waitForRetry = waitForRetry;
+        this.rate=rate;
     }
 
     /**
@@ -63,9 +65,10 @@ public class RateExceededException extends Exception {
      * @param waitForRetry the amount of time in mills a caller should wait to
      * try again. Set to -1 if never, 0 if unknown
      */
-    public RateExceededException(final String message, final Throwable cause, final long waitForRetry) {
+    public RateExceededException(final String message, final Throwable cause, final long rate,final long waitForRetry) {
         super(message, cause);
         this.waitForRetry = waitForRetry;
+        this.rate=rate;
     }
 
     /**

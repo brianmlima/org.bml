@@ -26,14 +26,14 @@ package org.bml.util.alert;
 
 import java.util.Date;
 import org.bml.util.exception.DisabledException;
-import org.bml.util.ratelimitor.RateExceededException;
+import org.bml.util.exception.RateExceededException;
 
 /**Interface all Alert Handlers must implement
  * @author Brian M. Lima
  */
 public interface AlertHandler {
     
-    public Date trigger(String subject, String body)throws DisabledException, RateExceededException;
+    public long trigger(String subject, String body)throws DisabledException, RateExceededException;
 
     public void disable();
 
@@ -41,9 +41,23 @@ public interface AlertHandler {
 
     public boolean isEnabled();
 
-    public Date lastTriggered();
+    public long lastTriggered();
 
-    public long getMinTriggerInterval();
+    /**
+     * <p>
+     * Gets the maximum allowed trigger actions per second
+     * </p>
+     *
+     * @return the maximum allowed trigger actions per second.
+     */
+    public double getMaxTriggersPerSecond();
 
-    public void setMinTriggerInterval(long interval);
+    /**
+     * <p>
+     * Sets the maximum allowed trigger actions per second.
+     * </p>
+     *
+     * @param permitPerSecond the maximum allowed triggers per second.
+     */
+    public void setMaxTriggersPerSecond(final double permitPerSecond);
 }
