@@ -156,7 +156,7 @@ public class ParseErrorWorkerThread extends BlockingQueueWorkerThread<ParseError
             }
             StopWatch connectionAge = new StopWatch();
             connectionAge.start();
-            setWorkerState(WORKER_STATE.AQUIRING_CONNECTION);
+            setWorkerState(WORKER_STATE.ACQUIRING_CONNECTION);
             myConnection = DBUtil.getDefaultDataSource().getConnection();
             setWorkerState(WORKER_STATE.CONFIGURING_CONNECTION);
             myConnection.clearWarnings();
