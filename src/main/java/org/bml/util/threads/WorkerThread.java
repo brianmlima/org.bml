@@ -184,6 +184,8 @@ public abstract class WorkerThread extends Thread {
 
         /**
          * Indicates a worker thread that is starting up.
+         *//**
+         * Indicates a worker thread that is starting up.
          */
         STARTING,
         /**
@@ -195,10 +197,20 @@ public abstract class WorkerThread extends Thread {
          */
         STOPPED,
         /**
-         * Indicates a worker thread that is aquiring a connection to some
+         * Indicates a worker thread that is polling. Commonly used in 
+         * blocking IO.
+         */
+        POLLING,
+        /**
+         * Indicates a worker thread that is acquiring a permit. This is common
+         * in systems with rate limits.
+         */
+        ACQUIRING_PERMIT,
+        /**
+         * Indicates a worker thread that is acquiring a connection to some
          * outside API such as a JDBC or URL connection.
          */
-        AQUIRING_CONNECTION,
+        ACQUIRING_CONNECTION,
         /**
          * Indicates a worker thread that is configuring a connection. This state
          * exists as some configurations depend on the underlying database and can
@@ -207,7 +219,7 @@ public abstract class WorkerThread extends Thread {
         CONFIGURING_CONNECTION,
         /**
          * Indicates a worker thread that is waiting on a pull operation from a
-         * queue or stack like structure
+         * queue or stack like structure.
          */
         PULLING,
         /**
@@ -216,7 +228,7 @@ public abstract class WorkerThread extends Thread {
         WAITING,
         /**
          * Indicates a worker thread that is waiting on a push operation. The
-         * equivilant of an offer on a queue
+         * equivalent of an offer on a queue.
          */
         PUSHING,
         /**
