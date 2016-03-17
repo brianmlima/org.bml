@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.TimeUnit;
-import org.apache.commons.pool.PoolableObjectFactory;
+import org.apache.commons.pool2.PooledObjectFactory;
 import org.bml.util.elasticconsumer.ElasticConsumer;
 
 /**
@@ -46,7 +46,7 @@ public class ElasticConsumerTest {
         BlockingQueue<ProcData> queueIn = new SynchronousQueue<ProcData>();
 
         //This is the factory that creates worker threads for the ElasticConsumer
-        PoolableObjectFactory factory = new TestWorkerThreadObjectFactory(queueIn, 2, TimeUnit.SECONDS, 100);
+        PooledObjectFactory<TestWorkerThread> factory = new TestWorkerThreadObjectFactory(queueIn, 2, TimeUnit.SECONDS, 100);
 
         //The ElasticConsumer component.
         ElasticConsumer<ProcData,TestWorkerThread> app = new ElasticConsumer<ProcData,TestWorkerThread>(factory, queueIn, 1, false);

@@ -87,7 +87,7 @@ public class ParseErrorWorkerThread extends BlockingQueueWorkerThread<ParseError
      * queue.
      */
     public ParseErrorWorkerThread(final BlockingQueue<ParseError> queueIn, final long timeout, final TimeUnit unit, final long waitOnEmptyQueueInMills) {
-        super(queueIn, timeout, unit, waitOnEmptyQueueInMills);
+        super(queueIn, unit.toMillis(timeout), waitOnEmptyQueueInMills);
         timer = new StopWatch();
         timer.start();
     }

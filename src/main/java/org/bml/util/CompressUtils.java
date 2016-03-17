@@ -136,7 +136,7 @@ public class CompressUtils {
             Preconditions.checkArgument(destDir.exists(), "Can not extract zipFileName %s to a non existant destination %s", zipFile, destDir);
             Preconditions.checkArgument(destDir.canWrite(), "Can not extract archive with no write permissions. Check File permissions. USER=%s FILE=%s", System.getProperty("user.name"), destDir);
             //bufferSize
-            Preconditions.checkArgument(bufferSize > 0, "Can not extract archive %s to %s with a buffer size less than 1 size = %s", zipFile, destDir, bufferSize);
+            Preconditions.checkArgument(bufferSize > 0, "Can not extract archive %s to %s with a buffer size less than 1. size = %s", zipFile, destDir, bufferSize);
 
         }
 

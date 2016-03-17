@@ -58,9 +58,16 @@
         <level value="INFO" />
         <appender-ref ref="FILE" />
     </logger>    
+    <logger name="org.bml.util.rt.telemetry.impl.StringToFileRTTelemetrySink" additivity="false" >
+        <level value="TRACE" />
+        <appender-ref ref="FILE" />
+    </logger>    
+    
+    
+    
 
     <root> 
-        <priority value ="info" />
+        <priority value ="TRACE" />
         <appender-ref ref="FILE" /> 
     </root>
 </log4j:configuration>

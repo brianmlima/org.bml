@@ -1,4 +1,3 @@
-
 package org.bml.util.elasticconsumer.example;
 
 /*
@@ -23,24 +22,31 @@ package org.bml.util.elasticconsumer.example;
  *     along with ORG.BML.  If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
-import org.apache.commons.pool.PoolableObjectFactory;
+import org.apache.commons.pool2.BasePooledObjectFactory;
+import org.apache.commons.pool2.PooledObject;
+import org.apache.commons.pool2.impl.DefaultPooledObject;
 
-/** An Example implementation of an ObjectFactory<TestWorkerThread> for the test rig.
+/**
+ * An Example implementation of an ObjectFactory<TestWorkerThread> for the test rig.
+ *
  * @author BML
  */
-public class TestWorkerThreadObjectFactory implements PoolableObjectFactory<TestWorkerThread> {
+public class TestWorkerThreadObjectFactory extends BasePooledObjectFactory<TestWorkerThread> {
 
-    /**This input queue. this is only used in the factory for TestWorkerThread initialization*/
+    /**
+     * This input queue. this is only used in the factory for TestWorkerThread initialization
+     */
     private BlockingQueue<ProcData> queueIn = null;
     /*Used for TestWorkerThread initialization*/
-    private long timeout = 1,  waitOnEmptyQueueInMills = 1000;
+    private long timeout = 1, waitOnEmptyQueueInMills = 1000;
     /*TimeUnit for polling timeout. Used for TestWorkerThread initialization*/
     private TimeUnit unit = TimeUnit.SECONDS;
 
-    /**Creates a new instance of TestWorkerThreadObjectFactory.
+    /**
+     * Creates a new instance of TestWorkerThreadObjectFactory.
+     *
      * @param queueIn The BlockingQueue<ProcData> for worker threads to poll.
      * @param timeout The worker threads poll timeout.
      * @param unit The worker threads poll timeout TimeUnit.
@@ -53,14 +59,9 @@ public class TestWorkerThreadObjectFactory implements PoolableObjectFactory<Test
         this.waitOnEmptyQueueInMills = waitOnEmptyQueueInMills;
     }
 
-    /**Makes a new TestWorkerThread.
-     * @return a TestWorkerThread ready to be started.
-     */
-    public TestWorkerThread makeObject() {
-        return new TestWorkerThread(queueIn, timeout, unit, waitOnEmptyQueueInMills);
-    }
-
-    /**Destruction method. Not necessary in the test case but handy in cleanup operations.
+    /**
+     * Destruction method. Not necessary in the test case but handy in cleanup operations.
+     *
      * @param obj TestWorkerThread to be destroyed.
      */
     public void destroyObject(TestWorkerThread obj) throws Exception {
@@ -68,15 +69,19 @@ public class TestWorkerThreadObjectFactory implements PoolableObjectFactory<Test
         obj.flush();
     }
 
-    public boolean validateObject(TestWorkerThread obj) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    @Override
+    public void destroyObject(PooledObject<TestWorkerThread> p) throws Exception {
+        this.destroyObject(p.getObject());
+        super.destroyObject(p);
     }
 
-    public void activateObject(TestWorkerThread obj) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    @Override
+    public TestWorkerThread create() throws Exception {
+        return new TestWorkerThread(queueIn, timeout, unit, waitOnEmptyQueueInMills);
     }
 
-    public void passivateObject(TestWorkerThread obj) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    @Override
+    public PooledObject<TestWorkerThread> wrap(final TestWorkerThread t) {
+        return new DefaultPooledObject(t);
     }
 }

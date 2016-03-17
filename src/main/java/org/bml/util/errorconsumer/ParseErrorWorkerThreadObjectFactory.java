@@ -1,4 +1,3 @@
-
 package org.bml.util.errorconsumer;
 
 /*
@@ -23,25 +22,33 @@ package org.bml.util.errorconsumer;
  *     along with ORG.BML.  If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 import org.apache.commons.pool.PoolableObjectFactory;
+import org.apache.commons.pool2.BasePooledObjectFactory;
+import org.apache.commons.pool2.PooledObject;
+import org.apache.commons.pool2.impl.DefaultPooledObject;
 
-/** An implementation of an ObjectFactory<ParseErrorWorkerThread> for the ParseError
+/**
+ * An implementation of an ObjectFactory<ParseErrorWorkerThread> for the ParseError
  * handler.
+ *
  * @author BML
  */
-public class ParseErrorWorkerThreadObjectFactory implements PoolableObjectFactory<ParseErrorWorkerThread> {
+public class ParseErrorWorkerThreadObjectFactory extends BasePooledObjectFactory<ParseErrorWorkerThread> {
 
-    /**This input queue. this is only used in the factory for TestWorkerThread initialization*/
+    /**
+     * This input queue. this is only used in the factory for TestWorkerThread initialization
+     */
     private BlockingQueue<ParseError> queueIn = null;
     /*Used for TestWorkerThread initialization*/
-    private long timeout = 1,  waitOnEmptyQueueInMills = 1000;
+    private long timeout = 1, waitOnEmptyQueueInMills = 1000;
     /*TimeUnit for polling timeout. Used for TestWorkerThread initialization*/
     private TimeUnit unit = TimeUnit.SECONDS;
 
-    /**Creates a new instance of .
+    /**
+     * Creates a new instance of .
+     *
      * @param queueIn The BlockingQueue<ProcData> for worker threads to poll.
      * @param timeout The worker threads poll timeout.
      * @param unit The worker threads poll timeout TimeUnit.
@@ -54,35 +61,37 @@ public class ParseErrorWorkerThreadObjectFactory implements PoolableObjectFactor
         this.waitOnEmptyQueueInMills = waitOnEmptyQueueInMills;
     }
 
-    /**Makes a new TestWorkerThread.
+    /**
+     * Makes a new TestWorkerThread.
+     *
      * @return a TestWorkerThread ready to be started.
      */
     @Override
-    public ParseErrorWorkerThread makeObject() {
+    public ParseErrorWorkerThread create() {
         return new ParseErrorWorkerThread(queueIn, timeout, unit, waitOnEmptyQueueInMills);
     }
 
-    /**Destruction method. Not necessary in the test case but handy in cleanup operations.
+    /**
+     * Destruction method. Not necessary in the test case but handy in cleanup operations.
+     *
      * @param obj TestWorkerThread to be destroyed.
      * @throws java.lang.Exception This implementation should not throw Exception however it is necessary to complete the contract of {@link PoolableObjectFactory}
      */
-    @Override
-    public void destroyObject(ParseErrorWorkerThread obj) throws Exception {
-        
+    public void destroyObject(final ParseErrorWorkerThread obj) throws Exception {
         obj.setShouldRun(false);
         obj.interrupt();
         obj.handleDBEntry();
     }
 
-    public boolean validateObject(ParseErrorWorkerThread obj) {
-        throw new UnsupportedOperationException("Not supported.");
+    @Override
+    public void destroyObject(PooledObject<ParseErrorWorkerThread> p) throws Exception {
+        this.destroyObject(p.getObject());
+        super.destroyObject(p);
     }
 
-    public void activateObject(ParseErrorWorkerThread obj) throws Exception {
-        throw new UnsupportedOperationException("Not supported.");
+    @Override
+    public PooledObject<ParseErrorWorkerThread> wrap(ParseErrorWorkerThread t) {
+        return new DefaultPooledObject(t);
     }
 
-    public void passivateObject(ParseErrorWorkerThread obj) throws Exception {
-        throw new UnsupportedOperationException("Not supported."); 
-    }
 }
