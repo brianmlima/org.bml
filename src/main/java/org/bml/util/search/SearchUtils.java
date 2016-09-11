@@ -1,4 +1,3 @@
-
 package org.bml.util.search;
 
 /*
@@ -23,7 +22,6 @@ package org.bml.util.search;
  *     along with ORG.BML.  If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -96,7 +94,7 @@ public class SearchUtils {
      * This allows the search to be focused to a predefined part of
      * theSearchBase array.
      * @param theKey The integer to search for.
-     * @return the nearest low integer to theKey 
+     * @return the nearest low integer to theKey
      */
     public static Integer binarySearchLower(final Integer[] theSearchBase, final int theLowerBound, final int theUpperBound, final int theKey) {
         //Argument sanity checking.

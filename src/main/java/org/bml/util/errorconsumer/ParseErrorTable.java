@@ -105,7 +105,7 @@ public class ParseErrorTable {
         tmpParamMap.put("uri".intern(), String.class);
         tmpParamMap.put("reason".intern(), String.class);
 
-        //Prepare tmpParamToPSMap 
+        //Prepare tmpParamToPSMap
         byte columnPosition = 1;
         Map<String, Byte> tmpParamToPSMap = new LinkedHashMap<String, Byte>();
         for (Map.Entry<String, Class> e : tmpParamMap.entrySet()) {

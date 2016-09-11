@@ -22,7 +22,6 @@ package org.bml.util.geo.util.geolite;
  *     along with ORG.BML.  If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
 import au.com.bytecode.opencsv.CSVReader;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -50,111 +49,106 @@ import org.bml.util.io.IOUtils;
  */
 public class GISNetworkTool {
 
-  public static boolean getFileFromNet(String urlIn, String fileOutName) {
-    URL myURL = null;
-    ReadableByteChannel myReadableByteChannel = null;
-    FileOutputStream myFileOutputStream = null;
-    try {
-      myURL = new URL(urlIn);
-      myReadableByteChannel = Channels.newChannel(myURL.openStream());
-      myFileOutputStream = new FileOutputStream(fileOutName);
-      myFileOutputStream.getChannel().transferFrom(myReadableByteChannel, 0, Long.MAX_VALUE);
-    } catch (MalformedURLException ex) {
-      Logger.getLogger(GISNetworkTool.class.getName()).log(Level.SEVERE, null, ex);
-      return false;
-    } catch (IOException ex) {
-      Logger.getLogger(GISNetworkTool.class.getName()).log(Level.SEVERE, null, ex);
-      return false;
-    } finally {
-      IOUtils.closeQuietly(myReadableByteChannel);
-      IOUtils.closeQuietly(myFileOutputStream);
-    }
-    return true;
-  }
-
-  
-  /**
-   * TODO: Clean up and log on failure. Currently this method just fails and returns with a vague message to STDOut
-   * @return true on success, false otherwise
-   * @todo code better more expressive error handling
-   * @throws Exception 
-   */
-  public static boolean initFromNetwork() throws Exception {
-
-    String stringCountryZipURLIn = "http://geolite.maxmind.com/download/geoip/database/GeoIPCountryCSV.zip";
-    String stringCountryZipFileOut = "/tmp/gis/GeoIPCountryCSV.zip";
-    String stringLatestCityZipFileOut = "/tmp/gis/GeoLiteCity-latest.zip";
-    String stringLatestCityZipURLIn = "http://geolite.maxmind.com/download/geoip/database/GeoLiteCity_CSV/GeoLiteCity-latest.zip";
-
-    File baseDir = new File("/tmp/gis");
-    if (baseDir.exists() && baseDir.isDirectory()) {
-      FileUtils.deleteDirectory(baseDir);
-    } else if (baseDir.exists() && baseDir.isFile()) {
-      FileUtils.deleteQuietly(baseDir);
+    public static boolean getFileFromNet(String urlIn, String fileOutName) {
+        URL myURL = null;
+        ReadableByteChannel myReadableByteChannel = null;
+        FileOutputStream myFileOutputStream = null;
+        try {
+            myURL = new URL(urlIn);
+            myReadableByteChannel = Channels.newChannel(myURL.openStream());
+            myFileOutputStream = new FileOutputStream(fileOutName);
+            myFileOutputStream.getChannel().transferFrom(myReadableByteChannel, 0, Long.MAX_VALUE);
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(GISNetworkTool.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        } catch (IOException ex) {
+            Logger.getLogger(GISNetworkTool.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        } finally {
+            IOUtils.closeQuietly(myReadableByteChannel);
+            IOUtils.closeQuietly(myFileOutputStream);
+        }
+        return true;
     }
 
-    FileUtils.forceMkdir(baseDir);
+    /**
+     * TODO: Clean up and log on failure. Currently this method just fails and returns with a vague message to STDOut
+     *
+     * @return true on success, false otherwise
+     * @todo code better more expressive error handling
+     * @throws Exception
+     */
+    public static boolean initFromNetwork() throws Exception {
 
-    getFileFromNet(stringCountryZipURLIn, stringCountryZipFileOut);
-    getFileFromNet(stringLatestCityZipURLIn, stringLatestCityZipFileOut);
+        String stringCountryZipURLIn = "http://geolite.maxmind.com/download/geoip/database/GeoIPCountryCSV.zip";
+        String stringCountryZipFileOut = "/tmp/gis/GeoIPCountryCSV.zip";
+        String stringLatestCityZipFileOut = "/tmp/gis/GeoLiteCity-latest.zip";
+        String stringLatestCityZipURLIn = "http://geolite.maxmind.com/download/geoip/database/GeoLiteCity_CSV/GeoLiteCity-latest.zip";
 
-    CompressUtils.extractZip(new File(stringCountryZipFileOut), baseDir);
-    CompressUtils.extractZip(new File(stringLatestCityZipFileOut), baseDir);
+        File baseDir = new File("/tmp/gis");
+        if (baseDir.exists() && baseDir.isDirectory()) {
+            FileUtils.deleteDirectory(baseDir);
+        } else if (baseDir.exists() && baseDir.isFile()) {
+            FileUtils.deleteQuietly(baseDir);
+        }
 
-    File blockFile = getBlockFile(baseDir);
+        FileUtils.forceMkdir(baseDir);
 
-    if (blockFile == null || !blockFile.isFile()) {
-      //throw some standard exception log and return.
-        System.out.println("Bad JUJU!");
+        getFileFromNet(stringCountryZipURLIn, stringCountryZipFileOut);
+        getFileFromNet(stringLatestCityZipURLIn, stringLatestCityZipFileOut);
+
+        CompressUtils.extractZip(new File(stringCountryZipFileOut), baseDir);
+        CompressUtils.extractZip(new File(stringLatestCityZipFileOut), baseDir);
+
+        File blockFile = getBlockFile(baseDir);
+
+        if (blockFile == null || !blockFile.isFile()) {
+            //throw some standard exception log and return.
+            System.out.println("Bad JUJU!");
+            return false;
+        }
+
+        Reader blockFIleReader = new FileReader(blockFile.getAbsolutePath());
+        System.out.println(blockFile.getAbsolutePath());
+        CSVReader reader = new CSVReader(blockFIleReader);
+
+        String[] nextLine;
+
+        Set<GeoLiteCityBlock> blockSet = new HashSet<GeoLiteCityBlock>();
+
+        int lineNum = 1;
+        while ((nextLine = reader.readNext()) != null) {
+            //Skip the header
+            if (lineNum == 1) {
+                lineNum++;
+                continue;
+            }
+            blockSet.add(new GeoLiteCityBlock(nextLine[0], nextLine[1], nextLine[2]));
+        }
+
+        System.out.println();
+
         return false;
     }
 
-    Reader blockFIleReader = new FileReader(blockFile.getAbsolutePath());
-    System.out.println(blockFile.getAbsolutePath());
-    CSVReader reader = new CSVReader(blockFIleReader);
-    
-    String[] nextLine;
-    
-    
-    Set<GeoLiteCityBlock> blockSet = new HashSet<GeoLiteCityBlock>();
-    
-    
-    int lineNum=1;
-    while ((nextLine = reader.readNext()) != null) {
-      //Skip the header
-      if(lineNum==1){
-        lineNum++;
-        continue;
-      }
-      blockSet.add(new GeoLiteCityBlock(nextLine[0],nextLine[1],nextLine[2]));
+    /**
+     *
+     * @param baseDir
+     * @return the Blocks.csv file or null if the file dows not exist in the
+     * baseDir.
+     */
+    public static File getBlockFile(final File baseDir) {
+        IOFileFilter blockFileFilter = new WildcardFileFilter("*Blocks.csv");
+        Collection<File> files = FileUtils.listFilesAndDirs(baseDir, blockFileFilter, new WildcardFileFilter("*"));
+        for (File file : files) {
+            if (file.isFile()) {
+                return file;
+            }
+        }
+        return null;
     }
 
-    System.out.println();
-
-
-
-
-    return false;
-  }
-
-  /**
-   *
-   * @param baseDir
-   * @return the Blocks.csv file or null if the file dows not exist in the
-   * baseDir.
-   */
-  public static File getBlockFile(final File baseDir) {
-    IOFileFilter blockFileFilter = new WildcardFileFilter("*Blocks.csv");
-    Collection<File> files = FileUtils.listFilesAndDirs(baseDir, blockFileFilter, new WildcardFileFilter("*"));
-    for (File file : files) {
-      if (file.isFile()) {
-        return file;
-      }
+    public static void main(String args[]) throws Exception {
+        initFromNetwork();
     }
-    return null;
-  }
-
-  public static void main(String args[]) throws Exception {
-    initFromNetwork();
-  }
 }

@@ -1,4 +1,3 @@
-
 package org.bml.util.mail;
 
 /*
@@ -23,7 +22,6 @@ package org.bml.util.mail;
  *     along with ORG.BML.  If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
 import java.util.Properties;
 import javax.mail.Address;
 import javax.mail.Message;
@@ -39,7 +37,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class MailUtils {
 
-        /**
+    /**
      * Standard Logging. All logging should be funneled through this log so we
      * can use adaptors for ELB and in house with the same results.
      */
@@ -53,15 +51,16 @@ public class MailUtils {
      */
     private static final String SIMPLE_CLASS_NAME = MailUtils.class.getSimpleName();
 
-    public static enum MAIL_STATE{
+    public static enum MAIL_STATE {
+
         SENT,
         SENT_FAIL_NOTICE,
         SENT_RECOVERY_NOTICE;
     }
-    
-    
+
     /**
      * Simple mail utility
+     *
      * @param sendToAdresses email addresses to send the mail to
      * @param emailSubjectLine the subject of the email.
      * @param emailBody The body of the mail
@@ -71,7 +70,7 @@ public class MailUtils {
      * @param smtpPort the port to contact the smtp server on
      * @return boolean true on success and false on error
      */
-    public static boolean sendMail(final String[] sendToAdresses, final String emailSubjectLine, final String emailBody,final String smtpHost,String sender,String smtpPassword,final int smtpPort) {
+    public static boolean sendMail(final String[] sendToAdresses, final String emailSubjectLine, final String emailBody, final String smtpHost, String sender, String smtpPassword, final int smtpPort) {
         if ((sendToAdresses == null) || (sendToAdresses.length == 0)) {
             return false;
         }
@@ -107,8 +106,8 @@ public class MailUtils {
             transport.sendMessage(message, message.getAllRecipients());
             transport.close();
         } catch (Throwable t) {
-            if(LOG.isErrorEnabled()){
-                LOG.error("Error occured while sending mail.",t);
+            if (LOG.isErrorEnabled()) {
+                LOG.error("Error occured while sending mail.", t);
             }
             return false;
         }

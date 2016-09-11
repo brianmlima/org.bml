@@ -22,25 +22,24 @@ package org.bml.util.fabric;
  *     along with ORG.BML.  If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
 /**
- * FabricNode represents a particle in a 2d plane. It can be thought of as a 
- * coordinate in 2d space that is aware of and able to act on its surrounding 
+ * FabricNode represents a particle in a 2d plane. It can be thought of as a
+ * coordinate in 2d space that is aware of and able to act on its surrounding
  * FabricNode objects.
- * 
+ *
  * @author Brian M. Lima
  */
 public abstract class FabricNode<T> {
 
-    private FabricNode<T> north=null;
-    private FabricNode<T> south=null;
-    private FabricNode<T> east=null;
-    private FabricNode<T> west=null;
-    
+    private FabricNode<T> north = null;
+    private FabricNode<T> south = null;
+    private FabricNode<T> east = null;
+    private FabricNode<T> west = null;
+
     private final T payload;
 
-    public FabricNode(T payload){
-        this.payload=payload;
+    public FabricNode(T payload) {
+        this.payload = payload;
     }
-    
+
 }

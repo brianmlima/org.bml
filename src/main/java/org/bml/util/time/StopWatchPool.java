@@ -1,4 +1,3 @@
-
 package org.bml.util.time;
 
 /*
@@ -23,7 +22,6 @@ package org.bml.util.time;
  *     along with ORG.BML.  If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
 import java.util.concurrent.atomic.AtomicInteger;
 import org.apache.commons.lang.time.StopWatch;
 import org.apache.commons.logging.Log;
@@ -44,7 +42,7 @@ public class StopWatchPool extends GenericObjectPool<StopWatch> {
     private final Log LOG = LogFactory.getLog(StopWatchPool.class);
 
     /**
-     * If true this object will act internally as a pool, if false it will act 
+     * If true this object will act internally as a pool, if false it will act
      * like an object factory and returned instances will eventually be GC'd.
      */
     private boolean usePool = true;
@@ -121,7 +119,7 @@ public class StopWatchPool extends GenericObjectPool<StopWatch> {
 }
 
 /**
- * 
+ *
  * @author Brian M. Lima
  */
 class StopWatchFactory implements PoolableObjectFactory<StopWatch> {

@@ -246,7 +246,7 @@ public class DataStoreManager implements Closeable {
         Preconditions.checkState(open, "Can not open a FeatureCollection from a closed DataStore");
         synchronized (this.DATA_STORE_STATE_LOCK) {//GRAB TYPES LOCK
             //Check open now that we have a lock
-            Preconditions.checkState(open, "Can not open a FeatureCollection from a closed DataStore");            
+            Preconditions.checkState(open, "Can not open a FeatureCollection from a closed DataStore");
             String types[] = this.dataStore.getTypeNames();
             Preconditions.checkState(types != null, "DataStoreManager: DataStore.getTypeNames() is returning null. Can not manage a DataStore with no types.");
             synchronized (this.TYPE_NAME_STATE_LOCK) {

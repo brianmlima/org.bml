@@ -1,4 +1,3 @@
-
 package org.bml.util.geo.util.geolite;
 
 /*
@@ -23,7 +22,6 @@ package org.bml.util.geo.util.geolite;
  *     along with ORG.BML.  If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import java.io.IOException;
 import java.sql.Connection;
@@ -104,7 +102,7 @@ public class GeoLiteCityLocation {
         }
 
         int c = 1;
-        //POPULATE the PARAM_TO_PS_MAP based on the parameters in PARAM_MAP 
+        //POPULATE the PARAM_TO_PS_MAP based on the parameters in PARAM_MAP
         for (Map.Entry<String, Class> e : PARAM_MAP.entrySet()) {
             PARAM_TO_PS_MAP.put(e.getKey(), c);
             c++;
@@ -155,15 +153,15 @@ public class GeoLiteCityLocation {
                 c++;
                 mapOut.put(rs.getInt(FIELD.LOCID.fieldName),
                         new GeoLiteCityLocation(
-                        rs.getInt(FIELD.LOCID.fieldName),
-                        rs.getString(FIELD.COUNTRY.fieldName),
-                        rs.getString(FIELD.REGION.fieldName),
-                        rs.getString(FIELD.CITY.fieldName),
-                        rs.getString(FIELD.POSTALCODE.fieldName),
-                        rs.getDouble(FIELD.LATITUDE.fieldName),
-                        rs.getDouble(FIELD.LONGITUDE.fieldName),
-                        rs.getString(FIELD.METROCODE.fieldName),
-                        rs.getLong(FIELD.AREACODE.fieldName)));
+                                rs.getInt(FIELD.LOCID.fieldName),
+                                rs.getString(FIELD.COUNTRY.fieldName),
+                                rs.getString(FIELD.REGION.fieldName),
+                                rs.getString(FIELD.CITY.fieldName),
+                                rs.getString(FIELD.POSTALCODE.fieldName),
+                                rs.getDouble(FIELD.LATITUDE.fieldName),
+                                rs.getDouble(FIELD.LONGITUDE.fieldName),
+                                rs.getString(FIELD.METROCODE.fieldName),
+                                rs.getLong(FIELD.AREACODE.fieldName)));
                 if ((c % 100000) == 0) {
                     if (LOG.isInfoEnabled()) {
                         LOG.info("Loaded " + c + " Location mappings");
@@ -171,8 +169,8 @@ public class GeoLiteCityLocation {
                 }
             }
         } catch (SQLException ex) {
-            if(LOG.isWarnEnabled()){
-            LOG.warn("SQLException caught while loading GeoLiteCityBlock objects ", ex);
+            if (LOG.isWarnEnabled()) {
+                LOG.warn("SQLException caught while loading GeoLiteCityBlock objects ", ex);
             }
         } finally {
             DbUtils.closeQuietly(con, st, rs);

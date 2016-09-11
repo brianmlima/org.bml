@@ -22,7 +22,6 @@ package org.bml.util.data;
  *     along with ORG.BML.  If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
 /**
  *
  * @author Brian M. Lima

@@ -1,4 +1,3 @@
-
 package org.bml.util.tree.node;
 
 /*
@@ -23,14 +22,14 @@ package org.bml.util.tree.node;
  *     along with ORG.BML.  If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
 import java.util.Map;
 
 /**
  * @author Brian M. Lima
  */
 public class ByteNode {
+
     int numChildren;
     boolean isLeaf;
-    Map<Byte,ByteNode> children;
+    Map<Byte, ByteNode> children;
 }

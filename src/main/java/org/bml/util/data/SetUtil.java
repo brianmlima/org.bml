@@ -27,7 +27,6 @@ package org.bml.util.data;
  *     along with ORG.BML.  If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
 /**
  * Interface for setters. This is handy when using enumeration to deal with setting data
  * fields.

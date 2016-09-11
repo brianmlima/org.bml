@@ -38,7 +38,6 @@ package org.bml.util;
  *     along with ORG.BML.  If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
 /**
  * A utility for dealing with Hex numerics and strings.
  *

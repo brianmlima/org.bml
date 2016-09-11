@@ -27,7 +27,6 @@ package org.bml.util.data;
  *     along with ORG.BML.  If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Objects;
 

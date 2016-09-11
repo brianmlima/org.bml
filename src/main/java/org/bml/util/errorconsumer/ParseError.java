@@ -1,4 +1,3 @@
-
 package org.bml.util.errorconsumer;
 
 /*
@@ -23,7 +22,6 @@ package org.bml.util.errorconsumer;
  *     along with ORG.BML.  If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.commons.logging.Log;

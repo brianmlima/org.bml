@@ -22,7 +22,6 @@ package org.bml.util.elasticmessager.stores;
  *     along with ORG.BML.  If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;

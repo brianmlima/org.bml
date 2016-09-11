@@ -1,4 +1,3 @@
-
 package org.bml.util.elasticmessager;
 
 /*
@@ -23,7 +22,6 @@ package org.bml.util.elasticmessager;
  *     along with ORG.BML.  If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
 import org.bml.util.threads.WorkerThread;
 
 /**
@@ -31,8 +29,8 @@ import org.bml.util.threads.WorkerThread;
  * @author Brian M. Lima
  */
 public class MessageStoreTestThread extends WorkerThread {
-    
-    private int testInterval=1000;
+
+    private int testInterval = 1000;
 
     @Override
     protected void doIt() {
@@ -52,5 +50,5 @@ public class MessageStoreTestThread extends WorkerThread {
     public void setTestInterval(int testInterval) {
         this.testInterval = testInterval;
     }
-    
+
 }

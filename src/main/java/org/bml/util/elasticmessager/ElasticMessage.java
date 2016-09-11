@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package org.bml.util.elasticmessager;
 
 /*
@@ -28,7 +27,6 @@ package org.bml.util.elasticmessager;
  *     along with ORG.BML.  If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
 /**
  *
  * @author Brian M. Lima

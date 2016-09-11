@@ -1,4 +1,5 @@
-/** The utility thread package from org.bml.util.
+/**
+ * The utility thread package from org.bml.util.
  * BML: The github version of this package changes too often. I chose to keep a copy of the package here to improve stability.
  */
 package org.bml.util.threads;

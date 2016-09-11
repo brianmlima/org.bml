@@ -24,7 +24,6 @@ package org.bml.util;
  *     along with ORG.BML.  If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
 /**
  *
  * @author Brian M. Lima.
@@ -32,6 +31,7 @@ package org.bml.util;
 public class AmazonFBACalculator {
 
     public static enum CONDITION {
+
         NEW(),
         USED();
     }
@@ -57,7 +57,5 @@ public class AmazonFBACalculator {
         //Weight the sales per day over time.
 
         //Figure out the daily sales of an asin for a monthly subscription.
-        
-        
     }
 }

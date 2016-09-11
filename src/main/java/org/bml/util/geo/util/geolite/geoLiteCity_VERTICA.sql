@@ -5,17 +5,17 @@
 -- Copyright (C) 2006 - 2014 Brian M. Lima
 -- %%
 -- This file is part of ORG.BML.
--- 
+--
 --     ORG.BML is free software: you can redistribute it and/or modify
 --     it under the terms of the GNU General Public License as published by
 --     the Free Software Foundation, either version 3 of the License, or
 --     (at your option) any later version.
--- 
+--
 --     ORG.BML is distributed in the hope that it will be useful,
 --     but WITHOUT ANY WARRANTY; without even the implied warranty of
 --     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 --     GNU Lesser General Public License for more details.
--- 
+--
 --     You should have received a copy of the GNU Lesser General Public License
 --     along with ORG.BML.  If not, see <http://www.gnu.org/licenses/>.
 -- #L%
@@ -54,27 +54,27 @@ CREATE TABLE IF NOT EXISTS geo.countries
  code varchar(2) NOT NULL PRIMARY KEY
 )
 ORDER BY code ASC
-UNSEGMENTED ALL NODES 
+UNSEGMENTED ALL NODES
 KSAFE 1;
 
 
 COPY geo.countries
    FROM '/mnt/raid00/vertica/tmp/country_names_and_code_elements_txt'
-   DELIMITER ';' 
+   DELIMITER ';'
    ENCLOSED BY  '"'
    SKIP 1
 ;
 
-COPY geo.geoLiteCityBlock 
+COPY geo.geoLiteCityBlock
    FROM '/mnt/raid00/vertica/tmp/GeoLiteCity-Blocks.csv'
-   DELIMITER ',' 
+   DELIMITER ','
    ENCLOSED BY  '"'
    SKIP 2
 ;
 
-COPY geo.geoLiteCityLocation 
+COPY geo.geoLiteCityLocation
    FROM '/mnt/raid00/vertica/tmp/GeoLiteCity-Location.csv'
-   DELIMITER ',' 
+   DELIMITER ','
    ENCLOSED BY  '"'
    SKIP 2
 ;
@@ -97,11 +97,11 @@ CREATE TABLE IF NOT EXISTS geo.gisCore
  PRIMARY KEY (startIpNum, endIpNum)
 )
 ORDER BY startIpNum ASC
-UNSEGMENTED ALL NODES 
+UNSEGMENTED ALL NODES
 KSAFE 1;
 
 INSERT INTO geo.gisCore
-SELECT 
+SELECT
  geo.geoLiteCityBlock.startIpNum,
  geo.geoLiteCityBlock.endIpNum,
  geo.geoLiteCityLocation.locId,
@@ -113,7 +113,7 @@ SELECT
  geo.geoLiteCityLocation.longitude,
  geo.geoLiteCityLocation.metroCode,
  geo.geoLiteCityLocation.areaCode
-FROM geo.geoLiteCityLocation 
+FROM geo.geoLiteCityLocation
 JOIN geo.geoLiteCityBlock  ON geo.geoLiteCityLocation.locId = geo.geoLiteCityBlock.locId
 ORDER BY geo.geoLiteCityBlock.startIpNum ASC
  ; COMMIT ;

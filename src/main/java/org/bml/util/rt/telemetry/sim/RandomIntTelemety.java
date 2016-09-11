@@ -22,7 +22,6 @@ package org.bml.util.rt.telemetry.sim;
  *     along with ORG.BML.  If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
 /**
  *
  * @author Brian M. Lima
@@ -31,5 +30,5 @@ public class RandomIntTelemety {
 
     long millsDelay;
     double maxPerSecond;
-    
+
 }

@@ -24,7 +24,6 @@ package org.bml.util.profile.field;
  *     along with ORG.BML.  If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
 /**
  * An annotation for use to denote a data field.
  *

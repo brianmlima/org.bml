@@ -22,7 +22,6 @@ package org.bml.util.threads;
  *     along with ORG.BML.  If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
 /**
  * Used like an alarm clock or timer task but is more portable and has the
  * advantage of being an extension of the boiler plate WorkerThread.
@@ -38,6 +37,7 @@ public abstract class TimeoutNotificationThread extends WorkerThread {
 
     /**
      * Creates a new instance of {@link TimeoutNotificationThread}.
+     *
      * @param theThreadGroup The ThreadGroup this thread should join.
      * @param theThreadName The name this thread should take on.
      * @param theTimeoutInMills The number of milliseconds to sleep between calls to the worker threads doIt() method.
@@ -49,6 +49,7 @@ public abstract class TimeoutNotificationThread extends WorkerThread {
 
     /**
      * Creates a new instance of {@link TimeoutNotificationThread}.
+     *
      * @param theTimeoutInMills The number of milliseconds to sleep between calls to the worker threads doIt() method.
      */
     public TimeoutNotificationThread(final long theTimeoutInMills) {

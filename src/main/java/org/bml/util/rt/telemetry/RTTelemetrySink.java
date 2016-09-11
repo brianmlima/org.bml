@@ -232,13 +232,13 @@ public abstract class RTTelemetrySink<T> extends WorkerThread {
     }
 
     /*
-     * Updates the stable rate of this RTTelemetrySink, that is, the 
-     * maxOffersPerSecond argument provided in the method that 
-     * constructed the RTTelemetrySink. Currently throttled threads will not be 
-     * awakened as a result of this invocation, thus they do not observe the new 
+     * Updates the stable rate of this RTTelemetrySink, that is, the
+     * maxOffersPerSecond argument provided in the method that
+     * constructed the RTTelemetrySink. Currently throttled threads will not be
+     * awakened as a result of this invocation, thus they do not observe the new
      * rate; only subsequent requests will.
      * Note though that, since each request repays (by waiting, if necessary) the
-     * cost of the previous request, this means that the very next request after 
+     * cost of the previous request, this means that the very next request after
      * an invocation to setRate will not be affected by the new rate; it will pay
      * the cost of the previous request, which is in terms of the previous rate.
      */

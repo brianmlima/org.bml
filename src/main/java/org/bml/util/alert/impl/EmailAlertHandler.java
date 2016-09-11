@@ -49,8 +49,7 @@ public class EmailAlertHandler implements AlertHandler {
      * if true then this handler is enabled.
      */
     private boolean isEnabled = false;
-    
-    
+
     private RateLimiter theRateLimiter;
 
     /**
@@ -91,22 +90,22 @@ public class EmailAlertHandler implements AlertHandler {
             Preconditions.checkNotNull(sender, "sender parameter can not be null. host=%s", host);
             Preconditions.checkArgument(!sender.isEmpty(), "sender parameter can not be empty. host=%s", host);
 
-            Preconditions.checkNotNull(password, "password parameter can not be null. host=%s sender=%s", host,sender);
+            Preconditions.checkNotNull(password, "password parameter can not be null. host=%s sender=%s", host, sender);
 
             //check e-mail and allow local adresses
             EmailValidator validator = EmailValidator.getInstance(true);
-            Preconditions.checkArgument(validator.isValid(sender),"sender parameter %s is not a valid e-mail. host=%s",sender,host);
-            
-            Preconditions.checkNotNull(recipients, "recipients parameter can not be null. host=%s sender=%s", host,sender);
-            Preconditions.checkArgument(recipients.length>0, "recipients parameter can not be zero length. host=%s sender=%s", host,sender);
-            for(int c=0;c<recipients.length;c++){
-             Preconditions.checkArgument(validator.isValid(recipients[c]),"recipients entry %s value %s is not a valid e-mail.  host=%s sender=%s",c,recipients[c],host,sender);
+            Preconditions.checkArgument(validator.isValid(sender), "sender parameter %s is not a valid e-mail. host=%s", sender, host);
+
+            Preconditions.checkNotNull(recipients, "recipients parameter can not be null. host=%s sender=%s", host, sender);
+            Preconditions.checkArgument(recipients.length > 0, "recipients parameter can not be zero length. host=%s sender=%s", host, sender);
+            for (int c = 0; c < recipients.length; c++) {
+                Preconditions.checkArgument(validator.isValid(recipients[c]), "recipients entry %s value %s is not a valid e-mail.  host=%s sender=%s", c, recipients[c], host, sender);
             }
             //check i4 port range... in theory
-            Preconditions.checkArgument((smtpPort >=NetworkUtils.MIN_IPV4_NETWORK_PORT && smtpPort <= NetworkUtils.MAX_IPV4_NETWORK_PORT),"smtpPort %s is out of range %s - %s",smtpPort,NetworkUtils.MIN_IPV4_NETWORK_PORT,NetworkUtils.MAX_IPV4_NETWORK_PORT);
+            Preconditions.checkArgument((smtpPort >= NetworkUtils.MIN_IPV4_NETWORK_PORT && smtpPort <= NetworkUtils.MAX_IPV4_NETWORK_PORT), "smtpPort %s is out of range %s - %s", smtpPort, NetworkUtils.MIN_IPV4_NETWORK_PORT, NetworkUtils.MAX_IPV4_NETWORK_PORT);
             //check rate for RateLimitor
-            Preconditions.checkArgument(maxRatePerSecond >0,"the maxRatePerSecond parameter must be greater than zero for this AlertHandler implementation to function.");
-            
+            Preconditions.checkArgument(maxRatePerSecond > 0, "the maxRatePerSecond parameter must be greater than zero for this AlertHandler implementation to function.");
+
         }
         this.host = host;
         this.sender = sender;

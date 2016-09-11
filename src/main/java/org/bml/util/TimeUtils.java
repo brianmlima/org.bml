@@ -22,7 +22,6 @@ package org.bml.util;
  *     along with ORG.BML.  If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
 import java.util.Calendar;
 import java.util.Date;
 import org.apache.commons.lang.time.DateUtils;
@@ -80,33 +79,35 @@ public class TimeUtils {
         }
     }
 
-    /**Returns the hour of the week in the range of 1 to 168. 1 being the first hour of 
+    /**
+     * Returns the hour of the week in the range of 1 to 168. 1 being the first hour of
      * Sunday, 168 being the last hour of Saturday.
-     * 
+     *
      * @param dateIn the date to extract the hour of the week.
-     * @return an integer in the range of 1 to 168. 1 being the first hour of 
+     * @return an integer in the range of 1 to 168. 1 being the first hour of
      * Sunday.
      * @throws IllegalArgumentException if the parameter dateIn is null.
      */
     public static int getHourOfWeek(Date dateIn) {
-        if(dateIn==null){
+        if (dateIn == null) {
             throw new IllegalArgumentException("Can not operate on a null Date object.");
         }
         Calendar cal = Calendar.getInstance();
         cal.setTime(dateIn);
         return ((cal.get(Calendar.DAY_OF_WEEK) - 1) * 24) + cal.get(Calendar.HOUR_OF_DAY);
-        
+
     }
 
-    /**Truncates a Date object to the week. Truncation is based on Sunday being 
+    /**
+     * Truncates a Date object to the week. Truncation is based on Sunday being
      * the first day of the calendar week.
-     * 
+     *
      * @param dateIn a date to truncate to the week.
      * @return a truncated to the week version of the dateIn parameter.
      * @throws IllegalArgumentException if the parameter dateIn is null.
      */
     public static Date truncateToWeek(Date dateIn) throws IllegalArgumentException {
-        if(dateIn==null){
+        if (dateIn == null) {
             throw new IllegalArgumentException("Can not operate on a null Date object.");
         }
         Calendar cal = Calendar.getInstance();

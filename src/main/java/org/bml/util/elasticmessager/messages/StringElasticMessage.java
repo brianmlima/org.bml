@@ -1,4 +1,3 @@
-
 package org.bml.util.elasticmessager.messages;
 
 /*
@@ -23,18 +22,16 @@ package org.bml.util.elasticmessager.messages;
  *     along with ORG.BML.  If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
 import org.bml.util.elasticmessager.ElasticMessage;
 
 /**
  *
  * @author Brian M. Lima
  */
-public class StringElasticMessage extends ElasticMessage<String>{
+public class StringElasticMessage extends ElasticMessage<String> {
 
     public StringElasticMessage(String content) {
         super(content);
     }
-    
-    
+
 }

@@ -1,4 +1,3 @@
-
 package org.bml.util.geo.util.geolite;
 
 /*
@@ -23,7 +22,6 @@ package org.bml.util.geo.util.geolite;
  *     along with ORG.BML.  If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.sql.Connection;

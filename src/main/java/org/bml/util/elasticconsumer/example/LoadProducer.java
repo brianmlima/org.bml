@@ -1,4 +1,3 @@
-
 package org.bml.util.elasticconsumer.example;
 
 /*
@@ -23,34 +22,38 @@ package org.bml.util.elasticconsumer.example;
  *     along with ORG.BML.  If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.bml.util.threads.WorkerThread;
 import org.bml.util.elasticconsumer.ElasticConsumer;
 
-/**Load producer for testing ElasticConsumer<ProcData> behavior
+/**
+ * Load producer for testing ElasticConsumer<ProcData> behavior
+ *
  * @author Brian M. Lima
  */
 public class LoadProducer extends WorkerThread {
 
     /*The ElasticConsumer to place a load on*/
-    private ElasticConsumer<ProcData,TestWorkerThread> anElasticConsumer = null;
+    private ElasticConsumer<ProcData, TestWorkerThread> anElasticConsumer = null;
     /*The total succesfull offers to make*/
     private int doTotal = 1000000;
     /*The total succesfull offers made*/
     private int doneTotal = 0;
 
-    /**Creates a new LoadProducer for ElasticConsumer<ProcData,TestWorkerThread>  testing.
+    /**
+     * Creates a new LoadProducer for ElasticConsumer<ProcData,TestWorkerThread> testing.
+     *
      * @param anElasticConsumer a ElasticConsumer<ProcData,TestWorkerThread> to place a load on.
      */
-    public LoadProducer(ElasticConsumer<ProcData,TestWorkerThread> anElasticConsumer) {
+    public LoadProducer(ElasticConsumer<ProcData, TestWorkerThread> anElasticConsumer) {
         super();
         this.anElasticConsumer = anElasticConsumer;
     }
 
-    /**Override of Thread.start();
+    /**
+     * Override of Thread.start();
      * Checks aElasticConsumer.isAlive() and sets shoudlRun appropriately
      */
     @Override
@@ -63,7 +66,8 @@ public class LoadProducer extends WorkerThread {
         }
     }
 
-    /**Overrides WorkerThread.doIt();
+    /**
+     * Overrides WorkerThread.doIt();
      * This is the guts of the thread;
      */
     @Override
@@ -92,7 +96,9 @@ public class LoadProducer extends WorkerThread {
 
     }
 
-    /**Overrides WorkerThread.doShutdown() to add some logging for test clarity.*/
+    /**
+     * Overrides WorkerThread.doShutdown() to add some logging for test clarity.
+     */
     @Override
     protected void doShutdown() {
         System.out.println("LoaderProducer: " + this.getId() + " Shutting Down");

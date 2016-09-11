@@ -22,39 +22,29 @@ package org.bml.util.errorconsumer;
  *     along with ORG.BML.  If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 /**
- * The {@link ParseErrorComponent} provides a simple way to create and use the 
+ * The {@link ParseErrorComponent} provides a simple way to create and use the
  * ParseError component.
  *
  * @author Brian M. Lima
  */
 public class ParseErrorComponent {
-    
+
     public class ParseErrorComponentConfig {
-     public BlockingQueue<ParseError> queueIn=null;
-     public long timeout=0;
-     public TimeUnit timeUnit=null;
-     public long waitOnEmptyQueueInMills=0;
-     
+
+        public BlockingQueue<ParseError> queueIn = null;
+        public long timeout = 0;
+        public TimeUnit timeUnit = null;
+        public long waitOnEmptyQueueInMills = 0;
+
     }
-    
-    
-    public ParseErrorComponent(){
-        
+
+    public ParseErrorComponent() {
+
     }
-    
-    
-    
+
     //ParseErrorWorkerThreadObjectFactory(BlockingQueue<ParseError> queueIn, long timeout, TimeUnit unit, long waitOnEmptyQueueInMills)
-    
-    
-    
-    
-    
-    
-    
 }

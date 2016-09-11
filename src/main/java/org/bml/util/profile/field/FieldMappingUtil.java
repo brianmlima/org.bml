@@ -27,7 +27,6 @@ package org.bml.util.profile.field;
  *     along with ORG.BML.  If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.bml.util.data.DataFieldDescription;
 import java.lang.reflect.Field;

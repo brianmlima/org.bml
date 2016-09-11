@@ -24,7 +24,6 @@ package org.bml.util.data;
  *     along with ORG.BML.  If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
 import java.io.IOException;
 import java.io.Reader;
 import java.text.ParseException;

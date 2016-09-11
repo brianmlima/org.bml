@@ -1,4 +1,3 @@
-
 package org.bml.util;
 
 /*
@@ -23,14 +22,15 @@ package org.bml.util;
  *     along with ORG.BML.  If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-/**Helper for printing stack traces.
+/**
+ * Helper for printing stack traces.
+ *
  * @author Brian M. Lima
  */
 public class StackTraceUtils {

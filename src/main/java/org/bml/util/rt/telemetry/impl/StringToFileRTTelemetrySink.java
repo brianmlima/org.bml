@@ -1,4 +1,3 @@
-
 package org.bml.util.rt.telemetry.impl;
 
 /*
@@ -47,12 +46,12 @@ import org.bml.util.rt.telemetry.RTTelemetrySink;
 /**
  *
  * @author Brian M. Lima
- * 
- * 
- * @todo This class can block on offer indefinitely if the out file is removed 
+ *
+ *
+ * @todo This class can block on offer indefinitely if the out file is removed
  * during operation. For some reason pushing the write operation into a callable
- * and using the executor service still blocks the Future object. 
- * 
+ * and using the executor service still blocks the Future object.
+ *
  */
 public class StringToFileRTTelemetrySink extends RTTelemetrySink<String> {
 
@@ -121,7 +120,7 @@ public class StringToFileRTTelemetrySink extends RTTelemetrySink<String> {
                     System.out.println("Attempting to write to output buffer");
 
                     for (String s : list) {
-                        if(!outFile.exists()){
+                        if (!outFile.exists()) {
                             return false;
                         }
                         try {
@@ -136,7 +135,7 @@ public class StringToFileRTTelemetrySink extends RTTelemetrySink<String> {
                     }
                     System.out.println("Attempting to flush output buffer");
                     try {
-                        if(!outFile.exists()){
+                        if (!outFile.exists()) {
                             return false;
                         }
                         outBufferedWriter.flush();
@@ -162,10 +161,10 @@ public class StringToFileRTTelemetrySink extends RTTelemetrySink<String> {
                 System.out.println("executing get");
                 Boolean result = future.get(5, TimeUnit.SECONDS);
                 System.out.println("executing get finished result==" + result);
-                if(result==false){
+                if (result == false) {
                     this.shutDown("An attemted write failed.");
                 }
-                
+
                 LOG.info(result);
             } catch (TimeoutException e) {
                 LOG.fatal("TimeoutException caught while calling flushData with timeout", e);

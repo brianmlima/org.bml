@@ -22,13 +22,12 @@ package org.bml.util;
  *     along with ORG.BML.  If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
 /**
  *
  * @author Brian M. Lima
  */
 public class CharacterUtils {
 
-    public static final String NL=System.getProperty("line.separator").intern();
-    
+    public static final String NL = System.getProperty("line.separator").intern();
+
 }

@@ -1,4 +1,3 @@
-
 package org.bml.util.io.net;
 
 /*
@@ -96,7 +95,7 @@ public class NetworkUtils {
 
     /**
      * <p>
-     * Attempt to resolve this computers host name. In its current state this 
+     * Attempt to resolve this computers host name. In its current state this
      * method only calls 'hostname'.
      * </p>
      * <p>
@@ -117,7 +116,7 @@ public class NetworkUtils {
      * @throws java.io.IOException If there is a problem with {@link Process} IO
      * @throws java.lang.InterruptedException if this thread is interrupted while
      * it is waiting for a process to complete.
-     * 
+     *
      * @todo Implement multiple hostname attempts and try to guess the rite one for the OS.
      */
     public static String getThisHostName() throws IOException, InterruptedException {

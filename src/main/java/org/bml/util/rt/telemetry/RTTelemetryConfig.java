@@ -1,4 +1,3 @@
-
 package org.bml.util.rt.telemetry;
 
 /*
@@ -23,7 +22,6 @@ package org.bml.util.rt.telemetry;
  *     along with ORG.BML.  If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
 import java.util.Properties;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -32,11 +30,15 @@ import org.apache.commons.logging.LogFactory;
  * @author Brian M. Lima
  */
 public class RTTelemetryConfig extends Properties {
-  /** standard commons Logging */
-  private static final Log LOG = LogFactory.getLog(RTTelemetryConfig.class);
 
-  static enum KEYS {
-    SYNC_RATE,
-  }
-  
+    /**
+     * standard commons Logging
+     */
+    private static final Log LOG = LogFactory.getLog(RTTelemetryConfig.class);
+
+    static enum KEYS {
+
+        SYNC_RATE,
+    }
+
 }

@@ -8,14 +8,29 @@
     <inceptionYear>2008</inceptionYear>
     <organization>
         <name>Brian M. Lima</name>
-        <url></url>  
+        <url></url>
     </organization>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <geotools.version>11-SNAPSHOT</geotools.version>
+        <repository.update.policy>always</repository.update.policy>
+        <checkstyle.plugin.version>2.9.1</checkstyle.plugin.version>
     </properties>
+
+        <!-- BEGIN private maven repo-->
+    <distributionManagement>
+        <snapshotRepository>
+            <id>org.bml</id>
+            <name>org.bml SNAPSHOTS</name>
+            <url>git:snapshots://git@bitbucket.org:brianmlima/orgbml-mvn-snapshot-repo.git</url>
+        </snapshotRepository>
+    </distributionManagement>
+    <!-- END private maven repo-->
+
+
+
     <repositories>
         <repository>
             <snapshots>
@@ -34,6 +49,17 @@
             <url>http://repo.opengeo.org</url>
         </repository>
     </repositories>
+
+    <pluginRepositories>
+        <!-- BEGIN REPO for WAGON -->
+        <pluginRepository>
+            <id>synergian-repo</id>
+            <url>https://raw.github.com/synergian/wagon-git/releases</url>
+        </pluginRepository>
+        <!-- END REPO for WAGON -->
+    </pluginRepositories>
+
+
     <build>
         <extensions>
             <extension>
@@ -41,6 +67,13 @@
                 <artifactId>org.springframework.build.aws.maven</artifactId>
                 <version>3.0.0.RELEASE</version>
             </extension>
+            <extension>
+            <!-- BEGIN Exension for private maven repo-->
+                <groupId>ar.com.synergian</groupId>
+                <artifactId>wagon-git</artifactId>
+                <version>0.2.5</version>
+            </extension>
+            <!-- END Exension for private maven repo-->
         </extensions>
         <plugins>
             <plugin>
@@ -111,10 +144,56 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>2.10</version>
-            </plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-checkstyle-plugin</artifactId>
+                        <version>${checkstyle.plugin.version}</version>
+                        <configuration>
+                            <configLocation>${basedir}/conf/checkstyle/checkstyle.xml</configLocation>
+                            <encoding>UTF-8</encoding>
+                            <logViolationsToConsole>true</logViolationsToConsole>
+                            <failOnViolation>true</failOnViolation>
+                            <linkXRef>false</linkXRef>
+                            <includeTestSourceDirectory>false</includeTestSourceDirectory>
+                        </configuration>
+                        <dependencies>
+                            <dependency>
+                                <groupId>com.puppycrawl.tools</groupId>
+                                <artifactId>checkstyle</artifactId>
+                                <version>6.16</version>
+                            </dependency>
+                        </dependencies>
+                        <executions>
+                            <execution>
+                                <phase>test-compile</phase>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>findbugs-maven-plugin</artifactId>
+                        <version>3.0.3</version>
+                        <configuration>
+                            <effort>Max</effort>
+                            <!--Reports all bugs (other values are medium and max)-->
+                            <threshold>Low</threshold>
+                            <includeTests>true</includeTests>
+                            <classFilesDirectory>${project.build.outputDirectory}</classFilesDirectory>
+                        </configuration>
+                        <executions>
+                            <!--Ensures that FindBugs inspects source code before project is tested.-->
+                            <execution>
+                                <phase>test-compile</phase>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>ounce-maven-plugin</artifactId>
@@ -146,25 +225,25 @@
                         <link>http://java.sun.com/products/servlet/2.5/docs/servlet-2_5-mr2/</link>
                         <link>http://findbugs.sourceforge.net/api/</link>
                         <link>http://tomcat.apache.org/tomcat-6.0-doc/api/</link>
-                    </links>          
+                    </links>
                     <source>1.6</source>
                     <code>javadoc:aggregate</code>
                     <code>javadoc:test-aggregate</code>
                     <tags>
-                        <tag>                            
+                        <tag>
                             <name>todo</name>
                             <placement>a</placement>
-                            <head>To Do:</head>                            
+                            <head>To Do:</head>
                         </tag>
-                        <tag>                            
+                        <tag>
                             <name>pre</name>
                             <placement>a</placement>
-                            <head>Pre-conditions:</head>                            
+                            <head>Pre-conditions:</head>
                         </tag>
-                        <tag>                            
+                        <tag>
                             <name>post</name>
                             <placement>mc</placement>
-                            <head>Post-conditions:</head>                            
+                            <head>Post-conditions:</head>
                         </tag>
                     </tags>
                 </configuration>
@@ -199,7 +278,7 @@
                 <version>2.6</version>
             </plugin>
 
-      
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
@@ -216,7 +295,7 @@
             <version>1.7.5</version>
             <type>jar</type>
         </dependency>
-        <dependency>            
+        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>jcl-over-slf4j</artifactId>
             <version>1.7.13</version>

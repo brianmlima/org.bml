@@ -1,6 +1,5 @@
 /*
  */
-
 package org.bml.util.exception;
 
 /*
@@ -25,7 +24,6 @@ package org.bml.util.exception;
  *     along with ORG.BML.  If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
 /**
  * Thrown ins situations where a required property is missing or invalid.
  * This is essentially a checked version of IllegalArgumentException for properties.

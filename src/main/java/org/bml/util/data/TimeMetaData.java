@@ -1,4 +1,3 @@
-
 package org.bml.util.data;
 
 /*
@@ -23,7 +22,6 @@ package org.bml.util.data;
  *     along with ORG.BML.  If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 

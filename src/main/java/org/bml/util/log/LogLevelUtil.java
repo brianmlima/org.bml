@@ -22,7 +22,6 @@ package org.bml.util.log;
  *     along with ORG.BML.  If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import ch.qos.logback.classic.Level;

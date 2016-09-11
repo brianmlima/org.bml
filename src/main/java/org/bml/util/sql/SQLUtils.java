@@ -1,4 +1,3 @@
-
 package org.bml.util.sql;
 
 /*
@@ -23,13 +22,13 @@ package org.bml.util.sql;
  *     along with ORG.BML.  If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
 /**
  * @author Brian M. Lima
  */
 public class SQLUtils {
 
     public static enum DATE_TRUNC {
+
         CENTURY,
         DAY,
         DECADE,
@@ -40,6 +39,6 @@ public class SQLUtils {
         MONTH,
         SECOND,
         WEEK,
-        YEAR ;
+        YEAR;
     };
 }

@@ -1,4 +1,3 @@
-
 package org.bml.util.bloom;
 
 /*
@@ -23,7 +22,6 @@ package org.bml.util.bloom;
  *     along with ORG.BML.  If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
 import java.io.Serializable;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
@@ -41,14 +39,14 @@ import java.util.Collection;
  * were proposed in comments in his blog:
  * http://blog.locut.us/2008/01/12/a-decent-stand-alone-java-bloom-filter-implementation/
  *
- * Further changes from http://github.com/magnuss/java-bloomfilter were made by Brian M. Lima to mitigate 
+ * Further changes from http://github.com/magnuss/java-bloomfilter were made by Brian M. Lima to mitigate
  * memory usage, simplify code, and allow for use in an upcoming framework for rotating -- priming filters
  * in and out of usage in a production environment
- * 
+ *
  * @param <E> Object type that is to be inserted into the Bloom filter, e.g. String or Integer.
- * @author Brian M. Lima 
+ * @author Brian M. Lima
  */
-public class BloomFilter<E> implements Bloom<E> ,Serializable {
+public class BloomFilter<E> implements Bloom<E>, Serializable {
 
     private BitSet bitset;
     private int bitSetSize;
@@ -226,6 +224,7 @@ public class BloomFilter<E> implements Bloom<E> ,Serializable {
 
     /**
      * Calculates a hash code for this class.
+     *
      * @return hash code representing the contents of an instance of this class.
      */
     @Override
@@ -322,6 +321,7 @@ public class BloomFilter<E> implements Bloom<E> ,Serializable {
 
     /**
      * Adds all elements from a Collection to the Bloom filter.
+     *
      * @param c Collection of elements.
      */
     public void addAll(Collection<? extends E> c) {
@@ -364,6 +364,7 @@ public class BloomFilter<E> implements Bloom<E> ,Serializable {
      * Returns true if all the elements of a Collection could have been inserted
      * into the Bloom filter. Use getFalsePositiveProbability() to calculate the
      * probability of this being correct.
+     *
      * @param c elements to check.
      * @return true if all the elements in c could have been inserted into the Bloom filter.
      */
@@ -378,6 +379,7 @@ public class BloomFilter<E> implements Bloom<E> ,Serializable {
 
     /**
      * Read a single bit from the Bloom filter.
+     *
      * @param bit the bit to read.
      * @return true if the bit is set, false if it is not.
      */
@@ -387,6 +389,7 @@ public class BloomFilter<E> implements Bloom<E> ,Serializable {
 
     /**
      * Set a single bit in the Bloom filter.
+     *
      * @param bit is the bit to set.
      * @param value If true, the bit is set. If false, the bit is cleared.
      */
@@ -396,6 +399,7 @@ public class BloomFilter<E> implements Bloom<E> ,Serializable {
 
     /**
      * Return the bit set used to store the Bloom filter.
+     *
      * @return bit set representing the Bloom filter.
      */
     public BitSet getBitSet() {
@@ -452,5 +456,4 @@ public class BloomFilter<E> implements Bloom<E> ,Serializable {
         return this.bitSetSize / (double) numberOfAddedElements;
     }
 
- 
 }

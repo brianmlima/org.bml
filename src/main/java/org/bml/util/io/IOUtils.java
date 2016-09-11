@@ -1,4 +1,3 @@
-
 package org.bml.util.io;
 
 /*
@@ -23,7 +22,6 @@ package org.bml.util.io;
  *     along with ORG.BML.  If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.logging.Level;
@@ -37,36 +35,36 @@ import org.apache.commons.io.LineIterator;
  */
 public class IOUtils extends org.apache.commons.io.IOUtils {
 
-  /**
-   * This is just a helper method to keep all the closeQuietly methods in one
-   * place
-   *
-   * @param theLineIterator an open or null LineIterator
-   */
-  public static void closeQuietly(LineIterator theLineIterator) {
-    if (theLineIterator == null) {
-      return;
+    /**
+     * This is just a helper method to keep all the closeQuietly methods in one
+     * place
+     *
+     * @param theLineIterator an open or null LineIterator
+     */
+    public static void closeQuietly(LineIterator theLineIterator) {
+        if (theLineIterator == null) {
+            return;
+        }
+        LineIterator.closeQuietly(theLineIterator);
     }
-    LineIterator.closeQuietly(theLineIterator);
-  }
 
-  public static void closeQuietly(PrintWriter thePrintWriters[]) {
-    if (thePrintWriters == null || thePrintWriters.length == 0) {
-      return;
+    public static void closeQuietly(PrintWriter thePrintWriters[]) {
+        if (thePrintWriters == null || thePrintWriters.length == 0) {
+            return;
+        }
+        for (int c = 0; c < thePrintWriters.length; c++) {
+            closeQuietly(thePrintWriters[c]);
+        }
     }
-    for (int c = 0; c < thePrintWriters.length; c++) {
-      closeQuietly(thePrintWriters[c]);
-    }
-  }
 
-  public static void closeQuietly(ZipFile zipFile) {
-    if (zipFile == null) {
-      return;
+    public static void closeQuietly(ZipFile zipFile) {
+        if (zipFile == null) {
+            return;
+        }
+        try {
+            zipFile.close();
+        } catch (IOException ex) {
+            Logger.getLogger(IOUtils.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
-    try {
-      zipFile.close();
-    } catch (IOException ex) {
-      Logger.getLogger(IOUtils.class.getName()).log(Level.SEVERE, null, ex);
-    }
-  }
 }

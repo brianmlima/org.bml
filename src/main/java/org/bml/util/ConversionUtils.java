@@ -68,13 +68,13 @@ public class ConversionUtils {
         if (CHECKED) {
             Preconditions.checkArgument(value > -1, "Passed integer value is less than 0 value=%s", value);
         }
-        return new byte[]{
+        return new byte[] {
             (byte) (value >>> 24),
             (byte) (value >>> 16),
             (byte) (value >>> 8),
             (byte) value};
     }
-    
+
     /**
      * <p>
      * Utility for conversion of byte[] to int.
@@ -82,10 +82,10 @@ public class ConversionUtils {
      *
      * @param byteArray An array of 4 bytes to convert to an unsigned int
      * @return The int defined by the passed byte array.
-     * 
+     *
      * @throws NullPointerException if the byteArray parameter is passed as null.
      * @throws IllegalArgumentException if the byte array passed length is not 4.
-     * 
+     *
      * @pre byteArray != null
      * @pre byteArray.length == 4
      */

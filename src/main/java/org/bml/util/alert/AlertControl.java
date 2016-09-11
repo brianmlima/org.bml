@@ -1,4 +1,3 @@
-
 package org.bml.util.alert;
 
 /*
@@ -23,7 +22,6 @@ package org.bml.util.alert;
  *     along with ORG.BML.  If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.bml.util.threads.WorkerThread;
@@ -36,25 +34,25 @@ import org.bml.util.threads.WorkerThread;
  */
 public class AlertControl extends WorkerThread {
 
-  /**
-   * Standard Logging. All logging should be funneled through this log.
-   */
-  private static final Log LOG = LogFactory.getLog(AlertControl.class);
-  /**
-   * Use to avoid calling .class.getName() in high throughput situations
-   */
-  private static final String CLASS_NAME = AlertControl.class.getName().intern();
-  /**
-   * Use to avoid calling .class.getSimpleName() in high throughput situations
-   */
-  private static final String SIMPLE_CLASS_NAME = AlertControl.class.getSimpleName().intern();
+    /**
+     * Standard Logging. All logging should be funneled through this log.
+     */
+    private static final Log LOG = LogFactory.getLog(AlertControl.class);
+    /**
+     * Use to avoid calling .class.getName() in high throughput situations
+     */
+    private static final String CLASS_NAME = AlertControl.class.getName().intern();
+    /**
+     * Use to avoid calling .class.getSimpleName() in high throughput situations
+     */
+    private static final String SIMPLE_CLASS_NAME = AlertControl.class.getSimpleName().intern();
 
-  public AlertControl() {
-    super(new ThreadGroup("AlertControl"), CLASS_NAME);
-  }
+    public AlertControl() {
+        super(new ThreadGroup("AlertControl"), CLASS_NAME);
+    }
 
-  @Override
-  protected void doIt() {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-  }
+    @Override
+    protected void doIt() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

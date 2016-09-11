@@ -27,7 +27,6 @@ package org.bml.util.pool2;
  *     along with ORG.BML.  If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
 import static com.google.common.base.Preconditions.checkNotNull;
 import java.beans.PropertyVetoException;
 import java.util.Properties;

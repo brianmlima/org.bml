@@ -1,4 +1,3 @@
-
 package org.bml.util.elasticconsumer.example;
 
 /*
@@ -23,7 +22,6 @@ package org.bml.util.elasticconsumer.example;
  *     along with ORG.BML.  If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
 /**
  * @author Brian M. Lima
  */

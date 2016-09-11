@@ -22,7 +22,6 @@ package org.bml.util.cmd;
  *     along with ORG.BML.  If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
 

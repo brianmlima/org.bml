@@ -6,17 +6,17 @@
   Copyright (C) 2008 - 2014 Brian M. Lima
   %%
   This file is part of ORG.BML.
-  
+
       ORG.BML is free software: you can redistribute it and/or modify
       it under the terms of the GNU General Public License as published by
       the Free Software Foundation, either version 3 of the License, or
       (at your option) any later version.
-  
+
       ORG.BML is distributed in the hope that it will be useful,
       but WITHOUT ANY WARRANTY; without even the implied warranty of
       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
       GNU Lesser General Public License for more details.
-  
+
       You should have received a copy of the GNU Lesser General Public License
       along with ORG.BML.  If not, see <http://www.gnu.org/licenses/>.
   #L%
@@ -24,20 +24,20 @@
 
 <!DOCTYPE log4j:configuration SYSTEM "http://logging.apache.org/log4j/1.2/apidocs/org/apache/log4j/xml/doc-files/log4j.dtd">
 <log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/" debug="false">
-    <appender name="FILE" class="org.apache.log4j.ConsoleAppender"> 
-        <param name="Target" value="System.out"/> 
-        <layout class="org.apache.log4j.PatternLayout"> 
-            <param name="ConversionPattern" value="%-5p %c{1} - %m%n"/> 
-        </layout> 
-    </appender> 
-    <!--   
+    <appender name="FILE" class="org.apache.log4j.ConsoleAppender">
+        <param name="Target" value="System.out"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%-5p %c{1} - %m%n"/>
+        </layout>
+    </appender>
+    <!--
     <appender name="FILE" class="org.apache.log4j.FileAppender">
         <param name="file" value="${log}/log.out"/>
         <param name="immediateFlush" value="false"/>
         <param name="threshold" value="debug"/>
         <param name="append" value="false"/>
         <layout class="org.apache.log4j.PatternLayout">
-            <param name="ConversionPattern" value="%-5p %c{1} - %m%n"/> 
+            <param name="ConversionPattern" value="%-5p %c{1} - %m%n"/>
         </layout>
     </appender>
     -->
@@ -46,28 +46,28 @@
     <logger name="org.bml.util.ratelimitor.RateControler" additivity="false" >
         <level value="INFO" />
         <appender-ref ref="FILE" />
-    </logger>    
+    </logger>
 
 
     <logger name="org.bml.util.ratelimitor.example.RateLimitorSim" additivity="false" >
         <level value="INFO" />
         <appender-ref ref="FILE" />
-    </logger>    
+    </logger>
 
     <logger name="org.bml.util.errorconsumer.ParseErrorTable" additivity="false" >
         <level value="INFO" />
         <appender-ref ref="FILE" />
-    </logger>    
+    </logger>
     <logger name="org.bml.util.rt.telemetry.impl.StringToFileRTTelemetrySink" additivity="false" >
         <level value="TRACE" />
         <appender-ref ref="FILE" />
-    </logger>    
-    
-    
-    
+    </logger>
 
-    <root> 
+
+
+
+    <root>
         <priority value ="TRACE" />
-        <appender-ref ref="FILE" /> 
+        <appender-ref ref="FILE" />
     </root>
 </log4j:configuration>

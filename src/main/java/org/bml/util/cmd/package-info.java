@@ -1,7 +1,6 @@
 /**
  * Utilities for working with {@link org.apache.commons.cli}.
  */
-
 package org.bml.util.cmd;
 
 /*

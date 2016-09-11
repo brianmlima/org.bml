@@ -1,4 +1,3 @@
-
 package org.bml.util;
 
 /*
@@ -63,12 +62,12 @@ public class RequestDataContainer {
     private final URI requestURI;
 
     /**
-     * 
+     *
      * @param requestURI
      * @throws NullPointerException if requestURI is null
      */
-    public RequestDataContainer(final URI requestURI) throws NullPointerException{
-        if(CHECKED){
+    public RequestDataContainer(final URI requestURI) throws NullPointerException {
+        if (CHECKED) {
             Preconditions.checkNotNull(requestURI, "Can not create an instance of RequestDataContainer with a null request URI.");
         }
         this.requestURI = requestURI;//no need to clone URI is immutable
@@ -77,8 +76,9 @@ public class RequestDataContainer {
 
     /**
      * Accepts a URI and parses out the parameters if there are any.
+     *
      * @param theUri A vaild URI
-     * @return a map of key - distinct values representing the parameters in the URI if any 
+     * @return a map of key - distinct values representing the parameters in the URI if any
      *
      * @pre theUri!=null
      */

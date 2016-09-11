@@ -1,4 +1,3 @@
-
 package org.bml.util.time;
 
 /*
@@ -23,7 +22,6 @@ package org.bml.util.time;
  *     along with ORG.BML.  If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.TimeZone;
@@ -34,9 +32,9 @@ import org.apache.commons.pool.BasePoolableObjectFactory;
  * a result we see odd behavior from DateFormat in a threaded environment. The
  * higher concurrency the greater the effect. As a result we use a pool whenever
  * we are in a threaded environment.
- * 
- * There are also situations where concurrency may be low but a specific format 
- * is necessary repeatedly enough to make this type of pooling a simple 
+ *
+ * There are also situations where concurrency may be low but a specific format
+ * is necessary repeatedly enough to make this type of pooling a simple
  * alternative to repeated creation, in effect reducing resource usage.
  *
  * @author Brian M. Lima
@@ -70,6 +68,6 @@ public class DateFormatFactory extends BasePoolableObjectFactory<DateFormat> {
 
     @Override
     public void passivateObject(DateFormat aDateFormat) {
-      //nothing necessary here
+        //nothing necessary here
     }
 }

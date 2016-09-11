@@ -22,7 +22,6 @@ package org.bml.util.rt.telemetry;
  *     along with ORG.BML.  If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
 import java.util.Calendar;
 import java.util.TimeZone;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -44,115 +43,100 @@ import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
  * behavior this would cause at a high level in a hard real time system.
  *
  * Only testing and analysis will tell what if any modifications are necessary.
- * 
- * NOTE : a method of zeroing out seconds that happen after the first rotation 
+ *
+ * NOTE : a method of zeroing out seconds that happen after the first rotation
  * without blocking is necessary otherwise this class serves no purpose
- * 
- * 
+ *
+ *
  *
  * @author Brian M Lima
  */
 public class SecondBasedCounter {
-  private final int windowSize;
-  private AtomicLong numOperations;
-  private final AtomicInteger[] counterArray;
-  private final String telemetryStreamId;
-  private int currentSecondId=-1, lastSecondId=-1;
 
-  public SecondBasedCounter(final int windowSize, final String telemetryStreamId) {
-    this.telemetryStreamId=telemetryStreamId;
-    this.windowSize = windowSize;
-    this.counterArray = new AtomicInteger[this.windowSize];
-    
-    for(int c=0;c<counterArray.length;c++){
-      counterArray[c] = new AtomicInteger(0);
+    private final int windowSize;
+    private AtomicLong numOperations;
+    private final AtomicInteger[] counterArray;
+    private final String telemetryStreamId;
+    private int currentSecondId = -1, lastSecondId = -1;
+
+    public SecondBasedCounter(final int windowSize, final String telemetryStreamId) {
+        this.telemetryStreamId = telemetryStreamId;
+        this.windowSize = windowSize;
+        this.counterArray = new AtomicInteger[this.windowSize];
+
+        for (int c = 0; c < counterArray.length; c++) {
+            counterArray[c] = new AtomicInteger(0);
+        }
+        numOperations = new AtomicLong(0);
     }
-    numOperations = new AtomicLong(0);
-  }
 
-  
-  
-  private void setSecond(){
-    this.currentSecondId=getCurrentSecondID();
-    if(this.lastSecondId!=this.currentSecondId){
-      
+    private void setSecond() {
+        this.currentSecondId = getCurrentSecondID();
+        if (this.lastSecondId != this.currentSecondId) {
+
+        }
     }
-  }
-  
-  /**
-   * 
-   * @return An array of AtomicInteger representing the second counters
-   */
-  public AtomicInteger[] getCounterArray(){
-      return counterArray;
-  }
-  
-  /**Telemetry for accessing usage.. Use full for usage telemetry, debugging,
-   * and component use trending.
-   * 
-   * @return the number of times increment has been called for the life of this 
-   * object
-   */
-  public long getNumOperations(){
-    return this.numOperations.get();
-  }
-  
-  /**
-   * Increments the counter for the current second. If it becomes necessary I
-   * may store the current second id in the class for telemetry however at this 
-   * point it looks like there is no reason for it and it will introduce more 
-   * complexity to ensure the id is accurate without manual locking.
-   */
-  public void increment() {
-    //increment total operations
-    numOperations.incrementAndGet();
-    //Handle the increment
-    this.counterArray[getCurrentSecondID()].incrementAndGet();
- }
 
-  /**
-   * There may be a way to do this faster however I chose to use a bound
-   * DescriptiveStatistics object to allow the caller to encapsulate more
-   * operations than just a simple sum.
-   *
-   * @return DescriptiveStatistics containing the last 60 seconds of telemetry
-   * data. because of the use of atomics this should be as up to date as
-   * possible without getting into manual locking which this method and all
-   * methods in this class are contracted to avoid at all costs.
-   */
-  public DescriptiveStatistics getLastMinutesTelemetry() {
-    DescriptiveStatistics stats = new DescriptiveStatistics(60);
-    for (int c = 0; c < 60; c++) {
-      stats.addValue(counterArray[c].doubleValue());
+    /**
+     *
+     * @return An array of AtomicInteger representing the second counters
+     */
+    public AtomicInteger[] getCounterArray() {
+        return counterArray;
     }
-    return stats;
-  }
 
-  /**
-   * This method should be studied carefully to see if there is a faster way to
-   * get the current second without creating a Calendar instance.
-   * Either way this method an be overridden if a faster or more appropriate 
-   * calculation is found.
-   *
-   * @return an int between 0 and 59 denoting the current second
-   */
-  public static int getCurrentSecondID() {
-    return Calendar.getInstance(TimeZone.getTimeZone("UTC".intern())).get(Calendar.SECOND);
-  }
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+    /**
+     * Telemetry for accessing usage.. Use full for usage telemetry, debugging,
+     * and component use trending.
+     *
+     * @return the number of times increment has been called for the life of this
+     * object
+     */
+    public long getNumOperations() {
+        return this.numOperations.get();
+    }
+
+    /**
+     * Increments the counter for the current second. If it becomes necessary I
+     * may store the current second id in the class for telemetry however at this
+     * point it looks like there is no reason for it and it will introduce more
+     * complexity to ensure the id is accurate without manual locking.
+     */
+    public void increment() {
+        //increment total operations
+        numOperations.incrementAndGet();
+        //Handle the increment
+        this.counterArray[getCurrentSecondID()].incrementAndGet();
+    }
+
+    /**
+     * There may be a way to do this faster however I chose to use a bound
+     * DescriptiveStatistics object to allow the caller to encapsulate more
+     * operations than just a simple sum.
+     *
+     * @return DescriptiveStatistics containing the last 60 seconds of telemetry
+     * data. because of the use of atomics this should be as up to date as
+     * possible without getting into manual locking which this method and all
+     * methods in this class are contracted to avoid at all costs.
+     */
+    public DescriptiveStatistics getLastMinutesTelemetry() {
+        DescriptiveStatistics stats = new DescriptiveStatistics(60);
+        for (int c = 0; c < 60; c++) {
+            stats.addValue(counterArray[c].doubleValue());
+        }
+        return stats;
+    }
+
+    /**
+     * This method should be studied carefully to see if there is a faster way to
+     * get the current second without creating a Calendar instance.
+     * Either way this method an be overridden if a faster or more appropriate
+     * calculation is found.
+     *
+     * @return an int between 0 and 59 denoting the current second
+     */
+    public static int getCurrentSecondID() {
+        return Calendar.getInstance(TimeZone.getTimeZone("UTC".intern())).get(Calendar.SECOND);
+    }
+
 }

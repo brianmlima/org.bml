@@ -1,4 +1,3 @@
-
 package org.bml.util.rt.telemetry.track;
 
 /*
@@ -23,7 +22,6 @@ package org.bml.util.rt.telemetry.track;
  *     along with ORG.BML.  If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
 /**
  * Parameter keys for configuration of tracking params. This provides a common
  * key set for parameters used to configure a telemetry track.
@@ -32,10 +30,10 @@ package org.bml.util.rt.telemetry.track;
  */
 public enum TrackParamKey {
 
-  DISPLAY_NAME,
-  FIELD_NAME,
-  CLASS_TYPE,
-  REQUIRED,
-  SYNC_RATE
+    DISPLAY_NAME,
+    FIELD_NAME,
+    CLASS_TYPE,
+    REQUIRED,
+    SYNC_RATE
 
 }

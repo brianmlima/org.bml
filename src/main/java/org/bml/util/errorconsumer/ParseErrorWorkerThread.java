@@ -40,16 +40,16 @@ import org.bml.util.sql.DBUtil;
 import org.bml.util.threads.BlockingQueueWorkerThread;
 
 /**
- * An extension of {@link BlockingQueueWorkerThread} charged with 
- * pulling {@link ParseError} objects from a {@link BlockingQueue} and storing them in 
- * 
- * 
+ * An extension of {@link BlockingQueueWorkerThread} charged with
+ * pulling {@link ParseError} objects from a {@link BlockingQueue} and storing them in
+ *
+ *
  * The core worker thread for use with ElasticConsumer Classes
  *
  *
- * 
+ *
  * TODO: Dump to /tmp/error_consumer/ on SQLException and recover
- * 
+ *
  * @see ParseError
  * @see BlockingQueueWorkerThread
  * @author Brian M. Lima
@@ -65,18 +65,12 @@ public class ParseErrorWorkerThread extends BlockingQueueWorkerThread<ParseError
      * A {@link StopWatch} utility for handling timing
      */
     private StopWatch timer = null;
-    
+
     /**
      * The {@link Queue} of {@link ParseError} objects to be stored
      */
     private Queue<ParseError> errorQueue = new LinkedList<ParseError>();
 
-
-    
-    
-    
-    
-    
     /**
      * Creates a new BlockingQueueWorkerThread.
      *
@@ -135,13 +129,11 @@ public class ParseErrorWorkerThread extends BlockingQueueWorkerThread<ParseError
 
         //DeviceType aDeviceType = null;
         //DeviceClass aDeviceClass = null;
-
         //Change to reusable map
         Map<String, String> tmpMap = null;
 
-        //Change to StringBuilder 
-        //String tmpString = null; 
-
+        //Change to StringBuilder
+        //String tmpString = null;
         //theBatchTrackingList = new ArrayList<PageViewData>(dataQueue.size());
         boolean dbErrror = false;
 
@@ -177,16 +169,15 @@ public class ParseErrorWorkerThread extends BlockingQueueWorkerThread<ParseError
             }
 
             this.setWorkerState(WORKER_STATE.EXECUTING_BATCH);
-            batchExecutionResults=myPreparedStatement.executeBatch();
-            
+            batchExecutionResults = myPreparedStatement.executeBatch();
+
             myConnection.commit();
-            
+
             this.setWorkerState(WORKER_STATE.VERIFYING_BATCH);
-            if(batchExecutionResults.length!=theBatchTrackingList.size()){
-                
+            if (batchExecutionResults.length != theBatchTrackingList.size()) {
+
             }
 
-            
         } catch (SQLException sqle) {
             if (LOG.isFatalEnabled()) {
                 LOG.fatal("SQLException caught. The ErrorConsumer is unable to push data to a database. ParseErrors will be dumped to /tmp/error_consumer/", sqle);
@@ -195,7 +186,7 @@ public class ParseErrorWorkerThread extends BlockingQueueWorkerThread<ParseError
             if (LOG.isFatalEnabled()) {
                 LOG.fatal("Exception caught. The ErrorConsumer is unable to push data to a database. Errors will be dumped to /tmp/error_consumer/", e);
             }
-            
+
         } finally {
             DbUtils.closeQuietly(myPreparedStatement);
             DbUtils.closeQuietly(myConnection);

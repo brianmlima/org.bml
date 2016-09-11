@@ -27,7 +27,6 @@ package org.bml.util.profile.field;
  *     along with ORG.BML.  If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
 import java.util.Map;
 import org.bml.util.data.DataFieldDescription;
 

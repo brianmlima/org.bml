@@ -1,4 +1,3 @@
-
 package org.bml.util.geo.util.geolite;
 
 /*
@@ -23,7 +22,6 @@ package org.bml.util.geo.util.geolite;
  *     along with ORG.BML.  If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import java.sql.Connection;
 import java.sql.ResultSet;

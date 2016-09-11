@@ -151,6 +151,7 @@ public class StringFieldProfiler implements AddUtil<String> {
     /**
      * The Class of the field this profiler is profiling.
      * This is for clarity JSON serialization.
+     *
      * @return the fieldClass
      */
     public Class getFieldClass() {

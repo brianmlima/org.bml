@@ -1,4 +1,3 @@
-
 package org.bml.util.alert;
 
 /*
@@ -23,17 +22,18 @@ package org.bml.util.alert;
  *     along with ORG.BML.  If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
 import java.util.Date;
 import org.bml.util.exception.DisabledException;
 import org.bml.util.exception.RateExceededException;
 
-/**Interface all Alert Handlers must implement
+/**
+ * Interface all Alert Handlers must implement
+ *
  * @author Brian M. Lima
  */
 public interface AlertHandler {
-    
-    public long trigger(String subject, String body)throws DisabledException, RateExceededException;
+
+    public long trigger(String subject, String body) throws DisabledException, RateExceededException;
 
     public void disable();
 

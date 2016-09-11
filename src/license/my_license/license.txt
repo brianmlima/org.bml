@@ -15,7 +15,7 @@
 
 <title>The GNU General Public License v3.0 - GNU Project - Free Software Foundation (FSF)</title>
 <link rel="alternate" type="application/rdf+xml"
-      href="/licenses/gpl-3.0.rdf" /> 
+      href="/licenses/gpl-3.0.rdf" />
 <!-- begin translist file -->
 
 
@@ -141,7 +141,7 @@
        own software</a></li>
   <li><a href="/licenses/translations.html">Translations
        of the GPL</a></li>
-  <li>The GPL in other formats: 
+  <li>The GPL in other formats:
        <a href="/licenses/gpl-3.0.txt">plain text</a>,
        <a href="/licenses/gpl-3.0.texi">Texinfo</a>,
        <a href="/licenses/gpl-3.0.tex">LaTeX</a>,
@@ -242,7 +242,7 @@ modification follow.</p>
 
 <p>&ldquo;Copyright&rdquo; also means copyright-like laws that apply to other kinds of
 works, such as semiconductor masks.</p>
- 
+
 <p>&ldquo;The Program&rdquo; refers to any copyrightable work licensed under this
 License.  Each licensee is addressed as &ldquo;you&rdquo;.  &ldquo;Licensees&rdquo; and
 &ldquo;recipients&rdquo; may be individuals or organizations.</p>
@@ -681,7 +681,7 @@ actual knowledge that, but for the patent license, your conveying the
 covered work in a country, or your recipient's use of the covered work
 in a country, would infringe one or more identifiable patents in that
 country that you have reason to believe are valid.</p>
-  
+
 <p>If, pursuant to or in connection with a single transaction or
 arrangement, you convey, or propagate by procuring conveyance of, a
 covered work, and grant a patent license to some of the parties
@@ -853,7 +853,7 @@ Public License instead of this License.  But first, please read
 
               <!-- begin server/footer-text.html -->
 <div class="inner">
-    
+
 <div class="yui-g" id="fsf-links">
 	<ul>
 		<li><a href="/">GNU&nbsp;home&nbsp;page</a></li>
@@ -877,7 +877,7 @@ rights of Free Software users.</strong> Support GNU and the FSF by <a
 href="http://shop.fsf.org/">buying manuals and gear</a>, <a
 href="http://www.fsf.org/join">joining the FSF as an associate
 member</a> or by making a
-donation, either <a href="http://donate.fsf.org/">directly to the FSF</a> 
+donation, either <a href="http://donate.fsf.org/">directly to the FSF</a>
 or <a href="http://flattr.com/thing/313733/gnuproject-on-Flattr">via Flattr</a>.</small></p>
 
 <p id="backtotop"><a href="#header">back to top</a></p>
@@ -894,9 +894,9 @@ or <a href="http://flattr.com/thing/313733/gnuproject-on-Flattr">via Flattr</a>.
 
 <div id="footer">
 <p>
-Please send FSF &amp; GNU inquiries to 
+Please send FSF &amp; GNU inquiries to
 <a href="mailto:gnu@gnu.org"><em>gnu@gnu.org</em></a>.
-There are also <a href="/contact/">other ways to contact</a> 
+There are also <a href="/contact/">other ways to contact</a>
 the FSF.
 <br />
 Please send broken links and other corrections or suggestions to
@@ -904,7 +904,7 @@ Please send broken links and other corrections or suggestions to
 </p>
 
 <p>
-Please see the 
+Please see the
 <a href="/server/standards/README.translations.html">Translations
 README</a> for information on coordinating and submitting
 translations of this article.

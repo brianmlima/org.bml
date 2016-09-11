@@ -1,4 +1,3 @@
-
 package org.bml.util.server;
 
 /*
@@ -23,7 +22,6 @@ package org.bml.util.server;
  *     along with ORG.BML.  If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -34,9 +32,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- *The Proxy class is responsible for connecting to a host
- *inverse proxy server, sending data to and from the server,
- *and closing the connection to the server.
+ * The Proxy class is responsible for connecting to a host
+ * inverse proxy server, sending data to and from the server,
+ * and closing the connection to the server.
  *
  * @author Brian M. Lima
  */
@@ -55,18 +53,19 @@ public class BClient {
     }
 
     /**
-     *The Connect method creates a connection to a specified
-     *host and port, and opens an object input and object ouput
-     *stream.
-     *@param aHost String - A host name or ip
-     *@param aPort int - The port the host server is running on
-     *@return boolean - true if connected successfully
+     * The Connect method creates a connection to a specified
+     * host and port, and opens an object input and object ouput
+     * stream.
+     *
+     * @param aHost String - A host name or ip
+     * @param aPort int - The port the host server is running on
+     * @return boolean - true if connected successfully
      */
     public boolean connect(String aHost, int aPort) {
 
         if (LOG.isDebugEnabled()) {
-            LOG.debug("Attempting to connect to server: " + aHost +
-                    " on port: " + aPort);
+            LOG.debug("Attempting to connect to server: " + aHost
+                    + " on port: " + aPort);
         }
 
         try {
@@ -80,8 +79,8 @@ public class BClient {
         }
 
         if (LOG.isDebugEnabled()) {
-            LOG.debug("Connected to host: " + aHost +
-                    " Now trying to open Object input and output streams: " + theClientSocket);
+            LOG.debug("Connected to host: " + aHost
+                    + " Now trying to open Object input and output streams: " + theClientSocket);
         }
 
         try {
@@ -146,8 +145,9 @@ public class BClient {
     }
 
     /**
-     *The Close method closes all sockets and streams
-     *@return boolean - true if sockets and streams closed correctly
+     * The Close method closes all sockets and streams
+     *
+     * @return boolean - true if sockets and streams closed correctly
      */
     public boolean close() {
         if (LOG.isDebugEnabled()) {

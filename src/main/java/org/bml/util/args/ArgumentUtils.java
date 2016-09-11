@@ -48,11 +48,12 @@ import org.bml.util.io.net.NetworkUtils;
  * I believe that even systems like the above should not fail hard and should be
  * engineered to notify us of the error and move on.
  * </p>
- *@deprecated This class has been depreciated in favor of a combination of {@link org.apache.commons.validator.Validator} and {@link com.google.common.base.Preconditions} framework which provides the same and broader functionality with greater flexibility.
+ *
+ * @deprecated This class has been depreciated in favor of a combination of {@link org.apache.commons.validator.Validator} and {@link com.google.common.base.Preconditions} framework which provides the same and broader functionality with greater flexibility.
  * @author Brian M. Lima
  */
 public class ArgumentUtils {
-    
+
     /**
      * Instances should <b>NOT</b> be constructed in standard programming.
      */
@@ -68,7 +69,7 @@ public class ArgumentUtils {
      * @param checkObject The {@link Object} to be checked.
      * @param name The name used to identify the variable - to be checked, in exception messages.
      * @throws IllegalArgumentException If any of the check conditions are not met.
- *@deprecated This class and method has been depreciated in favor of a combination of {@link org.apache.commons.validator.Validator} and {@link com.google.common.base.Preconditions} framework which provides the same and broader functionality with greater flexibility.
+     * @deprecated This class and method has been depreciated in favor of a combination of {@link org.apache.commons.validator.Validator} and {@link com.google.common.base.Preconditions} framework which provides the same and broader functionality with greater flexibility.
      */
     public static void checkNullArg(final Object checkObject, final String name) throws IllegalArgumentException {
         if (checkObject == null) {
@@ -86,7 +87,7 @@ public class ArgumentUtils {
      * @param minLong The minimum value of the passed long.
      * @param maxLong The maximum value of the passed long.
      * @throws IllegalArgumentException If any of the check conditions are not met.
- *@deprecated This class and method has been depreciated in favor of a combination of {@link org.apache.commons.validator.Validator} and {@link com.google.common.base.Preconditions} framework which provides the same and broader functionality with greater flexibility.
+     * @deprecated This class and method has been depreciated in favor of a combination of {@link org.apache.commons.validator.Validator} and {@link com.google.common.base.Preconditions} framework which provides the same and broader functionality with greater flexibility.
      */
     public static void checkLongArg(final long checkLong, final String name, final long minLong, final long maxLong) {
         if (minLong == Long.MIN_VALUE && maxLong == Long.MAX_VALUE) {
@@ -110,7 +111,7 @@ public class ArgumentUtils {
      * @param allowNull If true allow the checkString to be null.
      * @param allowEmpty If true allow the checkString to be empty.
      * @throws IllegalArgumentException If any of the check conditions are not met.
- *@deprecated This class and method has been depreciated in favor of a combination of {@link org.apache.commons.validator.Validator} and {@link com.google.common.base.Preconditions} framework which provides the same and broader functionality with greater flexibility.
+     * @deprecated This class and method has been depreciated in favor of a combination of {@link org.apache.commons.validator.Validator} and {@link com.google.common.base.Preconditions} framework which provides the same and broader functionality with greater flexibility.
      */
     public static void checkStringArg(final String checkString, final String name, final boolean allowNull, final boolean allowEmpty) {
         //CHECK NULL
@@ -128,8 +129,6 @@ public class ArgumentUtils {
             }
         }
     }
-
-
 
     /**
      * <p>
@@ -151,7 +150,7 @@ public class ArgumentUtils {
      * should be a directory.
      * @param exists If true enforce {@link File} existance check.
      * @throws IllegalArgumentException If any of the check conditions are not met.
- *@deprecated This class and method has been depreciated in favor of a combination of {@link org.apache.commons.validator.Validator} and {@link com.google.common.base.Preconditions} framework which provides the same and broader functionality with greater flexibility.
+     * @deprecated This class and method has been depreciated in favor of a combination of {@link org.apache.commons.validator.Validator} and {@link com.google.common.base.Preconditions} framework which provides the same and broader functionality with greater flexibility.
      */
     public static void checkFileArg(final File toCheck, final String name, final boolean isFile, final boolean exists) throws IllegalArgumentException {
         if (toCheck == null) {
@@ -186,7 +185,7 @@ public class ArgumentUtils {
      * @pre name != null
      * @pre minArrayLength >= 0
      * @pre maxArrayLength >= minArrayLength
- *@deprecated This class and method has been depreciated in favor of a combination of {@link org.apache.commons.validator.Validator} and {@link com.google.common.base.Preconditions} framework which provides the same and broader functionality with greater flexibility.
+     * @deprecated This class and method has been depreciated in favor of a combination of {@link org.apache.commons.validator.Validator} and {@link com.google.common.base.Preconditions} framework which provides the same and broader functionality with greater flexibility.
      */
     public static void checkArray(final Object[] array, final String name, boolean allowNullArray, final int minArrayLength, final int maxArrayLength) throws IllegalArgumentException {
 
@@ -220,7 +219,7 @@ public class ArgumentUtils {
      * @param allowNullValues If true the check will allow null array elements. If false and an array element is null an {@link IllegalArgumentException} is thrown.
      * @param allowEmptyValues If true the check will allow empty array elements. If false and an array element is empty an {@link IllegalArgumentException} is thrown.
      * @throws IllegalArgumentException if any of the conditions of the array or it's values are not met.
- *@deprecated This class and method has been depreciated in favor of a combination of {@link org.apache.commons.validator.Validator} and {@link com.google.common.base.Preconditions} framework which provides the same and broader functionality with greater flexibility.
+     * @deprecated This class and method has been depreciated in favor of a combination of {@link org.apache.commons.validator.Validator} and {@link com.google.common.base.Preconditions} framework which provides the same and broader functionality with greater flexibility.
      * @pre name !=null
      * @pre minArrayLength >= 0
      * @pre maxArrayLength >= minArrayLength
@@ -254,7 +253,7 @@ public class ArgumentUtils {
      * @throws IllegalArgumentException if any pre-conditions are not met or if the passed email does not validate as an email address.
      * @pre email != null
      * @pre !email.isEmpty()
- *@deprecated This class and method has been depreciated in favor of a combination of {@link org.apache.commons.validator.Validator} and {@link com.google.common.base.Preconditions} framework which provides the same and broader functionality with greater flexibility.
+     * @deprecated This class and method has been depreciated in favor of a combination of {@link org.apache.commons.validator.Validator} and {@link com.google.common.base.Preconditions} framework which provides the same and broader functionality with greater flexibility.
      */
     public static void checkEmail(final String email, final boolean allowLocal) throws IllegalArgumentException {
         ArgumentUtils.checkStringArg(email, "email address", false, false);
@@ -265,8 +264,6 @@ public class ArgumentUtils {
         }
     }
 
-
-
     /**
      * <p>
      * Validation method for IPV4 network port values.
@@ -274,7 +271,7 @@ public class ArgumentUtils {
      *
      * @param port the potential IPV4 port to validate
      * @throws IllegalArgumentException if the passed port is not valid
- *@deprecated This class and method has been depreciated in favor of a combination of {@link org.apache.commons.validator.Validator} and {@link com.google.common.base.Preconditions} framework which provides the same and broader functionality with greater flexibility.
+     * @deprecated This class and method has been depreciated in favor of a combination of {@link org.apache.commons.validator.Validator} and {@link com.google.common.base.Preconditions} framework which provides the same and broader functionality with greater flexibility.
      */
     public static void checkIPV4Port(final int port) throws IllegalArgumentException {
         if (!GenericValidator.isInRange(port, NetworkUtils.MIN_IPV4_NETWORK_PORT, NetworkUtils.MAX_IPV4_NETWORK_PORT)) {

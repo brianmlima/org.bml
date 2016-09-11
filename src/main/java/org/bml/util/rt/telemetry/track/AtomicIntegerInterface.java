@@ -1,4 +1,3 @@
-
 package org.bml.util.rt.telemetry.track;
 
 /*
@@ -23,46 +22,45 @@ package org.bml.util.rt.telemetry.track;
  *     along with ORG.BML.  If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
 /**
  * @author Brian M. Lima
  */
 public interface AtomicIntegerInterface {
 
-  int addAndGet(int delta);
+    int addAndGet(int delta);
 
-  byte byteValue();
+    byte byteValue();
 
-  boolean compareAndSet(int expect, int update);
+    boolean compareAndSet(int expect, int update);
 
-  int decrementAndGet();
+    int decrementAndGet();
 
-  double doubleValue();
+    double doubleValue();
 
-  float floatValue();
+    float floatValue();
 
-  int get();
+    int get();
 
-  int getAndAdd(int delta);
+    int getAndAdd(int delta);
 
-  int getAndDecrement();
+    int getAndDecrement();
 
-  int getAndIncrement();
+    int getAndIncrement();
 
-  int getAndSet(int newValue);
+    int getAndSet(int newValue);
 
-  int incrementAndGet();
+    int incrementAndGet();
 
-  int intValue();
+    int intValue();
 
-  void lazySet(int newValue);
+    void lazySet(int newValue);
 
-  long longValue();
+    long longValue();
 
-  void set(int newValue);
+    void set(int newValue);
 
-  short shortValue();
+    short shortValue();
 
-  boolean weakCompareAndSet(int expect, int update);
-  
+    boolean weakCompareAndSet(int expect, int update);
+
 }

@@ -1,4 +1,3 @@
-
 package org.bml.util.io.net;
 
 /*
@@ -32,9 +31,10 @@ import org.apache.commons.net.util.Base64;
 
 /**
  * <p>
- * Holds a static Transparent GIF and a method for easily writing to an 
+ * Holds a static Transparent GIF and a method for easily writing to an
  * OutputStream
  * </p>
+ *
  * @author Brian M. Lima
  */
 public class Pixel {
@@ -75,7 +75,8 @@ public class Pixel {
      * <p>
      * Writes a single pixel square transparent gif to the passed OutputStream.
      * Very handy for implementing empty call backs in web API's
-     *</p>
+     * </p>
+     *
      * @param out The
      * @throws IOException OutputStream to write a pixel to.
      * @throws NullPointerException if passed OutputStream is null.

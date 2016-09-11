@@ -1,5 +1,9 @@
-/**/
-package org.bml.util.data;
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package org.bml.util;
 
 /*
  * #%L
@@ -23,20 +27,17 @@ package org.bml.util.data;
  *     along with ORG.BML.  If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 /**
- * Interface for getters. This is handy when using enumeration to deal with data
- * fields.
  *
  * @author Brian M. Lima
- *
- * @param <T> The Type of the fields value.
  */
-public interface AddUtil<T> {
+public class URIEncodeUtil {
 
-    /**
-     * Adder for this field utilities field from a dataObject.
-     *
-     * @param dataObject An instance of an object where the field can be found.
-     */
-    void add(T dataObject);
+    public static void main(final String[] args) throws UnsupportedEncodingException {
+        System.out.print(URLEncoder.encode(args[0], "UTF-8").replaceAll("+", "%20"));
+    }
 }

@@ -38,7 +38,6 @@ package org.bml.util;
  *     along with ORG.BML.  If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
 /**
  *
  * This class is a data container for the Configuration Key Enumeration pattern.

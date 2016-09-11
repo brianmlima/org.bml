@@ -1,4 +1,3 @@
-
 package org.bml.util.bloom;
 
 /*
@@ -23,13 +22,13 @@ package org.bml.util.bloom;
  *     along with ORG.BML.  If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
 import java.util.Collection;
 
-/** interface for using Bloom Filters. This interface allows the maintenance 
+/**
+ * interface for using Bloom Filters. This interface allows the maintenance
  * associated with using bloom filters over long periods of time to be handled
  * by the BloomManager VIA BloomProxy.
- * 
+ *
  * @author Brian M. Lima
  */
 public interface Bloom<T> {
@@ -67,6 +66,7 @@ public interface Bloom<T> {
 
     /**
      * Adds all elements from a Collection to the Bloom filter.
+     *
      * @param c Collection of elements.
      */
     public void addAll(Collection<? extends T> c);
@@ -85,6 +85,7 @@ public interface Bloom<T> {
      * Returns true if all the elements of a Collection could have been inserted
      * into the Bloom filter. Use getFalsePositiveProbability() to calculate the
      * probability of this being correct.
+     *
      * @param c elements to check.
      * @return true if all the elements in c could have been inserted into the Bloom filter.
      */

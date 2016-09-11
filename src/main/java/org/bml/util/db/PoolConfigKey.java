@@ -23,7 +23,6 @@ package org.bml.util.db;
  *     along with ORG.BML.  If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
 import static com.google.common.base.Preconditions.checkNotNull;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import java.beans.PropertyVetoException;

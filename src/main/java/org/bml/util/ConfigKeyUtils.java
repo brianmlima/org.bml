@@ -38,12 +38,15 @@ package org.bml.util;
  *     along with ORG.BML.  If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkArgument;
+import java.io.IOException;
+import java.io.StringReader;
 import java.util.Properties;
+import org.apache.commons.io.IOUtils;
 import org.bml.util.exception.InvalidPropertyException;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A collection of utility methods for working with the configuration / config key enup pattern.
@@ -192,6 +195,21 @@ public final class ConfigKeyUtils {
     }
 
     /**
+     * Gets a parameter from a {@link Properties} object as a Integer.
+     *
+     * @param theLog The logger from the config key object that is using the helper method.
+     * @param theProperties A Properties object to pull values from.
+     * @param theEnumName The name of the enum in the config key.
+     * @param theConfigKey The ConfigKey object we are getting for.
+     * @return An Integer or null.
+     * @throws InvalidPropertyException If the property does not exist or is not an String.
+     */
+    public static Integer getInteger(final Logger theLog, final Properties theProperties, final String theEnumName, final ConfigKey theConfigKey) throws InvalidPropertyException {
+        checkNotNull(theProperties, "Can not getInteger property with a null theProperties.");
+        return (Integer) getObject(theLog, theProperties, theConfigKey.isRequired(), theEnumName, theConfigKey.getPropertyName(), theConfigKey.getValueClass(), theConfigKey.getDefaultValue());
+    }
+
+    /**
      * Gets a parameter from a {@link Properties} object as an Boolean.
      *
      * @param theLog The logger from the config key object that is using the helper method.
@@ -210,6 +228,21 @@ public final class ConfigKeyUtils {
     }
 
     /**
+     * Gets a parameter from a {@link Properties} object as a Boolean.
+     *
+     * @param theLog The logger from the config key object that is using the helper method.
+     * @param theProperties A Properties object to pull values from.
+     * @param theEnumName The name of the enum in the config key.
+     * @param theConfigKey The ConfigKey object we are getting for.
+     * @return An Boolean or null.
+     * @throws InvalidPropertyException If the property does not exist or is not an Boolean.
+     */
+    public static Boolean getBoolean(final Logger theLog, final Properties theProperties, final String theEnumName, final ConfigKey theConfigKey) throws InvalidPropertyException {
+        checkNotNull(theProperties, "Can not getBoolean property with a null theProperties.");
+        return (Boolean) getObject(theLog, theProperties, theConfigKey.isRequired(), theEnumName, theConfigKey.getPropertyName(), theConfigKey.getValueClass(), theConfigKey.getDefaultValue());
+    }
+
+    /**
      * Gets a parameter from a {@link Properties} object as a String.
      *
      * @param theLog The logger from the config key object that is using the helper method.
@@ -221,7 +254,7 @@ public final class ConfigKeyUtils {
      */
     public static String getString(final Logger theLog, final Properties theProperties, final String theEnumName, final ConfigKey theConfigKey) throws InvalidPropertyException {
         checkNotNull(theProperties, "Can not getString property with a null theProperties.");
-        return (String) getObject(theLog, theProperties, theEnumName, theConfigKey);
+        return (String) getObject(theLog, theProperties, theConfigKey.isRequired(), theEnumName, theConfigKey.getPropertyName(), theConfigKey.getValueClass(), theConfigKey.getDefaultValue());
     }
 
     /**
@@ -258,6 +291,54 @@ public final class ConfigKeyUtils {
     public static Long getLong(final Logger theLog, final Properties theProperties, final boolean isRequired, final String theEnumName, final String thePropertyName, final Class theValueClass, final Object theDefaultValue) throws InvalidPropertyException {
         checkNotNull(theProperties, "Can not getLong property with a null theProperties.");
         return (Long) getObject(theLog, theProperties, isRequired, theEnumName, thePropertyName, theValueClass, theDefaultValue);
+    }
+
+    /**
+     * Gets a parameter from a {@link Properties} object as a Long.
+     *
+     * @param theLog The logger from the config key object that is using the helper method.
+     * @param theProperties A Properties object to pull values from.
+     * @param theEnumName The name of the enum in the config key.
+     * @param theConfigKey The ConfigKey object we are getting for.
+     * @return An Long or null.
+     * @throws InvalidPropertyException If the property does not exist or is not an String.
+     */
+    public static Long getLong(final Logger theLog, final Properties theProperties, final String theEnumName, final ConfigKey theConfigKey) throws InvalidPropertyException {
+        checkNotNull(theProperties, "Can not getLong property with a null theProperties.");
+        return (Long) getObject(theLog, theProperties, theConfigKey.isRequired(), theEnumName, theConfigKey.getPropertyName(), theConfigKey.getValueClass(), theConfigKey.getDefaultValue());
+    }
+
+    /**
+     * Gets a parameter from a {@link Properties} object as a Properties object.
+     *
+     * @param theLog The logger from the config key object that is using the helper method.
+     * @param theProperties A Properties object to pull values from.
+     * @param theEnumName The name of the enum in the config key.
+     * @param theConfigKey The ConfigKey object we are getting for.
+     * @return An Properties or null.
+     * @throws InvalidPropertyException If the property does not exist or is not an Properties object.
+     */
+    public static Properties getProperties(final Logger theLog, final Properties theProperties, final String theEnumName, final ConfigKey theConfigKey) throws InvalidPropertyException {
+        checkNotNull(theProperties, "Can not getProperties property with a null theProperties.");
+        String propsString = (String) getObject(theLog, theProperties, theConfigKey.isRequired(), theEnumName, theConfigKey.getPropertyName(), theConfigKey.getValueClass(), theConfigKey.getDefaultValue());
+        if (propsString == null) {
+            return null;
+        }
+        Properties properties = new Properties();
+        StringReader reader = null;
+        try {
+            reader = new StringReader(propsString);
+            try {
+                properties.load(reader);
+            } catch (IOException ex) {
+                theLog.error("Unable to parse value of property {} to a Properties Object.", theConfigKey.getPropertyName(), ex);
+                return null;
+            }
+        } finally {
+            IOUtils.closeQuietly(reader);
+        }
+        return properties;
+
     }
 
 }

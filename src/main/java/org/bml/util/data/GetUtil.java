@@ -23,7 +23,6 @@ package org.bml.util.data;
  *     along with ORG.BML.  If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
 /**
  * Interface for getters. This is handy when using enumeration to deal with data
  * fields.

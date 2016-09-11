@@ -1,4 +1,3 @@
-
 package org.bml.util.elasticconsumer.example;
 
 /*
@@ -23,7 +22,6 @@ package org.bml.util.elasticconsumer.example;
  *     along with ORG.BML.  If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
@@ -49,7 +47,7 @@ public class ElasticConsumerTest {
         PooledObjectFactory<TestWorkerThread> factory = new TestWorkerThreadObjectFactory(queueIn, 2, TimeUnit.SECONDS, 100);
 
         //The ElasticConsumer component.
-        ElasticConsumer<ProcData,TestWorkerThread> app = new ElasticConsumer<ProcData,TestWorkerThread>(factory, queueIn, 1, false);
+        ElasticConsumer<ProcData, TestWorkerThread> app = new ElasticConsumer<ProcData, TestWorkerThread>(factory, queueIn, 1, false);
 
         app.setDebug(debug);
         app.start();
@@ -57,16 +55,16 @@ public class ElasticConsumerTest {
         System.out.println("ElasticConsumer: ALIVE=" + app.isAlive());
 
         int processors = Runtime.getRuntime().availableProcessors();
-        System.out.println("System is reporting "+processors+" processor cores.");
-        
+        System.out.println("System is reporting " + processors + " processor cores.");
+
         List<LoadProducer> LoadProducerList = new ArrayList<LoadProducer>(processors);
         LoadProducer load;
         for (int c = 0; c < processors; c++) {
-            load=new LoadProducer(app);
+            load = new LoadProducer(app);
             load.start();
             LoadProducerList.add(load);
         }
-        
+
         Thread.sleep(10000);
 
         app.setShouldRun(false);
