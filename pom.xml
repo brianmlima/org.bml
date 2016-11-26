@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.bml</groupId>
     <artifactId>org.bml</artifactId>
-    <version>2.0-SNAPSHOT</version>
+    <version>2.1-SNAPSHOT</version>
     <packaging>jar</packaging>
     <inceptionYear>2008</inceptionYear>
     <organization>
@@ -226,7 +226,7 @@
                         <link>http://findbugs.sourceforge.net/api/</link>
                         <link>http://tomcat.apache.org/tomcat-6.0-doc/api/</link>
                     </links>
-                    <source>1.6</source>
+                    <source>1.8</source>
                     <code>javadoc:aggregate</code>
                     <code>javadoc:test-aggregate</code>
                     <tags>
