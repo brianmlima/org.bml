@@ -43,7 +43,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.Locale;
 import org.apache.commons.compress.archivers.ArchiveException;
@@ -108,6 +110,43 @@ public final class IOUtil extends org.apache.commons.io.IOUtils {
                 return new CompressorStreamFactory().createCompressorInputStream(CompressorStreamFactory.BZIP2, is);
             default:
                 return new FileInputStream(theFile);
+        }
+    }
+
+    /**
+     * Determines a files format and returns an {@link OutputStream}. If the file
+     * is an archive or compressed the {@link OutputStream} returned is the
+     * will take in uncompressed and or un-archived data and compress it. Note this only works for archives
+     * and or compressions of single files.
+     *
+     * @param theFile A file to get an {@link OutputStream}.
+     * @return an {@link OutputStream}
+     * @throws ArchiveException If the file is an archive and there is an issue creating an OutputStream.
+     * @throws FileNotFoundException If the file can not be found when creating an OutputStream.
+     * @throws CompressorException If the file is compressed and there is an issue creating an OutputStream.
+     */
+    public static OutputStream outputStreamFromFile(final File theFile) throws ArchiveException, FileNotFoundException, CompressorException {
+        checkNotNull(theFile, "Can not create an OutputStream with a null theFile parameter.");
+        checkArgument(theFile.isFile(), "Can not create an OutputStream with a thefile parameter that is not a file. FILE=%s", theFile.getAbsolutePath());
+        checkArgument(theFile.canWrite(), "Can not create an OutputStream with a thefile parameter that can not be written to. FILE=%s USER=%s", theFile.getAbsolutePath(), System.getProperty("user.name"));
+        final String extension = FilenameUtils.getExtension(theFile.getName());
+        final OutputStream out = new FileOutputStream(theFile);
+        if (extension == null || extension.isEmpty()) {
+            return out;
+        }
+        switch (extension.toLowerCase(Locale.ROOT)) {
+            case ArchiveStreamFactory.TAR:
+                return new ArchiveStreamFactory().createArchiveOutputStream(ArchiveStreamFactory.TAR, out);
+            case ArchiveStreamFactory.ZIP:
+                return new ArchiveStreamFactory().createArchiveOutputStream(ArchiveStreamFactory.ZIP, out);
+            case ArchiveStreamFactory.JAR:
+                return new ArchiveStreamFactory().createArchiveOutputStream(ArchiveStreamFactory.JAR, out);
+            case CompressorStreamFactory.GZIP:
+                return new CompressorStreamFactory().createCompressorOutputStream(CompressorStreamFactory.GZIP, out);
+            case CompressorStreamFactory.BZIP2:
+                return new CompressorStreamFactory().createCompressorOutputStream(CompressorStreamFactory.BZIP2, out);
+            default:
+                return new FileOutputStream(theFile);
         }
     }
 
