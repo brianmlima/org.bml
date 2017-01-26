@@ -44,6 +44,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
@@ -125,12 +126,20 @@ public final class IOUtil extends org.apache.commons.io.IOUtils {
      * @throws FileNotFoundException If the file can not be found when creating an OutputStream.
      * @throws CompressorException If the file is compressed and there is an issue creating an OutputStream.
      */
-    public static OutputStream outputStreamFromFile(final File theFile) throws ArchiveException, FileNotFoundException, CompressorException {
+    public static OutputStream outputStreamFromFile(final File theFile) throws ArchiveException, FileNotFoundException, CompressorException, IOException {
         checkNotNull(theFile, "Can not create an OutputStream with a null theFile parameter.");
-        checkArgument(theFile.isFile(), "Can not create an OutputStream with a thefile parameter that is not a file. FILE=%s", theFile.getAbsolutePath());
-        checkArgument(theFile.canWrite(), "Can not create an OutputStream with a thefile parameter that can not be written to. FILE=%s USER=%s", theFile.getAbsolutePath(), System.getProperty("user.name"));
+        checkArgument(!theFile.isDirectory(), "Can not create an OutputStream with a thefile parameter that is a directory. FILE=%s", theFile.getAbsolutePath());
         final String extension = FilenameUtils.getExtension(theFile.getName());
-        final OutputStream out = new FileOutputStream(theFile);
+
+        /**
+         * if (!theFile.exists()) {
+         * theFile.setWritable(true,false);
+         * theFile.setReadable(true,false);
+         * theFile.createNewFile();;
+         *
+         * }
+         */
+        final OutputStream out = new FileOutputStream(theFile, false);
         if (extension == null || extension.isEmpty()) {
             return out;
         }
