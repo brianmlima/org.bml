@@ -24,12 +24,11 @@
         <snapshotRepository>
             <id>org.bml</id>
             <name>org.bml SNAPSHOTS</name>
-            <url>git:snapshots://git@bitbucket.org:brianmlima/orgbml-mvn-snapshot-repo.git</url>
+            <url>git:snapshots://git@github.com:brianmlima/orgbml-mvn-snapshot-repo.git</url>
+            <!--<url>git:snapshots://git@bitbucket.org:brianmlima/orgbml-mvn-snapshot-repo.git</url>-->
         </snapshotRepository>
     </distributionManagement>
     <!-- END private maven repo-->
-
-
 
     <repositories>
         <repository>
