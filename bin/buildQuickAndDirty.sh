@@ -24,6 +24,6 @@ source ${BASEDIR}/Functions.sh
 
 
 pushd ${BASEDIR}/../ > /dev/null ;
- mvn clean package -DskipTests -Dcheckstyle.skip=true -Dfindbugs.skip=true  ${@} ;
+ mvn clean package ${@} -DskipTests -Dcheckstyle.skip=true -Dfindbugs.skip=true ;
 popd > /dev/null ;
 

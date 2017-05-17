@@ -39,11 +39,10 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
+import java.util.Set;
 import java.util.regex.Pattern;
-import org.apache.commons.io.Charsets;
+import java.util.stream.Collectors;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.validator.GenericValidator;
 
 /**
@@ -52,7 +51,7 @@ import org.apache.commons.validator.GenericValidator;
  */
 public class CSVUtil {
 
-    static class BCSV {
+    public static class BCSV {
 
         @JsonProperty
         private final String[] headers;
@@ -105,13 +104,13 @@ public class CSVUtil {
 
     }
 
-    static class BCSVRow {
+    public static class BCSVRow {
 
     }
 
-    static class BCSVCell {
+    public static class BCSVCell {
 
-        static enum TYPE {
+        public static enum TYPE {
 
             LONG,
             LONG_WITH_NULLS,
@@ -167,12 +166,13 @@ public class CSVUtil {
                 if (isZipCode(rawValue)) {
                     return TYPE.US_ZIP;
                 }
-                if (isLong(rawValue)) {
-                    return TYPE.LONG;
-                }
                 if (isDate(rawValue)) {
                     return TYPE.DATE;
                 }
+                if (isLong(rawValue)) {
+                    return TYPE.LONG;
+                }
+
                 if (isEmail(rawValue)) {
                     return TYPE.EMAIL;
                 }
@@ -197,7 +197,7 @@ public class CSVUtil {
             }
 
             public static boolean isDate(final String rawValue) {
-                return GenericValidator.isDate(rawValue, null);
+                return (GenericValidator.isDate(rawValue, null) || GenericValidator.isDate(rawValue, "yyyyMMdd", true));
             }
 
             public static boolean isEmail(final String rawValue) {
@@ -210,37 +210,51 @@ public class CSVUtil {
 
         }
         @JsonProperty
-        final String rawValue;
+        private final String rawValue;
         @JsonProperty
-        final TYPE baseType;
+        private final TYPE baseType;
 
         public BCSVCell(final String rawValue) {
             this.rawValue = rawValue;
             this.baseType = TYPE.getType(rawValue);
         }
 
+        /**
+         * @return the rawValue
+         */
+        public String getRawValue() {
+            return rawValue;
+        }
+
+        /**
+         * @return the baseType
+         */
+        public TYPE getBaseType() {
+            return baseType;
+        }
+
     }
 
-    static class BCSVColumn {
+    public static class BCSVColumn {
 
         @JsonProperty
-        final String header;
+        private final String header;
         @JsonProperty
-        final List<BCSVCell> rawCells = new LinkedList<>();
+        private final List<BCSVCell> rawCells = new LinkedList<>();
 
         public BCSVColumn(final String header) {
             this.header = header;
         }
 
         public void addRawCell(final String value) {
-            this.rawCells.add(new BCSVCell(value));
+            this.getRawCells().add(new BCSVCell(value));
         }
 
         @JsonProperty("allColumnTypes")
         public Map<BCSVCell.TYPE, Integer> findColumnTypes() {
             Map<BCSVCell.TYPE, Integer> cellTypes = new HashMap<BCSVCell.TYPE, Integer>();
-            rawCells.forEach((cell) -> {
-                cellTypes.compute(cell.baseType, (type, count) -> {
+            getRawCells().forEach((cell) -> {
+                cellTypes.compute(cell.getBaseType(), (type, count) -> {
                     if (count == null) {
                         count = 0;
                     }
@@ -274,6 +288,34 @@ public class CSVUtil {
             return BCSVCell.TYPE.UNKNOWN;
         }
 
+        /**
+         * @return the header
+         */
+        public String getHeader() {
+            return header;
+        }
+
+        /**
+         * @return the rawCells
+         */
+        public List<BCSVCell> getRawCells() {
+            return rawCells;
+        }
+
+        /**
+         * @return the rawCells
+         */
+        public List<String> getRawCellValuesAsList() {
+            return rawCells.stream().map(BCSVCell::getRawValue).collect(Collectors.toList());
+        }
+
+        /**
+         * @return the rawCells
+         */
+        public Set<String> getRawCellValuesAsSet() {
+            return rawCells.stream().map(BCSVCell::getRawValue).collect(Collectors.toSet());
+        }
+
     }
 
     public static void main(final String[] args) throws FileNotFoundException, IOException {
@@ -288,22 +330,18 @@ public class CSVUtil {
         Map<String, Object> jsonMapOut = new HashMap<>();
 
         csv.getColumns().forEach((column) -> {
-
             Map<String, Object> columnDataMap = new HashMap<>();
-
             columnDataMap.put("SingleType", column.getSingleType());
             columnDataMap.put("AllTypesFound", column.findColumnTypes());
-            jsonMapOut.put(column.header, columnDataMap);
+            jsonMapOut.put(column.getHeader(), columnDataMap);
 
         });
 
         //System.out.println(new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(jsonMapOut));
-
-        
         File fout = new File("/Users/brianmlima/tmp/Redacted_debt_data1.json");
-        
+
         FileUtils.write(fout, new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(csv), StandardCharsets.UTF_8, false);
-        
+
     }
 
 }

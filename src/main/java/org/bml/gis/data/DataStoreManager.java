@@ -207,6 +207,9 @@ public class DataStoreManager implements Closeable {
             Preconditions.checkArgument(!typeName.isEmpty(), "Can not open FeatureIterator with an empty typeName");
             Preconditions.checkNotNull(dataStore, "Can not open FeatureIterator with a null dataStore");
         }
+        
+        //dataStore.
+        
         FeatureSource featureSource = dataStore.getFeatureSource(typeName);
         FeatureCollection collection = featureSource.getFeatures();
         return collection.features();
