@@ -79,14 +79,15 @@ public final class SortUtils {
     /**
      * Sorts the input map by its values descending. Does not alter the original map.
      *
+     * @param <K> Map Key class
+     * @param <V> Map Value class
      * @param theMap A map to sort by value.
      * @return A sorted version of the input map sorted by value descending.
      */
-    public static Map sortByValueHighToLow(final Map theMap) {
-        return sortMap(theMap, new Comparator() {
-            public int compare(final Object o1, final Object o2) {
-                return ((Comparable) ((Map.Entry) (o2)).getValue())
-                        .compareTo(((Map.Entry) (o1)).getValue());
+    public static <K, V extends Comparable<V>> Map<K, V> sortByValueHighToLow(final Map<K, V> theMap) {
+        return sortMap(theMap, new Comparator<Map.Entry<K, V>>() {
+            public int compare(final Map.Entry<K, V> o1, final Map.Entry<K, V> o2) {
+                return o2.getValue().compareTo(o1.getValue());
             }
         });
     }
@@ -98,14 +99,13 @@ public final class SortUtils {
      * @param theComparator A Comparator to sort with.
      * @return A sorted version of the input map.
      */
-    private static Map sortMap(final Map theMap, final Comparator theComparator) {
-        final List list = new LinkedList(theMap.entrySet());
+    private static <K, V extends Comparable<V>> Map<K, V> sortMap(final Map<K, V> theMap, final Comparator<Map.Entry<K, V>> theComparator) {
+        final List<Map.Entry<K, V>> list = new LinkedList<>(theMap.entrySet());
         Collections.sort(list, theComparator);
-        final Map result = new LinkedHashMap();
-        for (Iterator it = list.iterator(); it.hasNext();) {
-            Map.Entry entry = (Map.Entry) it.next();
+        final Map<K, V> result = new LinkedHashMap<>();
+        list.forEach((entry) -> {
             result.put(entry.getKey(), entry.getValue());
-        }
+        });
         return result;
     }
 }
